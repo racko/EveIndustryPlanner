@@ -53,7 +53,7 @@ void MarketData::loadPrices(Names& names) {
 //    //auto avgVolumeQuery = sqlite::prepare(db, volumeQuery);
 //    buy.reserve(priceCount);
 //    while(sqlite::step(selectBuy) == sqlite::ROW) {
-//        auto id = sqlite::column<int64_t>(selectBuy, 0);
+//        auto id = sqlite::column<std::int64_t>(selectBuy, 0);
 //        buy[id] = sqlite::column<double>(selectBuy, 1);
 //        //latestPrices[id] = avg;
 //        //avgPrices[id] = avg;
@@ -61,13 +61,13 @@ void MarketData::loadPrices(Names& names) {
 //    auto selectSell = sqlite::prepare(db, sellQuery);
 //    sell.reserve(priceCount);
 //    while(sqlite::step(selectSell) == sqlite::ROW) {
-//        auto id = sqlite::column<int64_t>(selectSell, 0);
+//        auto id = sqlite::column<std::int64_t>(selectSell, 0);
 //        sell[id] = sqlite::column<double>(selectSell, 1);
 //        //latestPrices[id] = avg;
 //        //avgPrices[id] = avg;
 //    }
 //    //while(sqlite::step(avgVolumeQuery) == sqlite::ROW) {
-//    //    auto id = sqlite::column<int64_t>(avgVolumeQuery, 0);
+//    //    auto id = sqlite::column<std::int64_t>(avgVolumeQuery, 0);
 //    //    auto avg = sqlite::column<double>(avgVolumeQuery, 1);
 //    //    volumes[id] = avg;
 //    //}
@@ -77,30 +77,30 @@ void MarketData::loadOrdersFromDB(const sqlite::dbPtr& db, const std::string& bu
     auto selectBuy = sqlite::prepare(db, buyQuery);
     buyorders.reserve(100000);
     while(sqlite::step(selectBuy) == sqlite::ROW) {
-        auto type = sqlite::column<int64_t>(selectBuy, 1);
+        auto type = sqlite::column<std::int64_t>(selectBuy, 1);
         if (!names.checkName(std::size_t(type))) {
             std::cout << "ignoring typeID " << type << ": no name\n";
             continue;
         }
-        auto id = sqlite::column<int64_t>(selectBuy, 0);
-        auto volume = sqlite::column<int64_t>(selectBuy, 2);
+        auto id = sqlite::column<std::int64_t>(selectBuy, 0);
+        auto volume = sqlite::column<std::int64_t>(selectBuy, 2);
         auto price = sqlite::column<double>(selectBuy, 3);
-        auto stationID = sqlite::column<int64_t>(selectBuy, 4);
+        auto stationID = sqlite::column<std::int64_t>(selectBuy, 4);
         const auto& stationName = sqlite::column<std::string>(selectBuy, 5);
         buyorders.emplace_back(id, type, price, volume, stationID, stationName);
     }
     auto selectSell = sqlite::prepare(db, sellQuery);
     sellorders.reserve(200000);
     while(sqlite::step(selectSell) == sqlite::ROW) {
-        auto type = sqlite::column<int64_t>(selectSell, 1);
+        auto type = sqlite::column<std::int64_t>(selectSell, 1);
         if (!names.checkName(std::size_t(type))) {
             std::cout << "ignoring typeID " << type << ": no name\n";
             continue;
         }
-        auto id = sqlite::column<int64_t>(selectSell, 0);
-        auto volume = sqlite::column<int64_t>(selectSell, 2);
+        auto id = sqlite::column<std::int64_t>(selectSell, 0);
+        auto volume = sqlite::column<std::int64_t>(selectSell, 2);
         auto price = sqlite::column<double>(selectSell, 3);
-        auto stationID = sqlite::column<int64_t>(selectSell, 4);
+        auto stationID = sqlite::column<std::int64_t>(selectSell, 4);
         const auto& stationName = sqlite::column<std::string>(selectSell, 5);
         sellorders.emplace_back(id, type, price, volume, stationID, stationName);
     }
@@ -115,7 +115,7 @@ void MarketData::loadOrdersFromDB(const sqlite::dbPtr& db, const std::string& bu
 //    auto avgVolumeQuery = sqlite::prepare(db, volumeQuery);
 //    buy.reserve(priceCount);
 //    while(sqlite::step(selectBuy) == sqlite::ROW) {
-//        auto id = sqlite::column<int64_t>(selectBuy, 0);
+//        auto id = sqlite::column<std::int64_t>(selectBuy, 0);
 //        buy[id] = sqlite::column<double>(selectBuy, 1);
 //        //latestPrices[id] = avg;
 //        //avgPrices[id] = avg;
@@ -123,13 +123,13 @@ void MarketData::loadOrdersFromDB(const sqlite::dbPtr& db, const std::string& bu
 //    auto selectSell = sqlite::prepare(db, sellQuery);
 //    sell.reserve(priceCount);
 //    while(sqlite::step(selectSell) == sqlite::ROW) {
-//        auto id = sqlite::column<int64_t>(selectSell, 0);
+//        auto id = sqlite::column<std::int64_t>(selectSell, 0);
 //        sell[id] = sqlite::column<double>(selectSell, 1);
 //        //latestPrices[id] = avg;
 //        //avgPrices[id] = avg;
 //    }
 //    while(sqlite::step(avgVolumeQuery) == sqlite::ROW) {
-//        auto id = sqlite::column<int64_t>(avgVolumeQuery, 0);
+//        auto id = sqlite::column<std::int64_t>(avgVolumeQuery, 0);
 //        auto avg = sqlite::column<double>(avgVolumeQuery, 1);
 //        volumes[id] = avg;
 //    }

@@ -14,7 +14,7 @@
 //
 class rapidjson_archive_stream {
   public:
-    using Ch = uint8_t;
+    using Ch = std::uint8_t;
 
     rapidjson_archive_stream(::archive* p) : p_(p) { GetNextBlock(); }
 
@@ -70,7 +70,7 @@ class rapidjson_archive_stream {
         // EOF ...
 
         // std::cout << "read new block (" << size << " B): ";
-        // std::cout.write(static_cast<const char*>(start), static_cast<int64_t>(size));
+        // std::cout.write(static_cast<const char*>(start), static_cast<std::int64_t>(size));
         // std::cout << '\n';
 
         data = static_cast<const Ch*>(start);

@@ -12,7 +12,7 @@ std::vector<std::size_t> outdatedOrders(const sqlite::dbPtr& db) {
 	std::cout << "determining outdated orders\n";
     TIME(
         for (rc = sqlite::step(getTypes); rc == sqlite::ROW; rc = sqlite::step(getTypes)) {
-			types.push_back(boost::numeric_cast<std::size_t>(sqlite::column<int64_t>(getTypes, 0)));
+			types.push_back(boost::numeric_cast<std::size_t>(sqlite::column<std::int64_t>(getTypes, 0)));
         }
     );
 	std::cout << types.size() << " orders have to be updated.\n";
@@ -28,7 +28,7 @@ std::vector<std::size_t> outdatedOrders2(const sqlite::dbPtr& db, std::size_t re
 	std::cout << "determining outdated orders\n";
     TIME(
         for (rc = sqlite::step(getTypes); rc == sqlite::ROW; rc = sqlite::step(getTypes)) {
-			types.push_back(boost::numeric_cast<std::size_t>(sqlite::column<int64_t>(getTypes, 0)));
+			types.push_back(boost::numeric_cast<std::size_t>(sqlite::column<std::int64_t>(getTypes, 0)));
         }
     );
 	std::cout << types.size() << " orders have to be updated.\n";

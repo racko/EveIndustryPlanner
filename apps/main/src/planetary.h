@@ -13,7 +13,7 @@ public:
     using product_t = type_t;
     using materials_t = std::vector<std::pair<type_t,std::size_t>>;
     using duration_t = std::chrono::seconds;
-    using tier_t = uint8_t;
+    using tier_t = std::uint8_t;
 
     Planetary(product_t product_, std::size_t producedQuantity_, materials_t materials_, duration_t duration_, tier_t tier_) : product(product_), producedQuantity(producedQuantity_), materials(std::move(materials_)), duration(duration_), tier(tier_) {}
 

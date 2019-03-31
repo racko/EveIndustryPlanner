@@ -25,9 +25,9 @@ std::vector<station> loadStations() {
     std::cout << "building map. " << std::flush;
     TIME(
         for (const auto& e : root) {
-            auto stationID = e["stationID"].as<uint64_t>();
+            auto stationID = e["stationID"].as<std::uint64_t>();
             const auto& stationName = e["stationName"].as<std::string>();
-            auto regionID = e["regionID"].as<uint64_t>();
+            auto regionID = e["regionID"].as<std::uint64_t>();
             stations.emplace_back(stationID, std::move(stationName), regionID);
         }
     );

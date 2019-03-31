@@ -156,9 +156,9 @@ void saveOrders(const std::unordered_map<std::size_t, double>& avgPrices, const 
 }
 
 namespace {
-int64_t to_int(uint64_t n) {
-    assert(n <= static_cast<uint64_t>(std::numeric_limits<int64_t>::max()));
-    return static_cast<int64_t>(n);
+int64_t to_int(std::uint64_t n) {
+    assert(n <= static_cast<std::uint64_t>(std::numeric_limits<std::int64_t>::max()));
+    return static_cast<std::int64_t>(n);
 }
 } // namespace
 
@@ -602,7 +602,7 @@ class OrderHandler3 {
         // sqlite::Transaction transaction;
         auto interrupted = false;
         auto handler_handle = addSigintHandler([&] {
-            interrupted = true; /*semaphore.setTo(std::numeric_limits<int32_t>::max());*/
+            interrupted = true; /*semaphore.setTo(std::numeric_limits<std::int32_t>::max());*/
         });
         auto sigintHandlerRemover = makeFinalizer([&] { removeSigintHandler(handler_handle); });
         TIME(simpleGet("https://esi.evetech.net/latest/markets/" + std::to_string(region) + "/orders/?page=1", stream););

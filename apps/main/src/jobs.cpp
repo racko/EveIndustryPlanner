@@ -20,12 +20,12 @@ void Jobs::loadSchematics(const Names& names) {
     std::unordered_multimap<std::size_t,std::pair<std::size_t,std::size_t>> inputs;
     inputs.reserve(100);
     while(sqlite::step(stmt) == sqlite::ROW) {
-        auto schematicID = boost::numeric_cast<std::size_t>(sqlite::column<int32_t>(stmt, 0));
-        auto typeID = boost::numeric_cast<std::size_t>(sqlite::column<int32_t>(stmt, 1));
-        auto quantity = boost::numeric_cast<std::size_t>(sqlite::column<int32_t>(stmt, 2));
-        auto isInput = boost::numeric_cast<std::size_t>(sqlite::column<int32_t>(stmt, 3));
-        auto marketGroup = boost::numeric_cast<std::size_t>(sqlite::column<int32_t>(stmt, 4));
-        auto cycleTime = boost::numeric_cast<std::size_t>(sqlite::column<int32_t>(stmt, 5));
+        auto schematicID = boost::numeric_cast<std::size_t>(sqlite::column<std::int32_t>(stmt, 0));
+        auto typeID = boost::numeric_cast<std::size_t>(sqlite::column<std::int32_t>(stmt, 1));
+        auto quantity = boost::numeric_cast<std::size_t>(sqlite::column<std::int32_t>(stmt, 2));
+        auto isInput = boost::numeric_cast<std::size_t>(sqlite::column<std::int32_t>(stmt, 3));
+        auto marketGroup = boost::numeric_cast<std::size_t>(sqlite::column<std::int32_t>(stmt, 4));
+        auto cycleTime = boost::numeric_cast<std::size_t>(sqlite::column<std::int32_t>(stmt, 5));
         if (!isInput) {
             output.emplace(schematicID, std::make_tuple(typeID, quantity, marketGroup - 1334u, cycleTime));
         } else {

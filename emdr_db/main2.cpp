@@ -98,10 +98,10 @@ namespace rapidjson {
   };
 }
 
-IMPLEMENT_GETTER(uint64_t, Uint64)
-IMPLEMENT_GETTER(int64_t, Int64)
-IMPLEMENT_GETTER(uint32_t, Uint)
-IMPLEMENT_GETTER(int32_t, Int)
+IMPLEMENT_GETTER(std::uint64_t, Uint64)
+IMPLEMENT_GETTER(std::int64_t, Int64)
+IMPLEMENT_GETTER(std::uint32_t, Uint)
+IMPLEMENT_GETTER(std::int32_t, Int)
 IMPLEMENT_GETTER(double, Double)
 IMPLEMENT_GETTER(bool, Bool)
 
@@ -188,11 +188,11 @@ template<typename T>
 struct Rowset {
   std::vector<T> x;
   Time generatedAt;
-  uint64_t regionID;
-  uint64_t typeID;
+  std::uint64_t regionID;
+  std::uint64_t typeID;
 
   template<typename T1>
-  Rowset(T1&& x_, Time g, uint64_t r, uint64_t t) : x(x_), generatedAt(g), regionID(r), typeID(t) {}
+  Rowset(T1&& x_, Time g, std::uint64_t r, std::uint64_t t) : x(x_), generatedAt(g), regionID(r), typeID(t) {}
 };
 
 template<typename T>
@@ -209,30 +209,30 @@ struct Message {
 
 struct Orders {
   double price;
-  uint64_t volRemaining;
-  int16_t range;
-  uint64_t orderID;
-  uint64_t volumeEntered;
-  uint64_t minVolume;
+  std::uint64_t volRemaining;
+  std::int16_t range;
+  std::uint64_t orderID;
+  std::uint64_t volumeEntered;
+  std::uint64_t minVolume;
   bool bid;
   Time issueDate;
   std::chrono::system_clock::duration duration;
-  uint64_t stationID;
-  uint64_t solarSystemID;
+  std::uint64_t stationID;
+  std::uint64_t solarSystemID;
 
-  Orders(double price_, uint64_t volRemaining_, int16_t range_, uint64_t orderID_, uint64_t volumeEntered_, uint64_t minVolume_, bool bid_, Time issueDate_, std::chrono::system_clock::duration duration_, uint64_t stationID_, uint64_t solarSystemID_) : price(price_), volRemaining(volRemaining_), range(range_), orderID(orderID_), volumeEntered(volumeEntered_), minVolume(minVolume_), bid(bid_), issueDate(issueDate_), duration(duration_), stationID(stationID_), solarSystemID(solarSystemID_) {}
+  Orders(double price_, std::uint64_t volRemaining_, std::int16_t range_, std::uint64_t orderID_, std::uint64_t volumeEntered_, std::uint64_t minVolume_, bool bid_, Time issueDate_, std::chrono::system_clock::duration duration_, std::uint64_t stationID_, std::uint64_t solarSystemID_) : price(price_), volRemaining(volRemaining_), range(range_), orderID(orderID_), volumeEntered(volumeEntered_), minVolume(minVolume_), bid(bid_), issueDate(issueDate_), duration(duration_), stationID(stationID_), solarSystemID(solarSystemID_) {}
 
 };
 
 struct History {
   Time date;
-  uint64_t orders;
-  uint64_t quantity;
+  std::uint64_t orders;
+  std::uint64_t quantity;
   double low;
   double high;
   double average;
 
-  History(Time date_, uint64_t orders_, uint64_t quantity_, double low_, double high_, double average_) : date(date_), orders(orders_), quantity(quantity_), low(low_), high(high_), average(average_) {}
+  History(Time date_, std::uint64_t orders_, std::uint64_t quantity_, double low_, double high_, double average_) : date(date_), orders(orders_), quantity(quantity_), low(low_), high(high_), average(average_) {}
 };
 
 namespace rapidjson {
@@ -270,8 +270,8 @@ namespace rapidjson {
   template<typename T>
   struct get_impl<Rowset<T>> {
     static Rowset<T> get(const Value& v) {
-      auto regionID = getMember<uint64_t>(v, "regionID");
-      auto typeID = getMember<uint64_t>(v, "typeID");
+      auto regionID = getMember<std::uint64_t>(v, "regionID");
+      auto typeID = getMember<std::uint64_t>(v, "typeID");
       auto generatedAt = getMember<Time>(v, "generatedAt");
       return Rowset<T>(getMember<std::vector<T>>(v, "rows"), generatedAt, regionID, typeID);
     }
@@ -283,8 +283,8 @@ namespace rapidjson {
       using rapidjson::get;
       // TODO: read column order from columns field in message
       auto date = get<Time>(v,0);
-      auto orders = get<uint64_t>(v,1);
-      auto quantity = get<uint64_t>(v,2);
+      auto orders = get<std::uint64_t>(v,1);
+      auto quantity = get<std::uint64_t>(v,2);
       auto low = get<double>(v,3);
       auto high = get<double>(v,4);
       auto average = get<double>(v,5);
@@ -298,16 +298,16 @@ namespace rapidjson {
       using rapidjson::get;
       // TODO: read column order from columns field in message
       auto price = get<double>(v, 0);
-      auto volRemaining = get<uint64_t>(v, 1);
-      auto range = get<int32_t>(v, 2);
-      auto orderID = get<uint64_t>(v, 3);
-      auto volumeEntered = get<uint64_t>(v, 4);
-      auto minVolume = get<uint64_t>(v, 5);
+      auto volRemaining = get<std::uint64_t>(v, 1);
+      auto range = get<std::int32_t>(v, 2);
+      auto orderID = get<std::uint64_t>(v, 3);
+      auto volumeEntered = get<std::uint64_t>(v, 4);
+      auto minVolume = get<std::uint64_t>(v, 5);
       auto bid = get<bool>(v, 6);
       auto issueDate = get<Time>(v, 7);
-      auto duration = get<uint32_t>(v, 8) * std::chrono::hours(24);
-      auto stationID = get<uint64_t>(v, 9);
-      auto solarSystemID = get<uint64_t>(v, 10);
+      auto duration = get<std::uint32_t>(v, 8) * std::chrono::hours(24);
+      auto stationID = get<std::uint64_t>(v, 9);
+      auto solarSystemID = get<std::uint64_t>(v, 10);
       return Orders(price, volRemaining, range, orderID, volumeEntered, minVolume, bid, issueDate, duration, stationID, solarSystemID);
     }
   };
@@ -391,7 +391,7 @@ struct emdr_db {
     sqlite::Resetter getResetter(getGeneratorStmt);
     if (rc == SQLITE_ROW) {
       // std::cout << "generator already known\n";
-      return column<int64_t>(getGeneratorStmt, 0);
+      return column<std::int64_t>(getGeneratorStmt, 0);
     }
     // std::cout << "Inserting new generator\n";
     sqlite::bind(insertGeneratorStmt, 1, g.name);
@@ -409,7 +409,7 @@ struct emdr_db {
     auto rc = step(getUploadKeyStmt);
     sqlite::Resetter getResetter(getUploadKeyStmt);
     if (rc == SQLITE_ROW)
-      return column<int64_t>(getUploadKeyStmt, 0);
+      return column<std::int64_t>(getUploadKeyStmt, 0);
     sqlite::bind(insertUploadKeyStmt, 1, k.name);
     sqlite::bind(insertUploadKeyStmt, 2, k.key);
     step(insertUploadKeyStmt);
@@ -589,16 +589,16 @@ void sigint_handler(int signal) {
 
 struct order {
   double price;
-  uint64_t station;
+  std::uint64_t station;
 };
 struct itemInfo {
   order maxBuy;
   order minSell;
 };
 
-std::unordered_map<uint64_t, itemInfo> maxPriceDiff(const Message<Orders>& m) {
+std::unordered_map<std::uint64_t, itemInfo> maxPriceDiff(const Message<Orders>& m) {
     // handle orders
-    using entries_t = std::unordered_map<uint64_t, itemInfo>;
+    using entries_t = std::unordered_map<std::uint64_t, itemInfo>;
     static entries_t entries;
     for (const auto& rs : m.rowsets) {
       auto& entry = [&] () -> itemInfo& {
@@ -667,7 +667,7 @@ void updateMaxIskHaulData(sqlite::dbPtr& eve, sqlite::stmtPtr& insertStmt, const
     
     auto rc = sqlite::step(lastUpdateStmt);
     if (rc == SQLITE_ROW) {
-      auto lastUpdate = sqlite::column<int64_t>(lastUpdateStmt, 0);
+      auto lastUpdate = sqlite::column<std::int64_t>(lastUpdateStmt, 0);
       //std::cout << "lastUpdate = " << lastUpdate << '\n';
       if (lastUpdate >= rs.generatedAt.time_since_epoch().count()) {
         //std::cout << "too old\n";
@@ -938,9 +938,9 @@ int main(int argc, char** argv) {
 //  //Transaction asdf(db.beginTransactionStmt, db.endTransactionStmt);
 //  // auto rc = sqlite::step(db.databaseListStmt);
 //  // while (rc == SQLITE_ROW) {
-//  //   auto id = sqlite::column<int64_t>(db.databaseListStmt, 0);
-//  //   auto name = sqlite::column<const uint8_t*>(db.databaseListStmt, 1);
-//  //   auto file = sqlite::column<const uint8_t*>(db.databaseListStmt, 2);
+//  //   auto id = sqlite::column<std::int64_t>(db.databaseListStmt, 0);
+//  //   auto name = sqlite::column<const std::uint8_t*>(db.databaseListStmt, 1);
+//  //   auto file = sqlite::column<const std::uint8_t*>(db.databaseListStmt, 2);
 //
 //  //   std::cout << id << " | " << name << " | " << file << '\n';
 //  //   rc = sqlite::step(db.databaseListStmt);
@@ -1001,13 +1001,13 @@ int main(int argc, char** argv) {
   auto itemCountStmt = sqlite::prepare(eve, "select count(*) from invTypes;");
   auto rc = sqlite::step(itemCountStmt);
   assert(rc == SQLITE_ROW);
-  auto itemCount = sqlite::column<int64_t>(itemCountStmt, 0);
+  auto itemCount = sqlite::column<std::int64_t>(itemCountStmt, 0);
   auto items = sqlite::prepare(eve, "select typeID, typeName, volume from invTypes;");
   std::unordered_map<std::size_t,std::string> itemName(itemCount);
   std::unordered_map<std::size_t,double> itemVolume(itemCount);
   while(sqlite::step(items) == SQLITE_ROW) {
-    auto id = sqlite::column<int64_t>(items, 0);
-    auto name = std::string((const char*)sqlite::column<const uint8_t*>(items, 1));
+    auto id = sqlite::column<std::int64_t>(items, 0);
+    auto name = std::string((const char*)sqlite::column<const std::uint8_t*>(items, 1));
     auto volume = sqlite::column<double>(items, 2);
     itemName.insert({id, name});
     itemVolume.insert({id, volume});
@@ -1203,13 +1203,13 @@ int main2(int argc, char** args) {
   auto itemCountStmt = sqlite::prepare(eve, "select count(*) from invTypes;");
   auto rc = sqlite::step(itemCountStmt);
   assert(rc == SQLITE_ROW);
-  auto itemCount = sqlite::column<int64_t>(itemCountStmt, 0);
+  auto itemCount = sqlite::column<std::int64_t>(itemCountStmt, 0);
   auto items = sqlite::prepare(eve, "select typeID, typeName, volume from invTypes;");
   std::unordered_map<std::size_t,std::string> itemName(itemCount);
   std::unordered_map<std::size_t,double> itemVolume(itemCount);
   while(sqlite::step(items) == SQLITE_ROW) {
-    auto id = sqlite::column<int64_t>(items, 0);
-    auto name = std::string((const char*)sqlite::column<const uint8_t*>(items, 1));
+    auto id = sqlite::column<std::int64_t>(items, 0);
+    auto name = std::string((const char*)sqlite::column<const std::uint8_t*>(items, 1));
     auto volume = sqlite::column<double>(items, 2);
     itemName.insert({id, name});
     itemVolume.insert({id, volume});
@@ -1217,13 +1217,13 @@ int main2(int argc, char** args) {
   
   auto ordersStmt = sqlite::prepare(eve, "select * from orders;");
   while(sqlite::step(ordersStmt) == SQLITE_ROW) {
-    auto orderID = sqlite::column<int64_t>(ordersStmt, 0);
-    auto typeID = sqlite::column<int64_t>(ordersStmt, 1);
-    bool bid = sqlite::column<int64_t>(ordersStmt, 2);
+    auto orderID = sqlite::column<std::int64_t>(ordersStmt, 0);
+    auto typeID = sqlite::column<std::int64_t>(ordersStmt, 1);
+    bool bid = sqlite::column<std::int64_t>(ordersStmt, 2);
     auto price = sqlite::column<double>(ordersStmt, 3);
-    auto volRemaining = sqlite::column<int64_t>(ordersStmt, 4);
-    auto stationID = sqlite::column<int64_t>(ordersStmt, 5);
-    auto availableUntil = sqlite::column<int64_t>(ordersStmt, 6);
+    auto volRemaining = sqlite::column<std::int64_t>(ordersStmt, 4);
+    auto stationID = sqlite::column<std::int64_t>(ordersStmt, 5);
+    auto availableUntil = sqlite::column<std::int64_t>(ordersStmt, 6);
     auto& station = maxIskHaul::stations[stationID];
     auto& orders = bid ? station.buyOrders : station.sellOrders;
     auto& order = orders[typeID].orders[orderID];

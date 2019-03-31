@@ -89,7 +89,7 @@ static void handleRequest(Poco::Net::HTTPClientSession& client, const Request& r
 }
 
 struct HTTPSRequestHandler::impl {
-    impl(std::string host, uint16_t port) : session(std::move(host), port, context), work(ioService), thread([&] { ioService.run(); }) {
+    impl(std::string host, std::uint16_t port) : session(std::move(host), port, context), work(ioService), thread([&] { ioService.run(); }) {
         session.setKeepAlive(true);
         //session.setTimeout(Timespan(1800,0));
     }
@@ -112,7 +112,7 @@ struct HTTPSRequestHandler::impl {
     std::thread thread;
 };
 
-HTTPSRequestHandler::HTTPSRequestHandler(std::string host, uint16_t port) : pimpl(new impl(std::move(host), port)) {}
+HTTPSRequestHandler::HTTPSRequestHandler(std::string host, std::uint16_t port) : pimpl(new impl(std::move(host), port)) {}
 
 HTTPSRequestHandler::~HTTPSRequestHandler() = default;
 
@@ -158,7 +158,7 @@ void ignore(const Response&, std::istream& s) {
 
 struct HTTPSRequestHandlerGroup::impl {
 public:
-    impl(std::size_t n, const std::string& host, uint16_t port) : next() {
+    impl(std::size_t n, const std::string& host, std::uint16_t port) : next() {
         handlers.reserve(n);
         for (auto i = 0u; i < n; ++i)
             handlers.emplace_back(host, port);
@@ -187,7 +187,7 @@ private:
     std::vector<HTTPSRequestHandler> handlers;
 };
 
-HTTPSRequestHandlerGroup::HTTPSRequestHandlerGroup(std::size_t n, const std::string& host, uint16_t port) : pimpl(std::make_unique<impl>(n, host, port)) {}
+HTTPSRequestHandlerGroup::HTTPSRequestHandlerGroup(std::size_t n, const std::string& host, std::uint16_t port) : pimpl(std::make_unique<impl>(n, host, port)) {}
 HTTPSRequestHandlerGroup::~HTTPSRequestHandlerGroup() = default;
 
 void HTTPSRequestHandlerGroup::postRequest(const std::shared_ptr<RequestWithResponseHandler>& request, const std::string& data) { pimpl->postRequest(request, data); }

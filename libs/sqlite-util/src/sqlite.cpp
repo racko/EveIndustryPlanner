@@ -95,10 +95,10 @@ struct bind_impl<std::string> {
 };
 
 template <>
-struct bind_impl<uint64_t> {
-    static void bind(const stmtPtr& stmt, int i, uint64_t v) {
+struct bind_impl<std::uint64_t> {
+    static void bind(const stmtPtr& stmt, int i, std::uint64_t v) {
         // std::cout << "binding column " << i << " to value \"" << v << "\"\n";
-        auto rc = sqlite3_bind_int64(stmt.get(), i, boost::numeric_cast<int64_t>(v));
+        auto rc = sqlite3_bind_int64(stmt.get(), i, boost::numeric_cast<std::int64_t>(v));
         // std::cout << "bind returned " << rc << '\n';
         if (rc)
             throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + ":  " + sqlite3_errstr(rc) + " (" +
@@ -107,10 +107,10 @@ struct bind_impl<uint64_t> {
 };
 
 template <>
-struct bind_impl<uint32_t> {
-    static void bind(const stmtPtr& stmt, int i, uint32_t v) {
+struct bind_impl<std::uint32_t> {
+    static void bind(const stmtPtr& stmt, int i, std::uint32_t v) {
         // std::cout << "binding column " << i << " to value \"" << v << "\"\n";
-        auto rc = sqlite3_bind_int64(stmt.get(), i, int64_t(v));
+        auto rc = sqlite3_bind_int64(stmt.get(), i, std::int64_t(v));
         // std::cout << "bind returned " << rc << '\n';
         if (rc)
             throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + ":  " + sqlite3_errstr(rc) + " (" +
@@ -137,9 +137,9 @@ T column(const stmtPtr& stmt, int i) {
     template cpp_type column<cpp_type>(const stmtPtr&, int);
 
 IMPLEMENT_COLUMN(double, double)
-IMPLEMENT_COLUMN(int32_t, int)
-IMPLEMENT_COLUMN(int64_t, int64)
-IMPLEMENT_COLUMN(const uint8_t*, text)
+IMPLEMENT_COLUMN(std::int32_t, int)
+IMPLEMENT_COLUMN(std::int64_t, int64)
+IMPLEMENT_COLUMN(const std::uint8_t*, text)
 
 template <>
 struct column_impl<std::string> {
@@ -149,7 +149,7 @@ struct column_impl<std::string> {
         // following types the behavior is undefined:
         // ... a char, unsigned char, or std::byte type.
         // (see https://stackoverflow.com/a/16261758)
-        return std::string(reinterpret_cast<const char*>(sqlite::column<const uint8_t*>(stmt, i)));
+        return std::string(reinterpret_cast<const char*>(sqlite::column<const std::uint8_t*>(stmt, i)));
     }
 };
 template std::string column<std::string>(const stmtPtr&, int);
@@ -169,9 +169,9 @@ template std::string column<std::string>(const stmtPtr&, int);
 IMPLEMENT_BIND(double, double)
 IMPLEMENT_BIND(float, double)
 IMPLEMENT_BIND(bool, int)
-IMPLEMENT_BIND(int16_t, int)
-IMPLEMENT_BIND(int32_t, int)
-IMPLEMENT_BIND(int64_t, int64)
+IMPLEMENT_BIND(std::int16_t, int)
+IMPLEMENT_BIND(std::int32_t, int)
+IMPLEMENT_BIND(std::int64_t, int64)
 
 template void bind<std::size_t>(const stmtPtr&, int, const std::size_t&);
 template void bind<std::string>(const stmtPtr&, int, const std::string&);

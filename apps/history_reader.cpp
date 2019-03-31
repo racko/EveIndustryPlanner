@@ -36,9 +36,9 @@ static constexpr const char* ANSI_CLEAR_LINE = "\033[2K";
 //        auto result = strptime(item["date"].asString().c_str(), "%Y-%m-%d", &time);
 //        if (result == nullptr)
 //            throw std::runtime_error("parse failed");
-//        uint64_t volume = item["volume"].asUInt64();
+//        std::uint64_t volume = item["volume"].asUInt64();
 //        auto then_time_t = timegm(&time);
-//        uint64_t orderCount = item["orderCount"].asUInt64();
+//        std::uint64_t orderCount = item["orderCount"].asUInt64();
 //        auto avg = item["avgPrice"].asDouble();
 //        auto low = item["lowPrice"].asDouble();
 //        auto high = item["highPrice"].asDouble();
@@ -95,13 +95,13 @@ void sigint_handler(int) {
 }
 
 int32_t to_int32(std::size_t n) {
-    assert(n <= static_cast<std::size_t>(std::numeric_limits<int32_t>::max()));
-    return static_cast<int32_t>(n);
+    assert(n <= static_cast<std::size_t>(std::numeric_limits<std::int32_t>::max()));
+    return static_cast<std::int32_t>(n);
 }
 
 uint32_t to_uint32(std::size_t n) {
-    assert(n <= static_cast<std::size_t>(std::numeric_limits<uint32_t>::max()));
-    return static_cast<uint32_t>(n);
+    assert(n <= static_cast<std::size_t>(std::numeric_limits<std::uint32_t>::max()));
+    return static_cast<std::uint32_t>(n);
 }
 
 class HistoryHandler {
@@ -237,9 +237,9 @@ class HistoryHandler {
             HistoryRequest& parent;
             std::size_t type;
             Json::Value item;
-            uint64_t volume;
+            std::uint64_t volume;
             time_t then_time_t;
-            uint64_t orderCount;
+            std::uint64_t orderCount;
             double avg;
             double low;
             double high;
@@ -313,9 +313,9 @@ void saveHistoriesST(const sqlite::dbPtr& db, const std::vector<std::size_t>& ty
                 auto result = strptime(item["date"].asString().c_str(), "%Y-%m-%d", &time);
                 if (result == nullptr)
                     throw std::runtime_error("parse failed");
-                uint64_t volume = item["volume"].asUInt64();
+                std::uint64_t volume = item["volume"].asUInt64();
                 auto then_time_t = timegm(&time);
-                uint64_t orderCount = item["orderCount"].asUInt64();
+                std::uint64_t orderCount = item["orderCount"].asUInt64();
                 auto avg = item["avgPrice"].asDouble();
                 auto low = item["lowPrice"].asDouble();
                 auto high = item["highPrice"].asDouble();

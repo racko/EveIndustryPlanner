@@ -36,35 +36,35 @@ struct Data {
 DefData(Buy, std::int8_t);        // 1 (int8, 0 or 1)
 DefData(Issued, std::uint32_t);   // 4 (uint32 timestamp)
 DefData(Price, double);           // 8
-DefData(VolumeEntered, uint32_t); // 4
-DefData(StationId, uint64_t);     // 8: not written (Jita only)
-DefData(Volume, uint32_t);        // 4
+DefData(VolumeEntered, std::uint32_t); // 4
+DefData(StationId, std::uint64_t);     // 8: not written (Jita only)
+DefData(Volume, std::uint32_t);        // 4
 DefData(Range, std::int8_t);      // 1: see _range_to_int comment
-DefData(MinVolume, uint32_t);     // 4
-DefData(Duration, uint32_t);      // 4
-DefData(Type, uint32_t);          // 4
-DefData(Id, uint64_t);            // 8
-//DefData(Index, uint32_t);
+DefData(MinVolume, std::uint32_t);     // 4
+DefData(Duration, std::uint32_t);      // 4
+DefData(Type, std::uint32_t);          // 4
+DefData(Id, std::uint64_t);            // 8
+//DefData(Index, std::uint32_t);
 // 50 Bytes
 
 // Static Data
 //
-// DefData(Id, uint64_t);             // 8
+// DefData(Id, std::uint64_t);             // 8
 // DefData(Buy, bool);                // 1 (int8, 0 or 1)
-// DefData(VolumeEntered, uint32_t);  // 4
-// DefData(StationId, uint64_t);      // 0: not written (Jita only)
+// DefData(VolumeEntered, std::uint32_t);  // 4
+// DefData(StationId, std::uint64_t);      // 0: not written (Jita only)
 // DefData(Range, std::string_view);  // 1: see _range_to_int comment
-// DefData(MinVolume, uint32_t);      // 4
-// DefData(Duration, uint32_t);       // 4
-// DefData(Type, uint32_t);           // 4
+// DefData(MinVolume, std::uint32_t);      // 4
+// DefData(Duration, std::uint32_t);       // 4
+// DefData(Type, std::uint32_t);           // 4
 // 26 Bytes
 
 // Dynamic Data
 //
-// DefData(Id, uint64_t);             // 8
+// DefData(Id, std::uint64_t);             // 8
 // DefData(Issued, std::string_view); // 4 (uint32 timestamp) ... shouldn't write it ... don't care
 // DefData(Price, double);            // 8
-// DefData(Volume, uint32_t);         // 4
+// DefData(Volume, std::uint32_t);         // 4
 // 24 Bytes
 
 DefData(ViewTime, std::uint32_t);

@@ -44,12 +44,12 @@ void saveHistories(const std::unordered_map<std::size_t, double>& avgPrices, con
             datestr >> std::get_time(&time, "%Y-%m-%d");
             if (!datestr)
                 throw std::runtime_error("parse failed");
-            uint64_t volume = item["volume"].asUInt64();
+            std::uint64_t volume = item["volume"].asUInt64();
             datestr.seekg(0);
             datestr.seekp(0);
             auto then_time_t = std::mktime(&time);
             auto then = std::chrono::system_clock::from_time_t(then_time_t);
-            uint64_t orderCount = item["orderCount"].asUInt64();
+            std::uint64_t orderCount = item["orderCount"].asUInt64();
             auto avg = item["avgPrice"].asDouble();
             auto low = item["lowPrice"].asDouble();
             auto high = item["highPrice"].asDouble();

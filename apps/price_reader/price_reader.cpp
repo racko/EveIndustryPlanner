@@ -19,7 +19,7 @@ std::vector<Price> loadPrices() {
     std::cout << "building map. " << std::flush;
     TIME(for (const auto& e
               : root["items"]) {
-        uint64_t id = e["type"]["id"].asUInt64();
+        std::uint64_t id = e["type"]["id"].asUInt64();
         const auto& name = e["type"]["name"].asString();
         const auto& adj = e["adjustedPrice"];
         const auto& avg = e["averagePrice"];
@@ -43,7 +43,7 @@ std::vector<std::pair<std::size_t, std::string>> loadTypes() {
         TIME(for (const auto& e
                   : root["items"]) {
             const auto& type = e["type"];
-            uint64_t id = type["id"].asUInt64();
+            std::uint64_t id = type["id"].asUInt64();
             const auto& name = type["name"].asString();
             types.emplace_back(id, std::move(name));
         });
