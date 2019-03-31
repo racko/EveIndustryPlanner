@@ -1,0 +1,2 @@
+add_library(Finalizer INTERFACE)
+set_property(TARGET Finalizer PROPERTY INTERFACE_INCLUDE_DIRECTORIES ${CMAKE_CURRENT_SOURCE_DIR}/include)

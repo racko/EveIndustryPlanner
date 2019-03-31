@@ -1,0 +1,37 @@
+add_executable(main
+  src/assets.cpp
+  src/blueprint_efficiency.cpp
+  src/blueprint_selection.cpp
+  src/blueprint_with_efficiency.cpp
+  src/facility_costs.cpp
+  src/filter_jobs.cpp
+  src/industry_limits.cpp
+  src/input_values.cpp
+  src/job_values.cpp
+  src/jobs.cpp
+  src/main.cpp
+  src/market_data.cpp
+  src/names.cpp
+  src/order.cpp
+  src/planner.cpp
+  src/production.cpp
+  src/queries.cpp
+  src/settings.cpp
+  src/skill_settings.cpp
+  src/skills.cpp
+  src/stuff.cpp
+  src/trade_costs.cpp
+  src/types.cpp
+  src/workspace.cpp
+)
+
+target_link_libraries(main
+  PRIVATE
+    infinity::infinity
+    jsoncpp::jsoncpp
+    libsoplex
+    profiling
+    pugixml
+    sqlite-util
+    yaml-cpp
+)

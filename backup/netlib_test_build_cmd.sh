@@ -1,0 +1,1 @@
+g++ -std=c++1z -Wall -Wpedantic -Wextra -Wconversion -isystem/usr/include/boost netlib_backup.cpp -lcppnetlib-uri -lcppnetlib-server-parsers -lcppnetlib-client-connections -lboost_system -lboost_thread -lpthread -lssl -lcrypto -o netlib_test

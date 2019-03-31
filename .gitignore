@@ -1,0 +1,11 @@
+build
+build_debug
+bazel-bin
+bazel-emdr
+bazel-genfiles
+bazel-out
+bazel-testlogs
+__pycache__
+*.pyc
+compile_commands.json
+apps/pricing/.ipynb_checkpoints/
