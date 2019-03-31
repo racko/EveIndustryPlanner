@@ -17,8 +17,8 @@ struct Types;
 struct Stuff {
     Stuff(const Names& names, const Assets& assets, const Types& types, const IndustryLimits& industry);
 
-    const Resource_Base::Ptr& getResource(size_t id);
-    const Resource_Base::Ptr& getBPO(size_t id);
+    const Resource_Base::Ptr& getResource(std::size_t id);
+    const Resource_Base::Ptr& getBPO(std::size_t id);
     const Resource_Base::Ptr& getBPC(const BlueprintWithEfficiency& bpwe);
 
     static const std::vector<BlueprintEfficiency> bpes;

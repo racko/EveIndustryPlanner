@@ -25,7 +25,7 @@ namespace std {
 template<>
 struct hash<BlueprintWithEfficiency> {
     typedef BlueprintWithEfficiency argument_type;
-    typedef size_t result_type;
+    typedef std::size_t result_type;
 
     result_type operator()(argument_type const& bp) const;
 };

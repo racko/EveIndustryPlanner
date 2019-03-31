@@ -16,15 +16,15 @@ class Resource_Base {
     virtual ~Resource_Base() = default;
     const std::string& getName() const { return name; }
     const std::string& getFullName() const { return fullName; }
-    // void setRowID(size_t r) {
+    // void setRowID(std::size_t r) {
     //    rowID = r;
     //}
-    // size_t getRowID() const {
+    // std::size_t getRowID() const {
     //    return rowID;
     //}
     double getLowerLimit() const { return lower_limit; }
     double getUpperLimit() const { return upper_limit; }
-    size_t rowID;
+    std::size_t rowID;
 
   private:
     double lower_limit;

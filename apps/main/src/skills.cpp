@@ -4,15 +4,15 @@
 #include <iostream>
 #include <pugixml.hpp>
 
-bool Skills::isRacialEncryptionSkill(size_t skill) const {
+bool Skills::isRacialEncryptionSkill(std::size_t skill) const {
     return racialEncryptionSkills.find(skill) != racialEncryptionSkills.end();
 }
 
-bool Skills::isAdvancedScienceSkill(size_t skill) const {
+bool Skills::isAdvancedScienceSkill(std::size_t skill) const {
     return advancedScienceSkills.find(skill) != advancedScienceSkills.end();
 }
 
-bool Skills::isManufacturingTimeModifierScienceSkill(size_t skill) const {
+bool Skills::isManufacturingTimeModifierScienceSkill(std::size_t skill) const {
     return manufacturingTimeModifierSkills.find(skill) != manufacturingTimeModifierSkills.end();
 }
 
@@ -53,14 +53,14 @@ void Skills::loadSkillLevels(const Names& names) {
     cpu = double((1 + interplanetaryConsolidation)) * (cpuLevels[commandCenterUpgrades] - 2.0 * (3600.0 + 22.0));
     power = double((1 + interplanetaryConsolidation)) * (powerLevels[commandCenterUpgrades] - 2.0 * (700 + 15.0));
 
-    racialEncryptionSkills = std::unordered_set<size_t> {
+    racialEncryptionSkills = std::unordered_set<std::size_t> {
         names.getTypeId("Amarr Encryption Methods"),
         names.getTypeId("Caldari Encryption Methods"),
         names.getTypeId("Gallente Encryption Methods"),
         names.getTypeId("Minmatar Encryption Methods"),
         names.getTypeId("Sleeper Encryption Methods")
     };
-    advancedScienceSkills = std::unordered_set<size_t> {
+    advancedScienceSkills = std::unordered_set<std::size_t> {
         names.getTypeId("Amarr Starship Engineering"),
         names.getTypeId("Caldari Starship Engineering"),
         names.getTypeId("Gallente Starship Engineering"),
@@ -83,7 +83,7 @@ void Skills::loadSkillLevels(const Names& names) {
         names.getTypeId("Core Subsystem Technology"),
         names.getTypeId("Propulsion Subsystem Technology"),
     };
-    manufacturingTimeModifierSkills = std::unordered_set<size_t> {
+    manufacturingTimeModifierSkills = std::unordered_set<std::size_t> {
         names.getTypeId("Advanced Small Ship Construction"),
         names.getTypeId("Advanced Medium Ship Construction"),
         names.getTypeId("Advanced Large Ship Construction"),
@@ -91,7 +91,7 @@ void Skills::loadSkillLevels(const Names& names) {
     };
 }
 
-size_t Skills::getSkillLevel(size_t skill) const {
+std::size_t Skills::getSkillLevel(std::size_t skill) const {
     if (overrideSkills)
         return 5;
     auto l = skillLevels.find(skill);

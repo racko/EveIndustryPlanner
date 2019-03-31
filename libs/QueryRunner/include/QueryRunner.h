@@ -27,7 +27,7 @@ class QueryRunner {
 
 class QueryRunnerGroup {
   public:
-    QueryRunnerGroup(size_t n, const char* path, const std::string& query);
+    QueryRunnerGroup(std::size_t n, const char* path, const std::string& query);
 
     void postQuery(std::function<void(const sqlite::dbPtr&, const sqlite::stmtPtr&)> f);
 
@@ -37,7 +37,7 @@ class QueryRunnerGroup {
     QueryRunnerGroup& operator=(QueryRunnerGroup&&) = default;
 
   private:
-    size_t next;
+    std::size_t next;
     std::vector<QueryRunner> handlers;
 };
 

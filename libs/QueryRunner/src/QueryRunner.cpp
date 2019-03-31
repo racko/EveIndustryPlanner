@@ -43,7 +43,7 @@ void QueryRunnerGroup::postQuery(std::function<void(const sqlite::dbPtr&, const 
     next = (next + 1) % handlers.size();
 }
 
-QueryRunnerGroup::QueryRunnerGroup(size_t n, const char* path, const std::string& query) : next() {
+QueryRunnerGroup::QueryRunnerGroup(std::size_t n, const char* path, const std::string& query) : next() {
     for (auto i = 0u; i < n; ++i)
         handlers.emplace_back(path, query);
 }

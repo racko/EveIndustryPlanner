@@ -128,30 +128,30 @@ soplex::SoPlex& Planner::getLP(double buyIn) {
         }
         for (auto i = 1; i < dual.dim(); ++i) {
             if (std::fabs(dual[i]) > 1e-16) {
-                std::cout << resources.at(size_t(i) - 1u)->getFullName() << ": " << dual[i] << '\n';
+                std::cout << resources.at(std::size_t(i) - 1u)->getFullName() << ": " << dual[i] << '\n';
             }
         }
         // std::cout << "extra constraint: " << dual[dual.dim()-1] << '\n';
         std::cout << "Primal solution is \n";
         for (auto i = 0; i < prim.dim(); ++i) {
             if (std::fabs(prim[i]) > 1e-16) {
-                std::cout << jobs.at(size_t(i))->getFullName() << "," << prim[i] << "," << lp.objReal(i) << '\n';
+                std::cout << jobs.at(std::size_t(i))->getFullName() << "," << prim[i] << "," << lp.objReal(i) << '\n';
             }
         }
-        std::multimap<size_t, std::pair<size_t, std::string>> shoppinglist;
-        std::multimap<size_t, std::pair<size_t, std::string>> sell_list;
-        std::unordered_map<size_t, std::string> stations;
+        std::multimap<std::size_t, std::pair<std::size_t, std::string>> shoppinglist;
+        std::multimap<std::size_t, std::pair<std::size_t, std::string>> sell_list;
+        std::unordered_map<std::size_t, std::string> stations;
         stations.reserve(100);
         for (auto i = 0; i < prim.dim(); ++i) {
             if (std::fabs(prim[i]) > 1e-16) {
-                if (const auto& buy_job = dynamic_cast<const Buy*>(jobs.at(size_t(i)).get())) {
+                if (const auto& buy_job = dynamic_cast<const Buy*>(jobs.at(std::size_t(i)).get())) {
                     auto station = buy_job->stationID;
                     auto count = std::llround(prim[i]);
 
                     const auto& name = buy_job->resource->getFullName();
                     shoppinglist.emplace(station, std::make_pair(count, name));
                     stations.emplace(station, buy_job->stationName);
-                } else if (const auto& sell_job = dynamic_cast<const Sell*>(jobs.at(size_t(i)).get())) {
+                } else if (const auto& sell_job = dynamic_cast<const Sell*>(jobs.at(std::size_t(i)).get())) {
                     auto station = sell_job->stationID;
                     auto count = std::llround(prim[i]);
 

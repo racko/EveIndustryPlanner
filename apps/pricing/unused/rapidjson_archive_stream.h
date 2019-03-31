@@ -32,13 +32,13 @@ class rapidjson_archive_stream {
 
     //! Get the current read cursor.
     //! \return Number of characters read from start.
-    size_t Tell() const {
+    std::size_t Tell() const {
         // we do it like this instead of increasing tell with every call to Take() because Take() gets called once per
         // character while Tell() only get's called to report error locations (And in ParseNumber it does startoffset =
         // Tell();
         // ...
         // length = Tell() - startoffset; )
-        return tell - static_cast<size_t>(stop - data);
+        return tell - static_cast<std::size_t>(stop - data);
     }
 
     // these are required because rapidjson does not sfinae away the calls if they are not requested ...
@@ -46,12 +46,12 @@ class rapidjson_archive_stream {
     Ch* PutBegin();
     void Put(Ch c);
     void Flush();
-    size_t PutEnd(Ch* begin);
+    std::size_t PutEnd(Ch* begin);
 
   private:
-    size_t GetNextBlock() {
+    std::size_t GetNextBlock() {
         const void* start;
-        size_t size;
+        std::size_t size;
         [[maybe_unused]] la_int64_t offset;
         auto status = archive_read_data_block(p_, &start, &size, &offset);
 
@@ -84,5 +84,5 @@ class rapidjson_archive_stream {
     ::archive* p_;
     const Ch* data;
     const Ch* stop;
-    size_t tell = 0;
+    std::size_t tell = 0;
 };

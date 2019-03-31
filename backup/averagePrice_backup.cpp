@@ -1,4 +1,4 @@
-void saveHistories(const std::unordered_map<size_t, double>& avgPrices, const sqlite::dbPtr& db, const std::string& access_token) {
+void saveHistories(const std::unordered_map<std::size_t, double>& avgPrices, const sqlite::dbPtr& db, const std::string& access_token) {
     using namespace soplex;
     std::cout << "Volumes:\n";
     auto insertHistory = sqlite::prepare(db, "insert or ignore into history values(?, ?, ?, ?, ?, ?, ?, ?);");

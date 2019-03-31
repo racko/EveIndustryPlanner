@@ -7,11 +7,11 @@
 #include <yaml-cpp/yaml.h>
 
 struct station {
-    station(size_t id_, std::string name_, size_t region_) : id(id_), name(std::move(name_)), region(region_) {}
+    station(std::size_t id_, std::string name_, std::size_t region_) : id(id_), name(std::move(name_)), region(region_) {}
 
-    size_t id;
+    std::size_t id;
     std::string name;
-    size_t region;
+    std::size_t region;
 };
 
 std::vector<station> loadStations() {

@@ -24,11 +24,11 @@ struct Types {
 
     void registerBlueprint(unsigned blueprintId, const YAML::Node& b, const Groups& groups);
 
-    void reserve(size_t n);
+    void reserve(std::size_t n);
 
     void isConsistent() const;
 
-    const std::unordered_map<size_t,size_t>& getBlueprints() const { return bpToProduct; }
+    const std::unordered_map<std::size_t,std::size_t>& getBlueprints() const { return bpToProduct; }
 
     TechLevel getBPTechLevel(TypeID t) const;
     TechLevel getProductTechLevel(TypeID t) const;
@@ -51,16 +51,16 @@ private:
     static YAML::Node get_invention_products(const YAML::Node& activities);
     static YAML::Node get_manufacturing_products(const YAML::Node& activities);
 
-    std::unordered_set<size_t> blueprints;
-    std::unordered_set<size_t> manufacturingOutputs;
-    std::unordered_set<size_t> t2_blueprints;
-    std::unordered_set<size_t> t1_blueprints;
-    std::unordered_set<size_t> ancient_relics;
-    std::unordered_set<size_t> t3_blueprints;
-    std::unordered_map<size_t,size_t> t3BPToRelic;
-    std::unordered_map<size_t,size_t> t2BPToT1BP;
-    std::unordered_map<size_t,size_t> bpToProduct;
-    std::unordered_map<size_t,size_t> productToBP;
-    std::unordered_multimap<size_t,size_t> t1BPToT2BPs;
-    std::unordered_multimap<size_t,size_t> relicToT3BPs;
+    std::unordered_set<std::size_t> blueprints;
+    std::unordered_set<std::size_t> manufacturingOutputs;
+    std::unordered_set<std::size_t> t2_blueprints;
+    std::unordered_set<std::size_t> t1_blueprints;
+    std::unordered_set<std::size_t> ancient_relics;
+    std::unordered_set<std::size_t> t3_blueprints;
+    std::unordered_map<std::size_t,std::size_t> t3BPToRelic;
+    std::unordered_map<std::size_t,std::size_t> t2BPToT1BP;
+    std::unordered_map<std::size_t,std::size_t> bpToProduct;
+    std::unordered_map<std::size_t,std::size_t> productToBP;
+    std::unordered_multimap<std::size_t,std::size_t> t1BPToT2BPs;
+    std::unordered_multimap<std::size_t,std::size_t> relicToT3BPs;
 };

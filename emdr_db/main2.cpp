@@ -71,7 +71,7 @@ namespace rapidjson {
   }
 
   template<typename T>
-  T get(const Value& v, size_t i) {
+  T get(const Value& v, std::size_t i) {
     if (!v.IsArray())
       throw std::runtime_error(std::string(__PRETTY_FUNCTION__) + ": Not an array");
     if (v.Size() <= i)
@@ -105,7 +105,7 @@ IMPLEMENT_GETTER(int32_t, Int)
 IMPLEMENT_GETTER(double, Double)
 IMPLEMENT_GETTER(bool, Bool)
 
-void printJSON(std::ostream& s, const rapidjson::Value& v, size_t indent) {
+void printJSON(std::ostream& s, const rapidjson::Value& v, std::size_t indent) {
     switch (v.GetType()) {
     case rapidjson::kNullType:
         s << "Null";
@@ -382,7 +382,7 @@ struct emdr_db {
       std::cout << __PRETTY_FUNCTION__ << ":  " << sqlite3_errstr(rc) << " (" << rc << ")\n";
   }
 
-  size_t insertGenerator(const Generator& g) {
+  std::size_t insertGenerator(const Generator& g) {
     using namespace sqlite;
     // std::cout << __PRETTY_FUNCTION__ << '\n';
     sqlite::bind(getGeneratorStmt, 1, g.name);
@@ -401,7 +401,7 @@ struct emdr_db {
     return sqlite3_last_insert_rowid(db.get());
   }
   
-  size_t insertUploadKey(const Key& k) {
+  std::size_t insertUploadKey(const Key& k) {
     // std::cout << __PRETTY_FUNCTION__ << '\n';
     using namespace sqlite;
     sqlite::bind(getUploadKeyStmt, 1, k.name);
@@ -424,11 +424,11 @@ struct emdr_db {
   const sqlite::stmtPtr& getStmt();
   
   template<typename T>
-  void insert(const T& x, size_t headerID) {
+  void insert(const T& x, std::size_t headerID) {
     insert_impl<T>::insert(getStmt<T>(), x, headerID);
   }
   
-  void associateUploadKey(size_t uploadKeyID, size_t messageID) {
+  void associateUploadKey(std::size_t uploadKeyID, std::size_t messageID) {
     using namespace sqlite;
     // std::cout << __PRETTY_FUNCTION__ << '\n';
     sqlite::bind(insertUploadKeyAssociationStmt, 1, uploadKeyID);
@@ -438,7 +438,7 @@ struct emdr_db {
   }
   
   template<typename T>
-  size_t insertRowsetHeader(const Rowset<T>& r, size_t messageID) {
+  std::size_t insertRowsetHeader(const Rowset<T>& r, std::size_t messageID) {
     using namespace sqlite;
     // std::cout << __PRETTY_FUNCTION__ << '\n';
     sqlite::bind(insertRowsetHeaderStmt, 1, messageID);
@@ -451,7 +451,7 @@ struct emdr_db {
   }
   
   template<typename T>
-  void insertRowset(const Rowset<T>& r, size_t messageID) {
+  void insertRowset(const Rowset<T>& r, std::size_t messageID) {
     // std::cout << __PRETTY_FUNCTION__ << '\n';
     auto headerID = insertRowsetHeader(r, messageID);
     for (const auto& row : r.x)
@@ -459,7 +459,7 @@ struct emdr_db {
   }
   
   template<typename T>
-  size_t insertMessageHeader(const Message<T>& m) {
+  std::size_t insertMessageHeader(const Message<T>& m) {
     // std::cout << __PRETTY_FUNCTION__ << '\n';
     using namespace sqlite;
     auto generatorID = insertGenerator(m.generator);
@@ -535,7 +535,7 @@ struct emdr_db {
 
 template<>
 struct emdr_db::insert_impl<Orders> {
-  static void insert(const sqlite::stmtPtr& stmt, const Orders& orders, size_t headerID) {
+  static void insert(const sqlite::stmtPtr& stmt, const Orders& orders, std::size_t headerID) {
     // std::cout << __PRETTY_FUNCTION__ << '\n';
     using namespace sqlite;
     sqlite::bind(stmt, 1, orders.orderID);
@@ -567,7 +567,7 @@ const sqlite::stmtPtr& emdr_db::getStmt<History>() {
 
 template<>
 struct emdr_db::insert_impl<History> {
-  static void insert(const sqlite::stmtPtr& stmt, const History& history, size_t headerID) {
+  static void insert(const sqlite::stmtPtr& stmt, const History& history, std::size_t headerID) {
     // std::cout << __PRETTY_FUNCTION__ << '\n';
     using namespace sqlite;
     sqlite::bind(stmt, 1, headerID);
@@ -633,27 +633,27 @@ std::unordered_map<uint64_t, itemInfo> maxPriceDiff(const Message<Orders>& m) {
 
 namespace maxIskHaul {
   struct order {
-    size_t quantity;
+    std::size_t quantity;
     double price;
   };
   
   struct orderList {
-    std::unordered_map<size_t,order> orders;
+    std::unordered_map<std::size_t,order> orders;
   };
 
   struct stationData {
-    std::unordered_map<size_t,orderList> buyOrders;
-    std::unordered_map<size_t,orderList> sellOrders;
+    std::unordered_map<std::size_t,orderList> buyOrders;
+    std::unordered_map<std::size_t,orderList> sellOrders;
   };
 
-  std::unordered_map<size_t,stationData> stations;
-  std::unordered_map<size_t, std::set<size_t>> freshData;
+  std::unordered_map<std::size_t,stationData> stations;
+  std::unordered_map<std::size_t, std::set<std::size_t>> freshData;
   std::mutex stationMutex;
 
 void updateMaxIskHaulData(sqlite::dbPtr& eve, sqlite::stmtPtr& insertStmt, const Message<Orders>& m) {
   for (const auto& rs : m.rowsets) {
     auto itemId = rs.typeID;
-    std::set<size_t> stationIDs;
+    std::set<std::size_t> stationIDs;
     
     for (const auto& o : rs.x) {
       stationIDs.insert(o.stationID);
@@ -722,8 +722,8 @@ void updateMaxIskHaulData(sqlite::dbPtr& eve, sqlite::stmtPtr& insertStmt, const
   }
 }
 
-void helper(size_t stationA_, const stationData& stationA, const std::set<size_t>& itemsA, size_t stationB_, const stationData& stationB, const std::set<size_t>& itemsB, const std::unordered_map<size_t,double>& volume, const std::unordered_map<size_t,std::string>& name) {
-  std::vector<size_t> intersection;
+void helper(std::size_t stationA_, const stationData& stationA, const std::set<std::size_t>& itemsA, std::size_t stationB_, const stationData& stationB, const std::set<std::size_t>& itemsB, const std::unordered_map<std::size_t,double>& volume, const std::unordered_map<std::size_t,std::string>& name) {
+  std::vector<std::size_t> intersection;
   intersection.reserve(std::min(itemsA.size(), itemsB.size()));
   std::set_intersection(itemsA.begin(), itemsA.end(), itemsB.begin(), itemsB.end(), std::back_inserter(intersection));
   if (intersection.empty()) {
@@ -733,11 +733,11 @@ void helper(size_t stationA_, const stationData& stationA, const std::set<size_t
   bool profitable = false;
   for (auto itemID : intersection) {
     const auto& buyOrders = stationB.buyOrders.at(itemID).orders;
-    auto maxBuy = *std::max_element(buyOrders.begin(), buyOrders.end(), [] (std::unordered_map<size_t,order>::const_reference a, std::unordered_map<size_t,order>::const_reference b) {
+    auto maxBuy = *std::max_element(buyOrders.begin(), buyOrders.end(), [] (std::unordered_map<std::size_t,order>::const_reference a, std::unordered_map<std::size_t,order>::const_reference b) {
         return a.second.price > b.second.price;
         });
     const auto& sellOrders = stationA.sellOrders.at(itemID).orders;
-    auto minSell = *std::min_element(sellOrders.begin(), sellOrders.end(), [] (std::unordered_map<size_t,order>::const_reference a, std::unordered_map<size_t,order>::const_reference b) {
+    auto minSell = *std::min_element(sellOrders.begin(), sellOrders.end(), [] (std::unordered_map<std::size_t,order>::const_reference a, std::unordered_map<std::size_t,order>::const_reference b) {
         return a.second.price < b.second.price;
         });
     if (minSell.second.price < maxBuy.second.price) {
@@ -773,8 +773,8 @@ void helper(size_t stationA_, const stationData& stationA, const std::set<size_t
     BUY, SELL
   };
   struct variableInfo {
-    size_t itemID;
-    size_t orderID;
+    std::size_t itemID;
+    std::size_t orderID;
     OrderType type;
   };
   std::vector<variableInfo> variableMap;
@@ -868,20 +868,20 @@ void helper(size_t stationA_, const stationData& stationA, const std::set<size_t
     std::cout << constraintCount << ", " << variableCount << ": " << std::chrono::duration_cast<std::chrono::duration<double>>(std::chrono::system_clock::now() - start).count() << "s\n";
 }
 
-void maxIskHaul(const std::unordered_map<size_t,stationData>& stations_, const std::unordered_map<size_t,double>& volume, const std::unordered_map<size_t,std::string>& name) {
-  auto first = [] (std::unordered_map<size_t,orderList>::const_reference i) { return i.first; };
+void maxIskHaul(const std::unordered_map<std::size_t,stationData>& stations_, const std::unordered_map<std::size_t,double>& volume, const std::unordered_map<std::size_t,std::string>& name) {
+  auto first = [] (std::unordered_map<std::size_t,orderList>::const_reference i) { return i.first; };
   for (const auto& stationA_ : stations_) {
     const auto& stationA = stationA_.second;
-    std::set<size_t> itemsA_full;
+    std::set<std::size_t> itemsA_full;
     for (const auto& order : stationA.sellOrders)
       if (!order.second.orders.empty())
         itemsA_full.insert(order.first);
-    std::set<size_t> itemsA;
+    std::set<std::size_t> itemsA;
     //itemsA.reserve(stationA_.second.size());
     //std::set_intersection(stationA_.second.begin(), stationA_.second.end(), itemsA_full.begin(), itemsA_full.end(), std::inserter(itemsA, itemsA.end()));
     for (const auto& stationB_ : stations_) {
       const auto& stationB = stationB_.second;
-      std::set<size_t> itemsB;
+      std::set<std::size_t> itemsB;
       //itemsB.reserve(stationB.buyOrders.size());
       for (const auto& order : stationB.buyOrders)
         if (!order.second.orders.empty())
@@ -1003,8 +1003,8 @@ int main(int argc, char** argv) {
   assert(rc == SQLITE_ROW);
   auto itemCount = sqlite::column<int64_t>(itemCountStmt, 0);
   auto items = sqlite::prepare(eve, "select typeID, typeName, volume from invTypes;");
-  std::unordered_map<size_t,std::string> itemName(itemCount);
-  std::unordered_map<size_t,double> itemVolume(itemCount);
+  std::unordered_map<std::size_t,std::string> itemName(itemCount);
+  std::unordered_map<std::size_t,double> itemVolume(itemCount);
   while(sqlite::step(items) == SQLITE_ROW) {
     auto id = sqlite::column<int64_t>(items, 0);
     auto name = std::string((const char*)sqlite::column<const uint8_t*>(items, 1));
@@ -1013,8 +1013,8 @@ int main(int argc, char** argv) {
     itemVolume.insert({id, volume});
   }
   //std::thread maxIskHaulThread([&itemVolume,&itemName] {
-  //  std::unordered_map<size_t,maxIskHaul::stationData> stations_;
-  //  std::unordered_map<size_t,std::set<size_t>> freshData_;
+  //  std::unordered_map<std::size_t,maxIskHaul::stationData> stations_;
+  //  std::unordered_map<std::size_t,std::set<std::size_t>> freshData_;
   //  while(!sigint) {
   //    std::this_thread::sleep_for(std::chrono::seconds{1});
   //    {
@@ -1205,8 +1205,8 @@ int main2(int argc, char** args) {
   assert(rc == SQLITE_ROW);
   auto itemCount = sqlite::column<int64_t>(itemCountStmt, 0);
   auto items = sqlite::prepare(eve, "select typeID, typeName, volume from invTypes;");
-  std::unordered_map<size_t,std::string> itemName(itemCount);
-  std::unordered_map<size_t,double> itemVolume(itemCount);
+  std::unordered_map<std::size_t,std::string> itemName(itemCount);
+  std::unordered_map<std::size_t,double> itemVolume(itemCount);
   while(sqlite::step(items) == SQLITE_ROW) {
     auto id = sqlite::column<int64_t>(items, 0);
     auto name = std::string((const char*)sqlite::column<const uint8_t*>(items, 1));

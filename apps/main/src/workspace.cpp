@@ -60,7 +60,7 @@ workspace::workspace() {
 void workspace::processBlueprints() {
     const auto& blueprints = loadBlueprints();
     auto count = blueprints.size();
-    // auto count = size_t(std::distance(blueprints.begin(), blueprints.end()));
+    // auto count = std::size_t(std::distance(blueprints.begin(), blueprints.end()));
     jobs_.reserve(count);
     types_.reserve(count);
     for (const auto& b : blueprints) {

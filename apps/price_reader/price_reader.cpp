@@ -29,8 +29,8 @@ std::vector<Price> loadPrices() {
     return prices;
 }
 
-std::vector<std::pair<size_t, std::string>> loadTypes() {
-    std::vector<std::pair<size_t, std::string>> types;
+std::vector<std::pair<std::size_t, std::string>> loadTypes() {
+    std::vector<std::pair<std::size_t, std::string>> types;
     std::stringstream types_stream;
     TIME(simpleGet("https://crest-tq.eveonline.com/market/types/", types_stream););
     do {
@@ -55,7 +55,7 @@ std::vector<std::pair<size_t, std::string>> loadTypes() {
     return types;
 }
 
-void assertTypes(const sqlite::dbPtr& db, const std::vector<std::pair<size_t, std::string>>& prices) {
+void assertTypes(const sqlite::dbPtr& db, const std::vector<std::pair<std::size_t, std::string>>& prices) {
     auto insertType = sqlite::prepare(db, "insert or ignore into types values(?, ?);");
 
     TIME(for (const auto& p

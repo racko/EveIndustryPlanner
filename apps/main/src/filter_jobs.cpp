@@ -22,7 +22,7 @@ void filterBySkill(std::vector<T>& jobs, const Skills& skills) {
     jobs.erase(std::remove_if(jobs.begin(), jobs.end(), any_skill_too_low), jobs.end());
 }
 
-void filterCopies(Jobs::copies_t& copies, const std::unordered_map<size_t, double>& avgPrices, double bpoPriceLimit) {
+void filterCopies(Jobs::copies_t& copies, const std::unordered_map<std::size_t, double>& avgPrices, double bpoPriceLimit) {
     auto bpo_too_expensive = [&](const Copying& c) {
         auto bpPrice = avgPrices.find(c.getBlueprint());
         return bpPrice == avgPrices.end() || bpPrice->second > bpoPriceLimit;
@@ -31,7 +31,7 @@ void filterCopies(Jobs::copies_t& copies, const std::unordered_map<size_t, doubl
 }
 } // namespace
 
-void filter_jobs(Jobs& jobs, const Skills& skills, const std::unordered_map<size_t, double>& avgPrices,
+void filter_jobs(Jobs& jobs, const Skills& skills, const std::unordered_map<std::size_t, double>& avgPrices,
                  double bpoPriceLimit) {
     filterBySkill(jobs.getProducts(), skills);
     filterCopies(jobs.getT1Copies(), avgPrices, bpoPriceLimit);

@@ -8,24 +8,24 @@
 #include <iostream>
 #include <yaml-cpp/yaml.h>
 
-void Jobs::reserve(size_t) {
+void Jobs::reserve(std::size_t) {
 
 }
 
 void Jobs::loadSchematics(const Names& names) {
     auto db = sqlite::getDB("/cifs/server/Media/Tim/Eve/SDE/sqlite-latest.sqlite");
     auto stmt = sqlite::prepare(db, "select planetschematicstypemap.*, marketgroupid, cycletime from planetschematicstypemap natural join invtypes join invmarketgroups using (marketgroupid) join planetschematics using (schematicid) order by schematicid;");
-    std::unordered_map<size_t,std::tuple<size_t,size_t,size_t,size_t>> output;
+    std::unordered_map<std::size_t,std::tuple<std::size_t,std::size_t,std::size_t,std::size_t>> output;
     output.reserve(100);
-    std::unordered_multimap<size_t,std::pair<size_t,size_t>> inputs;
+    std::unordered_multimap<std::size_t,std::pair<std::size_t,std::size_t>> inputs;
     inputs.reserve(100);
     while(sqlite::step(stmt) == sqlite::ROW) {
-        auto schematicID = boost::numeric_cast<size_t>(sqlite::column<int32_t>(stmt, 0));
-        auto typeID = boost::numeric_cast<size_t>(sqlite::column<int32_t>(stmt, 1));
-        auto quantity = boost::numeric_cast<size_t>(sqlite::column<int32_t>(stmt, 2));
-        auto isInput = boost::numeric_cast<size_t>(sqlite::column<int32_t>(stmt, 3));
-        auto marketGroup = boost::numeric_cast<size_t>(sqlite::column<int32_t>(stmt, 4));
-        auto cycleTime = boost::numeric_cast<size_t>(sqlite::column<int32_t>(stmt, 5));
+        auto schematicID = boost::numeric_cast<std::size_t>(sqlite::column<int32_t>(stmt, 0));
+        auto typeID = boost::numeric_cast<std::size_t>(sqlite::column<int32_t>(stmt, 1));
+        auto quantity = boost::numeric_cast<std::size_t>(sqlite::column<int32_t>(stmt, 2));
+        auto isInput = boost::numeric_cast<std::size_t>(sqlite::column<int32_t>(stmt, 3));
+        auto marketGroup = boost::numeric_cast<std::size_t>(sqlite::column<int32_t>(stmt, 4));
+        auto cycleTime = boost::numeric_cast<std::size_t>(sqlite::column<int32_t>(stmt, 5));
         if (!isInput) {
             output.emplace(schematicID, std::make_tuple(typeID, quantity, marketGroup - 1334u, cycleTime));
         } else {
@@ -35,9 +35,9 @@ void Jobs::loadSchematics(const Names& names) {
     schematics.reserve(output.size());
     for (const auto& s : output) {
         auto ins = inputs.equal_range(s.first);
-        // product_t product_, size_t producedQuantity_, materials_t materials_, duration_t duration_, tier_t tier_
+        // product_t product_, std::size_t producedQuantity_, materials_t materials_, duration_t duration_, tier_t tier_
         Planetary::materials_t mats;
-        mats.reserve(size_t(std::distance(ins.first, ins.second)));
+        mats.reserve(std::size_t(std::distance(ins.first, ins.second)));
         auto product = std::get<0>(s.second);
         auto quantity = std::get<1>(s.second);
         auto duration = std::chrono::seconds{std::get<3>(s.second)};
@@ -51,7 +51,7 @@ void Jobs::loadSchematics(const Names& names) {
     }
 }
 
-void Jobs::addManufacturingData(const YAML::Node& manufacturing, unsigned blueprintId, const Names& names, const std::unordered_map<size_t, double>& avgPrices, const Skills& skills) {
+void Jobs::addManufacturingData(const YAML::Node& manufacturing, unsigned blueprintId, const Names& names, const std::unordered_map<std::size_t, double>& avgPrices, const Skills& skills) {
     if (!manufacturing.IsDefined()) {
         std::cout << "  Cannot be manufactured\n"; // not an error: T3 relics can only be researched
         return;
@@ -120,7 +120,7 @@ void Jobs::addManufacturingData(const YAML::Node& manufacturing, unsigned bluepr
     products.emplace_back(blueprintId, productId, productQuantity, std::move(materials), std::move(required_skills), std::chrono::duration<double>(manufacturingTimeMod * t));
 }
 
-void Jobs::addInventionData(const YAML::Node& invention, unsigned blueprintId, const Names& names, const std::unordered_map<size_t, double>& avgPrices, const Skills& skills) {
+void Jobs::addInventionData(const YAML::Node& invention, unsigned blueprintId, const Names& names, const std::unordered_map<std::size_t, double>& avgPrices, const Skills& skills) {
     std::cout << "  Invention:\n";
     if (!invention.IsDefined()) {
         std::cout << "    Cannot be invented\n";
@@ -136,12 +136,12 @@ void Jobs::addInventionData(const YAML::Node& invention, unsigned blueprintId, c
         std::cout << "    ERROR: No skills listed\n";
         return;
     }
-    std::vector<size_t> scienceSkills;
-    std::vector<size_t> scienceSkillLevels;
+    std::vector<std::size_t> scienceSkills;
+    std::vector<std::size_t> scienceSkillLevels;
     scienceSkills.reserve(2);
     scienceSkillLevels.reserve(2);
-    std::vector<size_t> racialSkillLevel;
-    std::vector<size_t> racialSkill;
+    std::vector<std::size_t> racialSkillLevel;
+    std::vector<std::size_t> racialSkill;
     racialSkill.reserve(1);
     racialSkillLevel.reserve(1);
     Research::skills_t required_skills;
@@ -213,7 +213,7 @@ void Jobs::addInventionData(const YAML::Node& invention, unsigned blueprintId, c
     }
 }
 
-void Jobs::addCopyingData(const YAML::Node& copying, unsigned blueprintId, const Names& names, const std::unordered_map<size_t, double>& avgPrices) {
+void Jobs::addCopyingData(const YAML::Node& copying, unsigned blueprintId, const Names& names, const std::unordered_map<std::size_t, double>& avgPrices) {
     std::cout << "  Copying:\n";
     if (!copying.IsDefined()) {
         std::cout << "    Cannot be copied\n"; // not an error: T3 relics can only be researched

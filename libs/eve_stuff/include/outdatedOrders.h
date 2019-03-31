@@ -4,5 +4,5 @@
 #include "sqlite.h"
 
 
-std::vector<size_t> outdatedOrders(const sqlite::dbPtr& db);
-std::vector<size_t> outdatedOrders2(const sqlite::dbPtr& db, size_t region);
+std::vector<std::size_t> outdatedOrders(const sqlite::dbPtr& db);
+std::vector<std::size_t> outdatedOrders2(const sqlite::dbPtr& db, std::size_t region);

@@ -26,7 +26,7 @@
 // template <typename... T>
 // class WriterImpl {
 //  public:
-//    template <size_t... I>
+//    template <std::size_t... I>
 //    WriterImpl(const char* file_name, std::index_sequence<I...>) : f_(file_name), writers{((void)I, f_)...} {}
 //    WriterImpl(const char* file_name) : WriterImpl(file_name, std::make_index_sequence<sizeof...(T)>{}) {}
 //    void write(const std::tuple<T...>&);

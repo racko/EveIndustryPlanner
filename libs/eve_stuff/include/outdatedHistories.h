@@ -4,4 +4,4 @@
 #include "sqlite.h"
 
 
-std::vector<size_t> outdatedHistories(const sqlite::dbPtr& db);
+std::vector<std::size_t> outdatedHistories(const sqlite::dbPtr& db);

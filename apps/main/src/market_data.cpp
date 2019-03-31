@@ -78,7 +78,7 @@ void MarketData::loadOrdersFromDB(const sqlite::dbPtr& db, const std::string& bu
     buyorders.reserve(100000);
     while(sqlite::step(selectBuy) == sqlite::ROW) {
         auto type = sqlite::column<int64_t>(selectBuy, 1);
-        if (!names.checkName(size_t(type))) {
+        if (!names.checkName(std::size_t(type))) {
             std::cout << "ignoring typeID " << type << ": no name\n";
             continue;
         }
@@ -93,7 +93,7 @@ void MarketData::loadOrdersFromDB(const sqlite::dbPtr& db, const std::string& bu
     sellorders.reserve(200000);
     while(sqlite::step(selectSell) == sqlite::ROW) {
         auto type = sqlite::column<int64_t>(selectSell, 1);
-        if (!names.checkName(size_t(type))) {
+        if (!names.checkName(std::size_t(type))) {
             std::cout << "ignoring typeID " << type << ": no name\n";
             continue;
         }

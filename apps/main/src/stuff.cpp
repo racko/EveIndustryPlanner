@@ -7,14 +7,14 @@
 
 Stuff::Stuff(const Names& names, const Assets& assets, const Types& types, const IndustryLimits& industry) : labTime(std::make_shared<Resource_Base>("LabTime", "LabTime", -industry.timeFrame * double(industry.scienceLabs))), productionLineTime(std::make_shared<Resource_Base>("ProductionLineTime", "ProductionLineTime", -industry.timeFrame * double(industry.productionLines))), names_(names), assets_(assets), types_(types), timeFrame(industry.timeFrame) {}
 
-const Resource_Base::Ptr& Stuff::getResource(size_t id) {
+const Resource_Base::Ptr& Stuff::getResource(std::size_t id) {
     auto& resource = resources[id];
     if (resource == nullptr)
         resource = std::make_shared<Resource_Base>(std::to_string(id), names_.getName(id), -double(assets_.countAsset(id)));
     return resource;
 }
 
-const Resource_Base::Ptr& Stuff::getBPO(size_t id) {
+const Resource_Base::Ptr& Stuff::getBPO(std::size_t id) {
     auto& resource = bpoTimes[id];
     if (resource == nullptr)
         resource = std::make_shared<Resource_Base>(std::to_string(id) + "_BPO_Time", names_.getName(id) + " BPO Time", -timeFrame);

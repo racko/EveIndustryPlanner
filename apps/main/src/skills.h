@@ -9,18 +9,18 @@ struct Names;
 struct Skills {
     void loadSkillLevels(const Names& names);
 
-    size_t getSkillLevel(size_t skill) const;
+    std::size_t getSkillLevel(std::size_t skill) const;
 
-    bool isRacialEncryptionSkill(size_t skill) const;
+    bool isRacialEncryptionSkill(std::size_t skill) const;
 
-    bool isAdvancedScienceSkill(size_t skill) const;
+    bool isAdvancedScienceSkill(std::size_t skill) const;
 
-    bool isManufacturingTimeModifierScienceSkill(size_t skill) const;
+    bool isManufacturingTimeModifierScienceSkill(std::size_t skill) const;
 
     bool overrideSkills;
 
-    size_t productionLines;
-    size_t scienceLabs;
+    std::size_t productionLines;
+    std::size_t scienceLabs;
     double manufacturingTimeReduction;
     double copyTimeReduction;
     double researchTimeReduction;
@@ -28,8 +28,8 @@ struct Skills {
     double cpu;
     double power;
 private:
-    std::unordered_set<size_t> racialEncryptionSkills;
-    std::unordered_set<size_t> advancedScienceSkills;
-    std::unordered_set<size_t> manufacturingTimeModifierSkills;
-    std::unordered_map<size_t, size_t> skillLevels;
+    std::unordered_set<std::size_t> racialEncryptionSkills;
+    std::unordered_set<std::size_t> advancedScienceSkills;
+    std::unordered_set<std::size_t> manufacturingTimeModifierSkills;
+    std::unordered_map<std::size_t, std::size_t> skillLevels;
 };

@@ -35,7 +35,7 @@ void Types::isConsistent() const {
     //    throw std::runtime_error("types are inconsistent");
 }
 
-void Types::reserve(size_t n) {
+void Types::reserve(std::size_t n) {
     t2BPToT1BP.reserve(n);
     bpToProduct.reserve(n);
     productToBP.reserve(n);

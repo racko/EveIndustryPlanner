@@ -7,8 +7,8 @@
 struct IndustryLimits {
     double buyIn;
     double timeFrame;
-    size_t productionLines;
-    size_t scienceLabs;
+    std::size_t productionLines;
+    std::size_t scienceLabs;
     bool do_planetary_interaction;
     void read(const YAML::Node& settings);
 };

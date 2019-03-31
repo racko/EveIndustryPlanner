@@ -40,7 +40,7 @@ void Assets::addAssetsFromTsv(const char* filename, const Names& names) {
         auto typeId = names.getTypeId(name);
         std::stringstream qstr(quantity_str); // TODO: avoid unnecessary copies
         qstr.imbue(std::locale("en_US.UTF-8")); // allows parsing "1,000,000" etc.
-        size_t quantity;
+        std::size_t quantity;
         qstr >> quantity;
         auto assetIt = assets.insert({typeId, 0}); // no-op if it already exists.
         assetIt.first->second += quantity;
@@ -65,7 +65,7 @@ void Assets::loadOwnedBPCsFromXml(const Names& names) {
     }
     static const auto assetsString = std::string("blueprints");
     const auto& owned_blueprints = doc.child("eveapi").child("result").find_child([] (const pugi::xml_node& n) { return n.attribute("name").as_string() == assetsString; }).children();
-    ownedBPCs.reserve(size_t(std::distance(owned_blueprints.begin(), owned_blueprints.end())));
+    ownedBPCs.reserve(std::size_t(std::distance(owned_blueprints.begin(), owned_blueprints.end())));
     for (const auto& bp : owned_blueprints) {
         auto typeId = bp.attribute("typeID").as_ullong();
         auto quantity = bp.attribute("quantity").as_llong();
@@ -82,22 +82,22 @@ void Assets::loadOwnedBPCsFromXml(const Names& names) {
     }
 }
 
-size_t Assets::countAsset(size_t typeId) const {
+std::size_t Assets::countAsset(std::size_t typeId) const {
     auto a = assets.find(typeId);
     return a != assets.end() ? a->second : 0;
 }
 
-size_t Assets::countPlanetaryAsset(size_t typeId) const {
+std::size_t Assets::countPlanetaryAsset(std::size_t typeId) const {
     auto a = planetary_assets.find(typeId);
     return a != planetary_assets.end() ? a->second : 0;
 }
 
-size_t Assets::runs(const BlueprintWithEfficiency& bpwe) const {
+std::size_t Assets::runs(const BlueprintWithEfficiency& bpwe) const {
     auto r = ownedBPCs.find(bpwe);
     return r != ownedBPCs.end() ? r->second : 0;
 }
 
-size_t Assets::runs(size_t typeId) const {
+std::size_t Assets::runs(std::size_t typeId) const {
     auto runs = 0ul;
     for (const auto& ownedBP : ownedBPCs)
         if (ownedBP.first.getTypeID() == typeId)

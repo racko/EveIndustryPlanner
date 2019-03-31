@@ -13,12 +13,12 @@ struct MarketData {
     void loadPrices(Names& names);
     void loadOrdersFromDB(const sqlite::dbPtr& db, const std::string& buyQuery, const std::string& sellQuery, const Names& names);
 //private:
-    std::unordered_map<size_t, double> avgPrices;
-    std::unordered_map<size_t, double> adjPrices;
-    //std::unordered_map<size_t, double> lowPrices;
-    //std::unordered_map<size_t, double> sell;
-    //std::unordered_map<size_t, double> buy;
+    std::unordered_map<std::size_t, double> avgPrices;
+    std::unordered_map<std::size_t, double> adjPrices;
+    //std::unordered_map<std::size_t, double> lowPrices;
+    //std::unordered_map<std::size_t, double> sell;
+    //std::unordered_map<std::size_t, double> buy;
     std::vector<Order> sellorders;
     std::vector<Order> buyorders;
-    size_t priceCount;
+    std::size_t priceCount;
 };

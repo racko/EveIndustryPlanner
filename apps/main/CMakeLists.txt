@@ -5,6 +5,7 @@ add_executable(main
   src/blueprint_with_efficiency.cpp
   src/facility_costs.cpp
   src/filter_jobs.cpp
+  src/groups.cpp
   src/industry_limits.cpp
   src/input_values.cpp
   src/job_values.cpp

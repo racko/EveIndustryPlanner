@@ -6,4 +6,4 @@
 
 class Production;
 
-std::unordered_map<size_t,double> inputValues(const std::vector<Production>& products, const std::unordered_map<size_t, double>& adjPrices);
+std::unordered_map<std::size_t,double> inputValues(const std::vector<Production>& products, const std::unordered_map<std::size_t, double>& adjPrices);

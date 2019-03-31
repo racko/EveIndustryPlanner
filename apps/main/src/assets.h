@@ -17,17 +17,17 @@ struct Assets {
 
     void loadOwnedBPCsFromXml(const Names& names);
 
-    size_t countAsset(size_t typeId) const;
+    std::size_t countAsset(std::size_t typeId) const;
 
-    size_t countPlanetaryAsset(size_t typeId) const;
+    std::size_t countPlanetaryAsset(std::size_t typeId) const;
 
-    size_t runs(const BlueprintWithEfficiency& bpwe) const;
+    std::size_t runs(const BlueprintWithEfficiency& bpwe) const;
 
     // for t1 bpcs we ignore efficiencies because we would have to deal with all 100 research level combinations
-    size_t runs(size_t typeId) const;
+    std::size_t runs(std::size_t typeId) const;
 private:
-    std::unordered_map<size_t, size_t> assets;
-    std::unordered_map<size_t, size_t> planetary_assets;
-    std::unordered_map<BlueprintWithEfficiency, size_t> ownedBPCs;
+    std::unordered_map<std::size_t, std::size_t> assets;
+    std::unordered_map<std::size_t, std::size_t> planetary_assets;
+    std::unordered_map<BlueprintWithEfficiency, std::size_t> ownedBPCs;
 
 };

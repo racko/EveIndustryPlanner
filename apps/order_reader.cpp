@@ -56,7 +56,7 @@ auto loadJSON(const T& filename) {
     return parseStream(filestream);
 }
 
-auto loadOrders(const std::string& dir, size_t typeID) { return loadJSON(dir + std::to_string(typeID) + ".json"); }
+auto loadOrders(const std::string& dir, std::size_t typeID) { return loadJSON(dir + std::to_string(typeID) + ".json"); }
 
 template <typename Functor>
 void for_each(const Json::Value& root, Functor f) {
@@ -98,11 +98,11 @@ double getMinPrice(const Json::Value& root) {
                             [](double a, double b) { return std::min(a, b); });
 }
 
-double getMaxPrice(const std::string& dir, size_t typeID) { return getMaxPrice(loadOrders(dir, typeID)); }
+double getMaxPrice(const std::string& dir, std::size_t typeID) { return getMaxPrice(loadOrders(dir, typeID)); }
 
-double getMinPrice(const std::string& dir, size_t typeID) { return getMinPrice(loadOrders(dir, typeID)); }
+double getMinPrice(const std::string& dir, std::size_t typeID) { return getMinPrice(loadOrders(dir, typeID)); }
 
-double getMaxPriceInStation(const Json::Value& root, size_t stationId) {
+double getMaxPriceInStation(const Json::Value& root, std::size_t stationId) {
     return accumulate(root, -std::numeric_limits<double>::infinity(), [&](double a, const Json::Value& v) {
         auto p1 = v["location"]["id"].asUInt64() == stationId;
         auto p2 = v["minVolume"].asUInt64() == 1;
@@ -110,21 +110,21 @@ double getMaxPriceInStation(const Json::Value& root, size_t stationId) {
     });
 }
 
-double getMinPriceInStation(const Json::Value& root, size_t stationId) {
+double getMinPriceInStation(const Json::Value& root, std::size_t stationId) {
     return accumulate(root, std::numeric_limits<double>::infinity(), [&](double a, const Json::Value& v) {
         return v["location"]["id"].asUInt64() == stationId ? std::min(a, v["price"].asDouble()) : a;
     });
 }
 
-double getMaxPriceInStation(const std::string& dir, size_t typeID, size_t stationId) {
+double getMaxPriceInStation(const std::string& dir, std::size_t typeID, std::size_t stationId) {
     return getMaxPriceInStation(loadOrders(dir, typeID), stationId);
 }
 
-double getMinPriceInStation(const std::string& dir, size_t typeID, size_t stationId) {
+double getMinPriceInStation(const std::string& dir, std::size_t typeID, std::size_t stationId) {
     return getMinPriceInStation(loadOrders(dir, typeID), stationId);
 }
 
-void saveOrders(const std::unordered_map<size_t, double>& avgPrices, const sqlite::dbPtr& db) {
+void saveOrders(const std::unordered_map<std::size_t, double>& avgPrices, const sqlite::dbPtr& db) {
     auto insertRobustPrice = sqlite::prepare(db, "insert or replace into robust_price values(?, ?, ?);");
     auto i = 0u;
     auto count = avgPrices.size();
@@ -164,7 +164,7 @@ int64_t to_int(uint64_t n) {
 
 class OrderHandler : public HTTPSRequestHandlerGroup {
   public:
-    OrderHandler(size_t n, bool print_progress_)
+    OrderHandler(std::size_t n, bool print_progress_)
         : HTTPSRequestHandlerGroup(n, "crest-tq.eveonline.com", 443), writer("market_history.db"),
           insertBuy_(
               writer.prepareStatement("insert or replace into robust_price(typeid, buy, sell, date) values(?, ?, "
@@ -174,7 +174,7 @@ class OrderHandler : public HTTPSRequestHandlerGroup {
                                       "buy from robust_price where typeid = ?), ?, strftime('%s', 'now'));")),
           print_progress(print_progress_) {}
 
-    void saveOrders(const std::vector<size_t>& types /*, const std::string& access_token*/) {
+    void saveOrders(const std::vector<std::size_t>& types /*, const std::string& access_token*/) {
         total = 2 * types.size();
         auto handler_handle = addSigintHandler([&] { semaphore.setTo(to_int(total)); });
         auto sigintHandlerRemover = makeFinalizer([&] { removeSigintHandler(handler_handle); });
@@ -195,7 +195,7 @@ class OrderHandler : public HTTPSRequestHandlerGroup {
 
     class BuyTransaction : public RequestWithResponseHandler, public Query {
       public:
-        BuyTransaction(OrderHandler& parent_, size_t p_)
+        BuyTransaction(OrderHandler& parent_, std::size_t p_)
             : RequestWithResponseHandler("/market/10000002/orders/buy/?type=https://crest-tq.eveonline.com/types/" +
                                          std::to_string(p_) + "/"),
               parent(parent_), p(p_) {}
@@ -253,14 +253,14 @@ class OrderHandler : public HTTPSRequestHandlerGroup {
 
       private:
         OrderHandler& parent;
-        size_t p;
+        std::size_t p;
         double maxBuy = std::numeric_limits<double>::quiet_NaN();
         std::stringstream responseBody;
     };
 
     class SellTransaction : public RequestWithResponseHandler, public Query {
       public:
-        SellTransaction(OrderHandler& parent_, size_t p_)
+        SellTransaction(OrderHandler& parent_, std::size_t p_)
             : RequestWithResponseHandler("/market/10000002/orders/sell/?type=https://crest-tq.eveonline.com/types/" +
                                          std::to_string(p_) + "/"),
               parent(parent_), p(p_) {}
@@ -318,7 +318,7 @@ class OrderHandler : public HTTPSRequestHandlerGroup {
 
       private:
         OrderHandler& parent;
-        size_t p;
+        std::size_t p;
         double minSell = std::numeric_limits<double>::quiet_NaN();
         std::stringstream responseBody;
     };
@@ -329,13 +329,13 @@ class OrderHandler : public HTTPSRequestHandlerGroup {
     Semaphore semaphore;
     std::vector<std::shared_ptr<BuyTransaction>> buyTransactions;
     std::vector<std::shared_ptr<SellTransaction>> sellTransactions;
-    size_t total;
+    std::size_t total;
     bool print_progress;
 };
 
 class OrderHandler2 {
   public:
-    OrderHandler2(size_t r, size_t n, bool print_progress_)
+    OrderHandler2(std::size_t r, std::size_t n, bool print_progress_)
         : region(r), writer("/home/racko/btsync/git/emdr/market_history.db"),
           insertStation_(
               writer.prepareStatement("insert or ignore into stations(stationid, name, regionid) values(?, ?, ?);")),
@@ -348,7 +348,7 @@ class OrderHandler2 {
                                                    "start_date) values(strftime('%s', 'now'), ?, ?, ?, ?);")),
           http_handlers(n, "crest-tq.eveonline.com", 443), print_progress(print_progress_) {}
 
-    void saveOrders(const std::vector<size_t>& types /*, const std::string& access_token*/) {
+    void saveOrders(const std::vector<std::size_t>& types /*, const std::string& access_token*/) {
         total = types.size();
         auto handler_handle = addSigintHandler([&] { semaphore.setTo(to_int(total)); });
         auto sigintHandlerRemover = makeFinalizer([&] { removeSigintHandler(handler_handle); });
@@ -369,7 +369,7 @@ class OrderHandler2 {
 
     class Transaction : public RequestWithResponseHandler {
       public:
-        Transaction(OrderHandler2& parent_, size_t region, size_t p_)
+        Transaction(OrderHandler2& parent_, std::size_t region, std::size_t p_)
             : RequestWithResponseHandler("/market/" + std::to_string(region) +
                                          "/orders/?type=https://crest-tq.eveonline.com/types/" + std::to_string(p_) +
                                          "/"),
@@ -395,7 +395,7 @@ class OrderHandler2 {
                     onJsonError(e, order);
                 }
             }
-            semaphore.waitFor([&](size_t n) { return n == singleOrderHandlers.size(); });
+            semaphore.waitFor([&](std::size_t n) { return n == singleOrderHandlers.size(); });
             finalize();
         }
 
@@ -425,7 +425,7 @@ class OrderHandler2 {
       private:
         class SingleOrderHandler : public Query {
           public:
-            SingleOrderHandler(Transaction& parent_, const Json::Value& o, size_t region)
+            SingleOrderHandler(Transaction& parent_, const Json::Value& o, std::size_t region)
                 : parent(parent_), order(o), regionid(region) {
                 id = o["id"].asUInt64();
                 type = o["type"]["id"].asUInt64();
@@ -520,24 +520,24 @@ class OrderHandler2 {
           private:
             Transaction& parent;
             Json::Value order;
-            size_t regionid;
-            size_t id;
-            size_t type;
-            size_t station;
+            std::size_t regionid;
+            std::size_t id;
+            std::size_t type;
+            std::size_t station;
             std::string station_name;
-            size_t volume_entered;
+            std::size_t volume_entered;
             time_t start_date;
-            size_t duration;
+            std::size_t duration;
             std::string range;
             double price;
-            size_t volume;
-            size_t min_volume;
+            std::size_t volume;
+            std::size_t min_volume;
             bool buy;
         };
 
         OrderHandler2& parent;
-        size_t p;
-        size_t regionid;
+        std::size_t p;
+        std::size_t regionid;
 
         std::stringstream responseBody;
         Json::Value orders;
@@ -545,7 +545,7 @@ class OrderHandler2 {
         std::vector<SingleOrderHandler> singleOrderHandlers;
     };
 
-    size_t region;
+    std::size_t region;
     DatabaseConnection writer;
     sqlite::stmtPtr insertStation_;
     sqlite::stmtPtr insertOrder_;
@@ -555,13 +555,13 @@ class OrderHandler2 {
     Semaphore semaphore;
     std::vector<std::unique_ptr<Transaction>> transactions;
     HTTPSRequestHandlerGroup http_handlers;
-    size_t total;
+    std::size_t total;
     bool print_progress;
 };
 
 class OrderHandler3 {
   public:
-    OrderHandler3(size_t r, bool print_progress_)
+    OrderHandler3(std::size_t r, bool print_progress_)
         : region(r), writer("/home/racko/btsync/git/emdr/market_history.db"),
           insertOrder_(
               writer.prepareStatement("insert or replace into orders(orderid, typeid, station, volume_entered, "
@@ -626,7 +626,7 @@ class OrderHandler3 {
         // f.close();
         // stream.seekg(0);
         singleOrderHandlers.reserve(1000000); // reallocations cause undefined behaviour in sql threads
-        size_t page = 1;
+        std::size_t page = 1;
         try {
             do {
                 Json::Value root;
@@ -657,13 +657,13 @@ class OrderHandler3 {
         } catch (const HttpException& e) {
             std::cout << "HTTP error: " << e.what() << '\n';
         }
-        semaphore.waitFor([&](size_t n) { return n == singleOrderHandlers.size(); });
+        semaphore.waitFor([&](std::size_t n) { return n == singleOrderHandlers.size(); });
     }
 
   private:
     class SingleOrderHandler : public Query {
       public:
-        SingleOrderHandler(OrderHandler3& parent_, const Json::Value& o, size_t region)
+        SingleOrderHandler(OrderHandler3& parent_, const Json::Value& o, std::size_t region)
             : parent(parent_), order(o), regionid(region) {
             id = o["id"].asUInt64();
             type = o["type"].asUInt64();
@@ -751,24 +751,24 @@ class OrderHandler3 {
       private:
         OrderHandler3& parent;
         Json::Value order;
-        size_t regionid;
-        size_t id;
-        size_t type;
-        size_t station;
-        size_t volume_entered;
+        std::size_t regionid;
+        std::size_t id;
+        std::size_t type;
+        std::size_t station;
+        std::size_t volume_entered;
         time_t start_date;
-        size_t duration;
+        std::size_t duration;
         std::string range;
         double price;
-        size_t volume;
-        size_t min_volume;
+        std::size_t volume;
+        std::size_t min_volume;
         bool buy;
-        size_t step;
+        std::size_t step;
     };
 
     std::stringstream stream;
     Json::Value orders;
-    size_t region;
+    std::size_t region;
     DatabaseConnection writer;
     sqlite::stmtPtr insertOrder_;
     sqlite::stmtPtr insertBuyOrder_;
@@ -781,7 +781,7 @@ class OrderHandler3 {
 
 int main(int argc, char** args) {
     std::signal(SIGINT, &sigint_handler);
-    size_t n;
+    std::size_t n;
     if (argc < 2) {
         std::cout << "Missing print_progress parameter\n";
         return -1;
@@ -806,7 +806,7 @@ int main(int argc, char** args) {
         std::cout << "job count: " << n << " (default)\n";
     }
 
-    size_t region;
+    std::size_t region;
     if (argc > 3) {
         region = std::strtoull(args[3], &end, 10);
         if (end == args[3]) {
@@ -819,7 +819,7 @@ int main(int argc, char** args) {
         std::cout << "region: " << region << " (default)\n";
     }
 
-    std::vector<size_t> types;
+    std::vector<std::size_t> types;
     if (argc > 4) {
         auto type = std::strtoull(args[4], &end, 10);
         if (end == args[4]) {

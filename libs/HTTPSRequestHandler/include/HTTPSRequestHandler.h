@@ -146,7 +146,7 @@ private:
 
 class HTTPSRequestHandlerGroup {
 public:
-    HTTPSRequestHandlerGroup(size_t n, const std::string& host, uint16_t port);
+    HTTPSRequestHandlerGroup(std::size_t n, const std::string& host, uint16_t port);
     ~HTTPSRequestHandlerGroup();
 
     void postRequest(const std::shared_ptr<RequestWithResponseHandler>& request, const std::string& data);

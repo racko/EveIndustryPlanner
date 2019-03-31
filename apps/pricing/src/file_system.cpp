@@ -4,7 +4,7 @@
 #include <cassert>
 #include <iterator>
 
-template <size_t N>
+template <std::size_t N>
 bool endswith(const std::string_view s, const char (&ext)[N]) {
     constexpr auto len = N - 1; // N includes terminating '\0'
     return s.size() >= len && std::strncmp(s.end() - len, static_cast<const char*>(ext), len) == 0;

@@ -19,11 +19,11 @@ struct Jobs {
     using schematics_t = std::vector<Planetary>;
     void loadSchematics(const Names& names);
 
-    void addManufacturingData(const YAML::Node& manufacturing, unsigned blueprintId, const Names& names, const std::unordered_map<size_t, double>& avgPrices, const Skills& skills);
+    void addManufacturingData(const YAML::Node& manufacturing, unsigned blueprintId, const Names& names, const std::unordered_map<std::size_t, double>& avgPrices, const Skills& skills);
 
-    void addInventionData(const YAML::Node& invention, unsigned blueprintId, const Names& names, const std::unordered_map<size_t, double>& avgPrices, const Skills& skills);
+    void addInventionData(const YAML::Node& invention, unsigned blueprintId, const Names& names, const std::unordered_map<std::size_t, double>& avgPrices, const Skills& skills);
 
-    void addCopyingData(const YAML::Node& copying, unsigned blueprintId, const Names& names, const std::unordered_map<size_t, double>& avgPrices);
+    void addCopyingData(const YAML::Node& copying, unsigned blueprintId, const Names& names, const std::unordered_map<std::size_t, double>& avgPrices);
 
     const products_t& getProducts() const { return products; }
     products_t& getProducts() { return products; }
@@ -40,7 +40,7 @@ struct Jobs {
     const schematics_t& getSchematics() const { return schematics; }
     schematics_t& getSchematics() { return schematics; }
 
-    void reserve(size_t n);
+    void reserve(std::size_t n);
 
 private:
     products_t products;

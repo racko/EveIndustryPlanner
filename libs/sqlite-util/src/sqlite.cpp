@@ -5,7 +5,7 @@
 #include <sqlite3.h>
 
 namespace {
-int to_int(size_t n) {
+int to_int(std::size_t n) {
     assert(n <= static_cast<std::size_t>(std::numeric_limits<int>::max()));
     return static_cast<int>(n);
 }
@@ -173,7 +173,7 @@ IMPLEMENT_BIND(int16_t, int)
 IMPLEMENT_BIND(int32_t, int)
 IMPLEMENT_BIND(int64_t, int64)
 
-template void bind<size_t>(const stmtPtr&, int, const size_t&);
+template void bind<std::size_t>(const stmtPtr&, int, const std::size_t&);
 template void bind<std::string>(const stmtPtr&, int, const std::string&);
 
 const int ROW = SQLITE_ROW;

@@ -23,7 +23,7 @@
 static constexpr const char* ANSI_CLEAR_LINE = "\033[2K";
 
 // template<typename Functor>
-// void handleHistory(DatabaseConnection& writer, const sqlite::stmtPtr& insertHistory, size_t typeID, const
+// void handleHistory(DatabaseConnection& writer, const sqlite::stmtPtr& insertHistory, std::size_t typeID, const
 // Json::Value& history, Functor f) {
 //    const auto& items = history["items"];
 //    if (items.isNull()) {
@@ -61,7 +61,7 @@ static constexpr const char* ANSI_CLEAR_LINE = "\033[2K";
 //}
 //
 // template<typename Functor>
-// void updateLastUpdate(DatabaseConnection& writer, const sqlite::stmtPtr& update, size_t typeID, Functor f) {
+// void updateLastUpdate(DatabaseConnection& writer, const sqlite::stmtPtr& update, std::size_t typeID, Functor f) {
 //    Semaphore semaphore;
 //    writer.withConnection([&] (const sqlite::dbPtr& db) {
 //            sqlite::bind(update, 1, typeID);
@@ -94,13 +94,13 @@ void sigint_handler(int) {
         h();
 }
 
-int32_t to_int32(size_t n) {
-    assert(n <= static_cast<size_t>(std::numeric_limits<int32_t>::max()));
+int32_t to_int32(std::size_t n) {
+    assert(n <= static_cast<std::size_t>(std::numeric_limits<int32_t>::max()));
     return static_cast<int32_t>(n);
 }
 
-uint32_t to_uint32(size_t n) {
-    assert(n <= static_cast<size_t>(std::numeric_limits<uint32_t>::max()));
+uint32_t to_uint32(std::size_t n) {
+    assert(n <= static_cast<std::size_t>(std::numeric_limits<uint32_t>::max()));
     return static_cast<uint32_t>(n);
 }
 
@@ -113,7 +113,7 @@ class HistoryHandler {
               "insert or replace into last_history_update values(?, 10000002, strftime('%s', 'now'));")),
           http_handlers(15, "crest-tq.eveonline.com", 443) {}
 
-    void saveHistories(const std::vector<size_t>& types /*, const std::string& access_token*/) {
+    void saveHistories(const std::vector<std::size_t>& types /*, const std::string& access_token*/) {
         auto handler_handle = addSigintHandler([&] { semaphore.setTo(to_int32(types.size())); });
         auto sigintHandlerRemover = makeFinalizer([&] { removeSigintHandler(handler_handle); });
         total = types.size();
@@ -135,7 +135,7 @@ class HistoryHandler {
 
     class HistoryRequest : public RequestWithResponseHandler {
       public:
-        HistoryRequest(const std::string& uri, HistoryHandler& parent_, size_t type)
+        HistoryRequest(const std::string& uri, HistoryHandler& parent_, std::size_t type)
             : RequestWithResponseHandler(uri), parent(parent_), t(type) {}
 
         ~HistoryRequest() {
@@ -163,10 +163,10 @@ class HistoryHandler {
                     onJsonError(e, item);
                 }
             }
-            lock.waitFor([&](size_t n) { return n == queries.size(); });
+            lock.waitFor([&](std::size_t n) { return n == queries.size(); });
             UpdateQuery q(*this, t);
             parent.writer.withConnection(q);
-            lock.waitFor([&](size_t n) { return n == queries.size() + 1; });
+            lock.waitFor([&](std::size_t n) { return n == queries.size() + 1; });
             finalize();
         }
 
@@ -196,7 +196,7 @@ class HistoryHandler {
       private:
         class HistoryQuery : public Query {
           public:
-            HistoryQuery(HistoryRequest& parent_, size_t type_, const Json::Value& item_)
+            HistoryQuery(HistoryRequest& parent_, std::size_t type_, const Json::Value& item_)
                 : parent(parent_), type(type_), item(item_) {
                 std::tm time{};
                 auto result = strptime(item["date"].asString().c_str(), "%Y-%m-%d", &time);
@@ -235,7 +235,7 @@ class HistoryHandler {
 
           private:
             HistoryRequest& parent;
-            size_t type;
+            std::size_t type;
             Json::Value item;
             uint64_t volume;
             time_t then_time_t;
@@ -246,7 +246,7 @@ class HistoryHandler {
         };
         class UpdateQuery : public Query {
           public:
-            UpdateQuery(HistoryRequest& parent_, size_t type_) : parent(parent_), type(type_) {}
+            UpdateQuery(HistoryRequest& parent_, std::size_t type_) : parent(parent_), type(type_) {}
             void run(const sqlite::dbPtr&) override {
                 auto& updateStmt = parent.parent.updateStmt_;
                 sqlite::bind(updateStmt, 1, type);
@@ -265,12 +265,12 @@ class HistoryHandler {
 
           private:
             HistoryRequest& parent;
-            size_t type;
+            std::size_t type;
         };
 
         HistoryHandler& parent;
         std::vector<HistoryQuery> queries;
-        size_t t;
+        std::size_t t;
         std::stringstream responseBody;
         Json::Value items;
         Semaphore lock;
@@ -280,13 +280,13 @@ class HistoryHandler {
     sqlite::stmtPtr insertStmt_;
     sqlite::stmtPtr updateStmt_;
     Semaphore semaphore;
-    size_t total;
+    std::size_t total;
     std::vector<std::unique_ptr<HistoryRequest>> requests;
     bool print_progress = true;
     HTTPSRequestHandlerGroup http_handlers;
 };
 
-void saveHistoriesST(const sqlite::dbPtr& db, const std::vector<size_t>& types /*, const std::string& access_token*/) {
+void saveHistoriesST(const sqlite::dbPtr& db, const std::vector<std::size_t>& types /*, const std::string& access_token*/) {
     auto insertStmt = sqlite::prepare(db, "insert or ignore into history values(?, ?, ?, ?, ?, ?, ?, ?);");
     auto updateStmt =
         sqlite::prepare(db, "insert or replace into last_history_update values(?, 10000002, strftime('%s', 'now'));");
@@ -340,7 +340,7 @@ void saveHistoriesST(const sqlite::dbPtr& db, const std::vector<size_t>& types /
     }
 }
 
-// void saveHistoriesB(const sqlite::dbPtr& db, const std::vector<size_t>& types/*, const std::string& access_token*/) {
+// void saveHistoriesB(const sqlite::dbPtr& db, const std::vector<std::size_t>& types/*, const std::string& access_token*/) {
 //    DatabaseConnection writer("market_history.db");
 //    auto insertStmt = writer.prepareStatement("insert or ignore into history values(?, ?, ?, ?, ?, ?, ?, ?);");
 //    auto updateStmt = writer.prepareStatement("insert or replace into last_history_update values(?, 10000002,

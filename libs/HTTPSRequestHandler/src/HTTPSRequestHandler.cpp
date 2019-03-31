@@ -158,7 +158,7 @@ void ignore(const Response&, std::istream& s) {
 
 struct HTTPSRequestHandlerGroup::impl {
 public:
-    impl(size_t n, const std::string& host, uint16_t port) : next() {
+    impl(std::size_t n, const std::string& host, uint16_t port) : next() {
         handlers.reserve(n);
         for (auto i = 0u; i < n; ++i)
             handlers.emplace_back(host, port);
@@ -183,11 +183,11 @@ public:
     impl(impl&&) = default;
     impl& operator=(impl&&) = default;
 private:
-    size_t next;
+    std::size_t next;
     std::vector<HTTPSRequestHandler> handlers;
 };
 
-HTTPSRequestHandlerGroup::HTTPSRequestHandlerGroup(size_t n, const std::string& host, uint16_t port) : pimpl(std::make_unique<impl>(n, host, port)) {}
+HTTPSRequestHandlerGroup::HTTPSRequestHandlerGroup(std::size_t n, const std::string& host, uint16_t port) : pimpl(std::make_unique<impl>(n, host, port)) {}
 HTTPSRequestHandlerGroup::~HTTPSRequestHandlerGroup() = default;
 
 void HTTPSRequestHandlerGroup::postRequest(const std::shared_ptr<RequestWithResponseHandler>& request, const std::string& data) { pimpl->postRequest(request, data); }
