@@ -15,6 +15,7 @@ using bi::mapped_region;
 using bi::read_only;
 using bi::read_write;
 
+
 JsonWriter::JsonWriter(const boost::filesystem::path file_name)
     : file_name_{std::move(file_name)}, file_{file_name_.c_str(), read_write},
       region_{file_, read_write, 0, file_size(file_name_)}, start_{static_cast<char*>(region_.get_address())},
@@ -41,7 +42,7 @@ void JsonWriter::check(const char* const start, const char* const stop, std::int
     if (static_cast<std::int64_t>(read_orders.size()) < order_count) {
         throw std::runtime_error("not enough orders");
     }
-    assert(order_count <= active_orders_.size());
+    assert(order_count <= static_cast<std::int64_t>(active_orders_.size()));
     // if (read_orders.size() != active_orders_.size())
     //    std::cerr << "size mismatch. Actual: " << read_orders.size() << ", Expected: " << active_orders_.size() <<
     //    '\n';

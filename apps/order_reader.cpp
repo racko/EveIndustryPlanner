@@ -634,7 +634,7 @@ class OrderHandler3 {
                 orders = root["items"];
                 for (const auto& order : orders) {
                     try {
-                        singleOrderHandlers.emplace_back(*this, order, region);
+                        singleOrderHandlers.emplace_back(*this, order);
                         writer.withConnection(singleOrderHandlers.back());
                     } catch (const std::exception& e) {
                         onJsonError(e, order);
@@ -663,8 +663,8 @@ class OrderHandler3 {
   private:
     class SingleOrderHandler : public Query {
       public:
-        SingleOrderHandler(OrderHandler3& parent_, const Json::Value& o, std::size_t region)
-            : parent(parent_), order(o), regionid(region) {
+        SingleOrderHandler(OrderHandler3& parent_, const Json::Value& o)
+            : parent(parent_), order(o) {
             id = o["id"].asUInt64();
             type = o["type"].asUInt64();
             station = o["stationID"].asUInt64();
@@ -751,7 +751,6 @@ class OrderHandler3 {
       private:
         OrderHandler3& parent;
         Json::Value order;
-        std::size_t regionid;
         std::size_t id;
         std::size_t type;
         std::size_t station;

@@ -1,5 +1,5 @@
 #pragma once
 
-#include <cstdint>
+#include <cstddef>
 
 using TypeID = std::size_t;

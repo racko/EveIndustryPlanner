@@ -1,24 +1,31 @@
-#include "Finalizer.h"
-#include "HTTPSRequestHandler.h"
-#include "QueryRunner.h"
-#include "Semaphore.h"
-#include "access_token.h"
-#include "outdatedHistories.h"
-#include "sqlite.h"
-#include <algorithm>
-#include <atomic>
-#include <chrono>
-#include <csignal>
-#include <exception>
-#include <fstream>
-#include <iomanip>
-#include <iostream>
-#include <json/json.h>
-#include <list>
-#include <sstream>
-#include <thread>
-#include <unordered_map>
-#include <unordered_set>
+#include "Finalizer.h"           // for makeFinalizer
+#include "HTTPSRequestHandler.h" // for simpleGet, HTTPSRequestHandlerGroup
+#include "QueryRunner.h"         // for DatabaseConnection, Query
+#include "Semaphore.h"           // for Semaphore
+#include "outdatedHistories.h"   // for outdatedHistories
+#include "sqlite.h"              // for bind, reset, step, prepare, dbPtr
+#include <cassert>               // for assert
+#include <csignal>               // for signal, SIGINT
+#include <cstdint>               // for uint64_t, int32_t, uint32_t
+#include <ctime>                 // for strptime, timegm, tm, time_t
+#include <exception>             // for exception
+#include <functional>            // for function
+#include <ios>                   // for boolalpha
+#include <iosfwd>                // for ostream, size_t, stringstream, istream
+#include <iostream>              // for cout
+#include <istream>               // for basic_istream
+#include <iterator>              // for operator!=
+#include <json/reader.h>         // for operator>>
+#include <json/value.h>          // for Value
+#include <json/writer.h>         // for operator<<
+#include <list>                  // for list
+#include <memory>                // for unique_ptr, allocator, make_unique
+#include <ostream>               // for operator<<, basic_ostream, basic_os...
+#include <sstream>               // for basic_stringstream, basic_stringstr...
+#include <stdexcept>             // for runtime_error
+#include <string>                // for operator+, char_traits, to_string
+#include <utility>               // for move
+#include <vector>                // for vector
 
 static constexpr const char* ANSI_CLEAR_LINE = "\033[2K";
 
@@ -238,7 +245,7 @@ class HistoryHandler {
             std::size_t type;
             Json::Value item;
             std::uint64_t volume;
-            time_t then_time_t;
+            std::time_t then_time_t;
             std::uint64_t orderCount;
             double avg;
             double low;
@@ -286,7 +293,8 @@ class HistoryHandler {
     HTTPSRequestHandlerGroup http_handlers;
 };
 
-void saveHistoriesST(const sqlite::dbPtr& db, const std::vector<std::size_t>& types /*, const std::string& access_token*/) {
+void saveHistoriesST(const sqlite::dbPtr& db,
+                     const std::vector<std::size_t>& types /*, const std::string& access_token*/) {
     auto insertStmt = sqlite::prepare(db, "insert or ignore into history values(?, ?, ?, ?, ?, ?, ?, ?);");
     auto updateStmt =
         sqlite::prepare(db, "insert or replace into last_history_update values(?, 10000002, strftime('%s', 'now'));");
@@ -340,7 +348,8 @@ void saveHistoriesST(const sqlite::dbPtr& db, const std::vector<std::size_t>& ty
     }
 }
 
-// void saveHistoriesB(const sqlite::dbPtr& db, const std::vector<std::size_t>& types/*, const std::string& access_token*/) {
+// void saveHistoriesB(const sqlite::dbPtr& db, const std::vector<std::size_t>& types/*, const std::string&
+// access_token*/) {
 //    DatabaseConnection writer("market_history.db");
 //    auto insertStmt = writer.prepareStatement("insert or ignore into history values(?, ?, ?, ?, ?, ?, ?, ?);");
 //    auto updateStmt = writer.prepareStatement("insert or replace into last_history_update values(?, 10000002,
