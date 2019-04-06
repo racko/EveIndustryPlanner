@@ -27,9 +27,12 @@ dbPtr connectDB(const char* name) {
 dbPtr getDB(const char* path) {
     auto db = connectDB(path);
     sqlite3_extended_result_codes(db.get(), 1);
-    for (const auto& pragma :
-         {"pragma cache_size=2000000;", "pragma synchronous=OFF;", "pragma temp_store=Memory;",
-          "pragma journal_mode=MEMORY;", "PRAGMA wal_autocheckpoint=1000;", "pragma foreign_keys=ON;"}) {
+    for (const auto& pragma : {"pragma cache_size=2000000;",
+                               "pragma synchronous=OFF;",
+                               "pragma temp_store=Memory;",
+                               "pragma journal_mode=MEMORY;",
+                               "PRAGMA wal_autocheckpoint=1000;",
+                               "pragma foreign_keys=ON;"}) {
         step(sqlite::prepare(db, pragma));
     }
     return db;
@@ -181,4 +184,3 @@ const int DONE = SQLITE_DONE;
 const char* errstr(int code) { return sqlite3_errstr(code); }
 int64_t last_insert_rowid(const dbPtr& db) { return sqlite3_last_insert_rowid(db.get()); }
 } // namespace sqlite
-

@@ -1,7 +1,7 @@
 #pragma once
 
-#include <iterator>
 #include <cstdint>
+#include <iterator>
 
 struct archive;
 struct archive_entry;

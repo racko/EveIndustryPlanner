@@ -10,9 +10,7 @@ bool endswith(const std::string_view s, const char (&ext)[N]) {
     return s.size() >= len && std::strncmp(s.end() - len, static_cast<const char*>(ext), len) == 0;
 }
 
-bool isTgz(const char* path) {
-    return endswith(path, ".tgz");
-}
+bool isTgz(const char* path) { return endswith(path, ".tgz"); }
 
 std::pair<std::string_view, std::string_view> split_directory_and_basename(const std::string_view s) {
     const auto it = std::find(s.rbegin(), s.rend(), '/');
@@ -30,7 +28,7 @@ std::pair<std::string_view, std::string_view> split_extension(const std::string_
     const auto dist = std::distance(s.begin(), it);
     assert(dist >= 0);
     const auto len = static_cast<std::string_view::size_type>(dist);
-    return std::pair{s.substr(0,len), s.substr(len + 1,  s.size() - len - 1)};
+    return std::pair{s.substr(0, len), s.substr(len + 1, s.size() - len - 1)};
 }
 
 void create_directories(boost::filesystem::path& path, std::initializer_list<const char*> dirs) {

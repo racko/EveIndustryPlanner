@@ -1,8 +1,8 @@
 #pragma once
 
 #include <cstdint>
-#include <unordered_set>
 #include <unordered_map>
+#include <unordered_set>
 
 struct Names;
 
@@ -27,7 +27,8 @@ struct Skills {
 
     double cpu;
     double power;
-private:
+
+  private:
     std::unordered_set<std::size_t> racialEncryptionSkills;
     std::unordered_set<std::size_t> advancedScienceSkills;
     std::unordered_set<std::size_t> manufacturingTimeModifierSkills;

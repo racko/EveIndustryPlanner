@@ -26,7 +26,7 @@ class OrderReader {
             step();
             return *this;
         }
-        //const std::vector<Order>& operator*() const { return reader_->active_orders; }
+        // const std::vector<Order>& operator*() const { return reader_->active_orders; }
         auto operator*() const { return std::tie(reader_->viewtime, reader_->active_orders); }
         // hack: return true when we are done
         bool operator!=(const OrderIterator&) { return !reader_->text.empty(); }
@@ -41,11 +41,11 @@ class OrderReader {
     // apply changes in deleted and inserted to active_orders
     void finalize();
     // read single order/diff
-    //void read_step(std::string_view& doc, std::vector<std::uint64_t>::iterator& delete_it,
+    // void read_step(std::string_view& doc, std::vector<std::uint64_t>::iterator& delete_it,
     //               std::vector<Order>::iterator& insert_it);
     std::string_view read_step(std::string_view doc);
     // read_step with delete_it = deleted.begin() a,d insert_it = inserted.begin()
-    //void read_step(std::string_view doc);
+    // void read_step(std::string_view doc);
     // read_doc + finalize
     void step();
     // read_step in a loop until doc.empty()

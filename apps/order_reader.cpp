@@ -89,13 +89,13 @@ double getMaxPrice(const Json::Value& root) {
     // std::max<double> with the required signature. It only guarantees that std::max<double> can be called in some way
     // and will then return a double. But it could have default arguments or not be a function at all (it could be a
     // functor. They actually said "the 'correct' solution is to use a lambda."
-    return accumulate_price(root, -std::numeric_limits<double>::infinity(),
-                            [](double a, double b) { return std::max(a, b); });
+    return accumulate_price(
+        root, -std::numeric_limits<double>::infinity(), [](double a, double b) { return std::max(a, b); });
 }
 
 double getMinPrice(const Json::Value& root) {
-    return accumulate_price(root, std::numeric_limits<double>::infinity(),
-                            [](double a, double b) { return std::min(a, b); });
+    return accumulate_price(
+        root, std::numeric_limits<double>::infinity(), [](double a, double b) { return std::min(a, b); });
 }
 
 double getMaxPrice(const std::string& dir, std::size_t typeID) { return getMaxPrice(loadOrders(dir, typeID)); }
@@ -605,7 +605,8 @@ class OrderHandler3 {
             interrupted = true; /*semaphore.setTo(std::numeric_limits<std::int32_t>::max());*/
         });
         auto sigintHandlerRemover = makeFinalizer([&] { removeSigintHandler(handler_handle); });
-        TIME(simpleGet("https://esi.evetech.net/latest/markets/" + std::to_string(region) + "/orders/?page=1", stream););
+        TIME(
+            simpleGet("https://esi.evetech.net/latest/markets/" + std::to_string(region) + "/orders/?page=1", stream););
 
         // auto rawtime = std::time(nullptr);
         // auto ptm = gmtime(&rawtime);
@@ -663,8 +664,7 @@ class OrderHandler3 {
   private:
     class SingleOrderHandler : public Query {
       public:
-        SingleOrderHandler(OrderHandler3& parent_, const Json::Value& o)
-            : parent(parent_), order(o) {
+        SingleOrderHandler(OrderHandler3& parent_, const Json::Value& o) : parent(parent_), order(o) {
             id = o["id"].asUInt64();
             type = o["type"].asUInt64();
             station = o["stationID"].asUInt64();

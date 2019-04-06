@@ -25,9 +25,9 @@ struct Assets {
 
     // for t1 bpcs we ignore efficiencies because we would have to deal with all 100 research level combinations
     std::size_t runs(std::size_t typeId) const;
-private:
+
+  private:
     std::unordered_map<std::size_t, std::size_t> assets;
     std::unordered_map<std::size_t, std::size_t> planetary_assets;
     std::unordered_map<BlueprintWithEfficiency, std::size_t> ownedBPCs;
-
 };

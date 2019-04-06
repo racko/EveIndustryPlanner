@@ -1,5 +1,5 @@
 #pragma once
 
 namespace YAML {
-    class Node;
+class Node;
 }

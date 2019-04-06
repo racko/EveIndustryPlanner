@@ -7,8 +7,8 @@ struct Diff;
 struct Order;
 struct Id;
 
-std::vector<Order>::reverse_iterator findOrderWithSmallerId(std::vector<Order>::reverse_iterator begin,
-                                                            std::vector<Order>::reverse_iterator end, Id o);
+std::vector<Order>::reverse_iterator
+findOrderWithSmallerId(std::vector<Order>::reverse_iterator begin, std::vector<Order>::reverse_iterator end, Id o);
 
 std::vector<Order>::const_iterator findOrderWithEqualOrGreaterId(std::vector<Order>::const_iterator begin,
                                                                  std::vector<Order>::const_iterator end,

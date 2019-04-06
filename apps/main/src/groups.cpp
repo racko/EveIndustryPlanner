@@ -7,7 +7,7 @@
 void Groups::loadGroups(const YAML::Node& typesNode) {
     std::cout << "building map. " << std::flush;
     groups.reserve(typesNode.size());
-    const auto tTime2 = time<float,std::milli>([&] {
+    const auto tTime2 = time<float, std::milli>([&] {
         for (const auto& t : typesNode) {
             const auto& groupIdNode = t.second["groupID"];
             const auto& publishedNode = t.second["published"];

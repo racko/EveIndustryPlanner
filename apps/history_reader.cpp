@@ -128,7 +128,8 @@ class HistoryHandler {
             requests.emplace_back(std::make_unique<HistoryRequest>(
                 "/market/10000002/history/?type=https://crest-tq.eveonline.com/inventory/types/" + std::to_string(p) +
                     "/",
-                *this, p));
+                *this,
+                p));
             http_handlers.postRequest(*requests.back(), "");
         }
         semaphore.acquire(to_uint32(types.size()));

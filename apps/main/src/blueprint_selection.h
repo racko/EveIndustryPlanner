@@ -1,8 +1,8 @@
 #pragma once
 
-#include <unordered_set>
 #include "type_id.h"
 #include "yaml_fwd.h"
+#include <unordered_set>
 
 struct BluePrintSelection {
     std::unordered_set<TypeID> ignoreList;

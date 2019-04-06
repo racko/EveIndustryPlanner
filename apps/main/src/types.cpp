@@ -8,12 +8,13 @@
 
 void Types::isConsistent() const {
     //// only blueprints contains t1s without invention. So the following is wrong
-    //auto blueprints_ = t1_blueprints;
-    //blueprints_.insert(t2_blueprints.begin(), t2_blueprints.end());
-    //blueprints_.insert(t3_blueprints.begin(), t3_blueprints.end());
-    //auto blueprints_match = blueprints.size() == t1_blueprints.size() + t2_blueprints.size() + t3_blueprints.size() && blueprints == blueprints_;
+    // auto blueprints_ = t1_blueprints;
+    // blueprints_.insert(t2_blueprints.begin(), t2_blueprints.end());
+    // blueprints_.insert(t3_blueprints.begin(), t3_blueprints.end());
+    // auto blueprints_match = blueprints.size() == t1_blueprints.size() + t2_blueprints.size() + t3_blueprints.size()
+    // && blueprints == blueprints_;
 
-    //if (!blueprints_match) {
+    // if (!blueprints_match) {
     //    std::cout << "blueprints not in t1, t2 or t3: ";
     //    for (auto p : blueprints) {
     //        if (blueprints_.find(p) == blueprints_.end())
@@ -27,11 +28,11 @@ void Types::isConsistent() const {
     //    std::cout << '\n';
     //}
 
-    //auto products_match = true;
-    //for (auto p : manufacturingOutputs) {
+    // auto products_match = true;
+    // for (auto p : manufacturingOutputs) {
     //    products_match &= int(isT1_(p)) + int(isT2_(p)) + int(isT3_(p)) == 1;
     //}
-    //if (!blueprints_match || !products_match)
+    // if (!blueprints_match || !products_match)
     //    throw std::runtime_error("types are inconsistent");
 }
 
@@ -43,7 +44,8 @@ void Types::reserve(std::size_t n) {
 }
 
 bool Types::isBP_(TypeID t) const {
-    //return isT1BP_(t) || isT2BP_(t) || isT3BP_(t); // cannot use this because we have to base isT1BP_ on isBP_ (see below)
+    // return isT1BP_(t) || isT2BP_(t) || isT3BP_(t); // cannot use this because we have to base isT1BP_ on isBP_ (see
+    // below)
     return blueprints.find(t) != blueprints.end();
 }
 
@@ -54,9 +56,7 @@ bool Types::isT1BP_(TypeID t) const {
     return isBP_(t) && !isT2BP_(t) && !isT3BP_(t) && !isRelic_(t);
 }
 
-bool Types::isT2BP_(TypeID t) const {
-    return t2_blueprints.find(t) != t2_blueprints.end();
-}
+bool Types::isT2BP_(TypeID t) const { return t2_blueprints.find(t) != t2_blueprints.end(); }
 
 bool Types::isT1_(TypeID t) const {
     auto it = productToBP.find(t);
@@ -68,26 +68,18 @@ bool Types::isT2_(TypeID t) const {
     return it != productToBP.end() && isT2BP_(it->second);
 }
 
-bool Types::isRelic_(TypeID t) const {
-    return ancient_relics.find(t) != ancient_relics.end();
-}
+bool Types::isRelic_(TypeID t) const { return ancient_relics.find(t) != ancient_relics.end(); }
 
-bool Types::isT3BP_(TypeID t) const {
-    return t3_blueprints.find(t) != t3_blueprints.end();
-}
+bool Types::isT3BP_(TypeID t) const { return t3_blueprints.find(t) != t3_blueprints.end(); }
 
 bool Types::isT3_(TypeID t) const {
     auto it = productToBP.find(t);
     return it != productToBP.end() && isT3BP_(it->second);
 }
 
-bool Types::isProduct_(TypeID t) const {
-    return manufacturingOutputs.find(t) != manufacturingOutputs.end();
-}
+bool Types::isProduct_(TypeID t) const { return manufacturingOutputs.find(t) != manufacturingOutputs.end(); }
 
-bool Types::isBaseItem_(TypeID t) const {
-    return !isBP_(t) && !isProduct_(t);
-}
+bool Types::isBaseItem_(TypeID t) const { return !isBP_(t) && !isProduct_(t); }
 
 void Types::checkItem(TypeID t) const {
     auto isbp = isBP_(t);
@@ -247,7 +239,7 @@ void Types::registerBlueprint(unsigned blueprintId, const YAML::Node& b, const G
 YAML::Node Types::get_invention_products(const YAML::Node& activities) {
     try {
         return activities["invention"]["products"];
-    } catch(const YAML::InvalidNode&) {
+    } catch (const YAML::InvalidNode&) {
         return YAML::Node(YAML::NodeType::Sequence);
     }
 }
@@ -255,7 +247,7 @@ YAML::Node Types::get_invention_products(const YAML::Node& activities) {
 YAML::Node Types::get_manufacturing_products(const YAML::Node& activities) {
     try {
         return activities["manufacturing"]["products"];
-    } catch(const YAML::InvalidNode&) {
+    } catch (const YAML::InvalidNode&) {
         return YAML::Node(YAML::NodeType::Sequence);
     }
 }
@@ -264,7 +256,7 @@ bool Types::is_ancient_relic(const YAML::Node& root, const Groups& groups) {
     static const std::array<TypeID, 6> relicIDs{{971, 990, 991, 992, 993, 997}};
     auto group = groups.checkGroup(root["blueprintTypeID"].as<unsigned>());
     return group != nullptr && std::binary_search(relicIDs.begin(), relicIDs.end(), *group);
-    //try {
+    // try {
     //    for (const auto& skill : root["activities"]["invention"]["skills"])
     //        if (skill["typeID"].as<int>() == 3408)
     //            return true;

@@ -1,8 +1,8 @@
 #include "assets.h"
 #include "names.h"
 
-#include <iostream>
 #include <fstream>
+#include <iostream>
 #include <pugixml.hpp>
 #include <sstream>
 
@@ -18,7 +18,13 @@ void Assets::loadAssetsFromXml(const Names& names) {
         throw std::runtime_error("parsing asset list failed.");
     }
     static const auto assetsString = std::string("assets");
-    const auto& assetlist = doc.child("eveapi").child("result").find_child([] (const pugi::xml_node& n) { return n.attribute("name").as_string() == assetsString; }).find_child([] (const pugi::xml_node& n) { return n.attribute("itemID").as_ullong() == 1019171856618; }).child("rowset").children();
+    const auto& assetlist =
+        doc.child("eveapi")
+            .child("result")
+            .find_child([](const pugi::xml_node& n) { return n.attribute("name").as_string() == assetsString; })
+            .find_child([](const pugi::xml_node& n) { return n.attribute("itemID").as_ullong() == 1019171856618; })
+            .child("rowset")
+            .children();
     for (const auto& asset : assetlist) {
         auto typeId = asset.attribute("typeID").as_ullong();
         auto quantity = asset.attribute("quantity").as_ullong();
@@ -32,19 +38,20 @@ void Assets::addAssetsFromTsv(const char* filename, const Names& names) {
     std::cout << "Assets (" << filename << "):\n";
     std::ifstream file(filename);
     std::string line;
-    while(std::getline(file, line)) {
+    while (std::getline(file, line)) {
         std::stringstream linestream(line);
         std::string name, quantity_str;
         if (!std::getline(linestream, name, '\t') || !std::getline(linestream, quantity_str, '\t'))
             throw std::runtime_error("Failed to parse assets: '" + line + "'");
         auto typeId = names.getTypeId(name);
-        std::stringstream qstr(quantity_str); // TODO: avoid unnecessary copies
+        std::stringstream qstr(quantity_str);   // TODO: avoid unnecessary copies
         qstr.imbue(std::locale("en_US.UTF-8")); // allows parsing "1,000,000" etc.
         std::size_t quantity;
         qstr >> quantity;
         auto assetIt = assets.insert({typeId, 0}); // no-op if it already exists.
         assetIt.first->second += quantity;
-        std::cout << "  " << names.getName(typeId) << " (" << typeId << "): +" << quantity << " -> " << assetIt.first->second << '\n';
+        std::cout << "  " << names.getName(typeId) << " (" << typeId << "): +" << quantity << " -> "
+                  << assetIt.first->second << '\n';
     }
 }
 
@@ -64,7 +71,11 @@ void Assets::loadOwnedBPCsFromXml(const Names& names) {
         throw std::runtime_error("parsing blueprints failed.");
     }
     static const auto assetsString = std::string("blueprints");
-    const auto& owned_blueprints = doc.child("eveapi").child("result").find_child([] (const pugi::xml_node& n) { return n.attribute("name").as_string() == assetsString; }).children();
+    const auto& owned_blueprints =
+        doc.child("eveapi")
+            .child("result")
+            .find_child([](const pugi::xml_node& n) { return n.attribute("name").as_string() == assetsString; })
+            .children();
     ownedBPCs.reserve(std::size_t(std::distance(owned_blueprints.begin(), owned_blueprints.end())));
     for (const auto& bp : owned_blueprints) {
         auto typeId = bp.attribute("typeID").as_ullong();
@@ -78,7 +89,8 @@ void Assets::loadOwnedBPCsFromXml(const Names& names) {
         auto x = BlueprintWithEfficiency(typeId, bpe);
         auto bpIt = ownedBPCs.insert({x, 0}); // no-op if it already exists.
         bpIt.first->second += runs;
-        std::cout << "  " << names.getName(typeId) << " " << bpe << " (" << typeId << "): +" << runs << " -> " << bpIt.first->second << '\n';
+        std::cout << "  " << names.getName(typeId) << " " << bpe << " (" << typeId << "): +" << runs << " -> "
+                  << bpIt.first->second << '\n';
     }
 }
 

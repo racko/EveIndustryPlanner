@@ -5,7 +5,7 @@
 #include <chrono>
 
 class Copying {
-public:
+  public:
     using type_t = TypeID;
     using blueprint_t = type_t;
     using duration_t = std::chrono::seconds;
@@ -14,7 +14,8 @@ public:
 
     blueprint_t getBlueprint() const { return blueprint; }
     duration_t getDuration() const { return duration; }
-private:
+
+  private:
     blueprint_t blueprint;
     duration_t duration;
 };

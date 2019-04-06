@@ -27,12 +27,16 @@ void Skills::loadSkillLevels(const Names& names) {
         throw std::runtime_error("parsing character sheet failed.");
     }
     static const auto skillsString = std::string("skills");
-    const auto& skills = doc.child("eveapi").child("result").find_child([] (const pugi::xml_node& n) { return n.attribute("name").as_string() == skillsString; }).children();
+    const auto& skills =
+        doc.child("eveapi")
+            .child("result")
+            .find_child([](const pugi::xml_node& n) { return n.attribute("name").as_string() == skillsString; })
+            .children();
     for (const auto& skill : skills) {
         auto typeId = skill.attribute("typeID").as_ullong();
         auto level = skill.attribute("level").as_ullong();
         std::cout << "  " << names.getName(typeId) << " (" << typeId << "): " << level << '\n';
-        skillLevels.insert({ typeId, level });
+        skillLevels.insert({typeId, level});
     }
 
     const auto industry = getSkillLevel(names.getTypeId("Industry"));
@@ -41,8 +45,10 @@ void Skills::loadSkillLevels(const Names& names) {
     const auto commandCenterUpgrades = getSkillLevel(names.getTypeId("Command Center Upgrades"));
     const auto interplanetaryConsolidation = getSkillLevel(names.getTypeId("Interplanetary Consolidation"));
 
-    productionLines = 1 + getSkillLevel(names.getTypeId("Mass Production")) + getSkillLevel(names.getTypeId("Advanced Mass Production"));
-    scienceLabs = 1 + getSkillLevel(names.getTypeId("Laboratory Operation")) + getSkillLevel(names.getTypeId("Advanced Laboratory Operation"));
+    productionLines = 1 + getSkillLevel(names.getTypeId("Mass Production")) +
+                      getSkillLevel(names.getTypeId("Advanced Mass Production"));
+    scienceLabs = 1 + getSkillLevel(names.getTypeId("Laboratory Operation")) +
+                  getSkillLevel(names.getTypeId("Advanced Laboratory Operation"));
     manufacturingTimeReduction = (1.0 - double(industry) * 0.04) * (1.0 - double(advancedIndustry) * 0.03);
     copyTimeReduction = (1.0 - double(science) * 0.05) * (1.0 - double(advancedIndustry) * 0.03);
     researchTimeReduction = (1.0 - double(advancedIndustry) * 0.03);
@@ -53,14 +59,12 @@ void Skills::loadSkillLevels(const Names& names) {
     cpu = double((1 + interplanetaryConsolidation)) * (cpuLevels[commandCenterUpgrades] - 2.0 * (3600.0 + 22.0));
     power = double((1 + interplanetaryConsolidation)) * (powerLevels[commandCenterUpgrades] - 2.0 * (700 + 15.0));
 
-    racialEncryptionSkills = std::unordered_set<std::size_t> {
-        names.getTypeId("Amarr Encryption Methods"),
-        names.getTypeId("Caldari Encryption Methods"),
-        names.getTypeId("Gallente Encryption Methods"),
-        names.getTypeId("Minmatar Encryption Methods"),
-        names.getTypeId("Sleeper Encryption Methods")
-    };
-    advancedScienceSkills = std::unordered_set<std::size_t> {
+    racialEncryptionSkills = std::unordered_set<std::size_t>{names.getTypeId("Amarr Encryption Methods"),
+                                                             names.getTypeId("Caldari Encryption Methods"),
+                                                             names.getTypeId("Gallente Encryption Methods"),
+                                                             names.getTypeId("Minmatar Encryption Methods"),
+                                                             names.getTypeId("Sleeper Encryption Methods")};
+    advancedScienceSkills = std::unordered_set<std::size_t>{
         names.getTypeId("Amarr Starship Engineering"),
         names.getTypeId("Caldari Starship Engineering"),
         names.getTypeId("Gallente Starship Engineering"),
@@ -83,12 +87,11 @@ void Skills::loadSkillLevels(const Names& names) {
         names.getTypeId("Core Subsystem Technology"),
         names.getTypeId("Propulsion Subsystem Technology"),
     };
-    manufacturingTimeModifierSkills = std::unordered_set<std::size_t> {
-        names.getTypeId("Advanced Small Ship Construction"),
-        names.getTypeId("Advanced Medium Ship Construction"),
-        names.getTypeId("Advanced Large Ship Construction"),
-        names.getTypeId("Advanced Industrial Ship Construction")
-    };
+    manufacturingTimeModifierSkills =
+        std::unordered_set<std::size_t>{names.getTypeId("Advanced Small Ship Construction"),
+                                        names.getTypeId("Advanced Medium Ship Construction"),
+                                        names.getTypeId("Advanced Large Ship Construction"),
+                                        names.getTypeId("Advanced Industrial Ship Construction")};
 }
 
 std::size_t Skills::getSkillLevel(std::size_t skill) const {

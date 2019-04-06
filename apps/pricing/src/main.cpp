@@ -153,7 +153,8 @@ struct TritaniumBuyAnalysis {
         std::vector<Diff> diffs;
         std::vector<std::tuple<double, double, int>> price_changes;
         std::vector<double> new_prices;
-        const auto minmax{std::minmax_element(last_orders.begin(), last_orders.end(),
+        const auto minmax{std::minmax_element(last_orders.begin(),
+                                              last_orders.end(),
                                               [](const Order& a, const Order& b) { return price(a) < price(b); })};
         // we don't know if we are looking at sell or buy orders ...
         const auto max_buy = price(*minmax.second).data;
@@ -214,7 +215,9 @@ struct TritaniumBuyAnalysis {
             new_prices.push_back(price(*b).data);
         }
         total_volumes << viewtime << ','
-                      << std::accumulate(view.begin(), view.end(), 0LL,
+                      << std::accumulate(view.begin(),
+                                         view.end(),
+                                         0LL,
                                          [](std::int64_t acc, const Order& o) { return acc + volume(o).data; })
                       << '\n';
         sold_volumes << viewtime << ',' << sold_volume << '\n';
@@ -223,8 +226,8 @@ struct TritaniumBuyAnalysis {
         min_sells << viewtime << ',' << min_sell << '\n';
         max_buys << viewtime << ',' << max_buy << '\n';
         // stable_sort: old before new
-        std::stable_sort(diffs.begin(), diffs.end(),
-                         [](const Diff& lhs, const Diff& rhs) { return price(lhs.o) < price(rhs.o); });
+        std::stable_sort(
+            diffs.begin(), diffs.end(), [](const Diff& lhs, const Diff& rhs) { return price(lhs.o) < price(rhs.o); });
         for (const auto& d : diffs) {
             const auto& o = d.o;
             std::cout << Diff::typechar(d.t) << ' ' << id(o).data << ' ' << price(o).data << ' ' << volume(o).data

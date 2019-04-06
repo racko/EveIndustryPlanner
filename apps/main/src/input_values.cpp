@@ -6,8 +6,10 @@
 
 namespace {
 // TODO: this function still depends on the Production class (via the typedef)
-template<typename Cont>
-void inputValue(const Production::materials_t& materials, const std::unordered_map<std::size_t, double>& adjPrices, Cont c) {
+template <typename Cont>
+void inputValue(const Production::materials_t& materials,
+                const std::unordered_map<std::size_t, double>& adjPrices,
+                Cont c) {
     auto inputValue = 0.0;
     for (const auto& m : materials) {
         if (auto it = adjPrices.find(m.first); it != adjPrices.end()) {
@@ -18,38 +20,42 @@ void inputValue(const Production::materials_t& materials, const std::unordered_m
     }
     c(inputValue);
 }
-}
+} // namespace
 
-std::unordered_map<std::size_t,double> inputValues(const std::vector<Production>& products, const std::unordered_map<std::size_t, double>& adjPrices) {
-    std::unordered_map<std::size_t,double> inputValues(products.size());
+std::unordered_map<std::size_t, double> inputValues(const std::vector<Production>& products,
+                                                    const std::unordered_map<std::size_t, double>& adjPrices) {
+    std::unordered_map<std::size_t, double> inputValues(products.size());
     for (const auto& p : products) {
-        inputValue(p.getMaterials(), adjPrices, [&]  (double v) { inputValues[p.getProduct()] = v; });
+        inputValue(p.getMaterials(), adjPrices, [&](double v) { inputValues[p.getProduct()] = v; });
     }
     return inputValues;
 }
 
 //#include <unordered_map>
 //
-//class InputValues;
+// class InputValues;
 //
-//InputValues inputValues(const std::vector<Production>& products, const std::unordered_map<std::size_t, double>& adjPrices);
+// InputValues inputValues(const std::vector<Production>& products, const std::unordered_map<std::size_t, double>&
+// adjPrices);
 //
-//std::unordered_map<std::size_t,double>::const_iterator find(const std::unordered_map<std::size_t,double>& adjPrices, std::size_t material_id);
+// std::unordered_map<std::size_t,double>::const_iterator find(const std::unordered_map<std::size_t,double>& adjPrices,
+// std::size_t material_id);
 //
-//class InputValues {
-//public:
+// class InputValues {
+// public:
 //    InputValues(std::size_t product_count);
 //    ~InputValues();
 //    void insert(std::size_t product_id, double input_value);
-//private:
+// private:
 //    std::unordered_map<std::size_t,double> input_values_;
 //};
 //
-//namespace {
+// namespace {
 //
 //// TODO: this function still depends on the Production class (via the typedef)
-//template<typename Cont>
-//void inputValue(const Production::materials_t& materials, const std::unordered_map<std::size_t, double>& adjPrices, Cont c) {
+// template<typename Cont>
+// void inputValue(const Production::materials_t& materials, const std::unordered_map<std::size_t, double>& adjPrices,
+// Cont c) {
 //    auto inputValue = 0.0;
 //    for (const auto& m : materials) {
 //        auto mId = m.first;
@@ -64,7 +70,8 @@ std::unordered_map<std::size_t,double> inputValues(const std::vector<Production>
 //}
 //}
 //
-//InputValues inputValues(const std::vector<Production>& products, const std::unordered_map<std::size_t, double>& adjPrices) {
+// InputValues inputValues(const std::vector<Production>& products, const std::unordered_map<std::size_t, double>&
+// adjPrices) {
 //    InputValues inputValues(products.size());
 //    for (const auto& p : products) {
 //        inputValue(p.getMaterials(), adjPrices, [&](double v) {inputValues.insert(p.getProduct(), v); });

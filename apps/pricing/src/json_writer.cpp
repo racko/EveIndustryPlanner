@@ -15,7 +15,6 @@ using bi::mapped_region;
 using bi::read_only;
 using bi::read_write;
 
-
 JsonWriter::JsonWriter(const boost::filesystem::path file_name)
     : file_name_{std::move(file_name)}, file_{file_name_.c_str(), read_write},
       region_{file_, read_write, 0, file_size(file_name_)}, start_{static_cast<char*>(region_.get_address())},
@@ -259,10 +258,12 @@ void JsonWriter::extract2(const char* const file_name) {
         const auto header = current_;
         current_ += 4; // 4 bytes for size of doc in bytes as written to the file ... should be variably sized
         const auto snapshot = std::move(active_orders_);
-        const auto r1 = std::lower_bound(snapshot.begin(), snapshot.end(), doc.front(),
-                                         [](const Order& a, const Order& b) { return id(a).data < id(b).data; });
-        const auto r2 = std::upper_bound(r1, snapshot.end(), doc.back(),
-                                         [](const Order& a, const Order& b) { return id(a).data < id(b).data; });
+        const auto r1 =
+            std::lower_bound(snapshot.begin(), snapshot.end(), doc.front(), [](const Order& a, const Order& b) {
+                return id(a).data < id(b).data;
+            });
+        const auto r2 = std::upper_bound(
+            r1, snapshot.end(), doc.back(), [](const Order& a, const Order& b) { return id(a).data < id(b).data; });
 
         active_orders_.clear();
         active_orders_.reserve(static_cast<std::size_t>((r1 - snapshot.begin()) +
@@ -287,8 +288,8 @@ void JsonWriter::extract2(const char* const file_name) {
                             active_orders2_.push_back(*current);
                             return static_cast<std::int32_t>(active_orders2_.size());
                         } else {
-                            //const auto i = free_list_.back();
-                            //free_list_.pop_back();
+                            // const auto i = free_list_.back();
+                            // free_list_.pop_back();
                             const auto i = free_list_.front();
                             free_list_.pop_front();
                             active_orders2_[static_cast<std::size_t>(i)] = *current;
@@ -319,7 +320,7 @@ void JsonWriter::extract2(const char* const file_name) {
                         std::memcpy(current_, &existing_index, 4);
                         current_ += 4;
 
-                        //write_diff(current_, Diff{{2}, price(*current), volume(*current), id(*current)});
+                        // write_diff(current_, Diff{{2}, price(*current), volume(*current), id(*current)});
                         write_diff(current_, Diff{{2}, price(*current), volume(*current)});
                     } else {
                         // order did not change since last view.
@@ -343,7 +344,7 @@ void JsonWriter::extract2(const char* const file_name) {
                     current_ += 4;
 
                     write_diff(current_, Diff{{2}, price(*last), {0}});
-                    //write_diff(current_, Diff{{2}, price(*last), {0}, id(*last)});
+                    // write_diff(current_, Diff{{2}, price(*last), {0}, id(*last)});
                     ++last;
                     if (last == r2)
                         break;
@@ -365,8 +366,8 @@ void JsonWriter::extract2(const char* const file_name) {
                     active_orders2_.push_back(*current);
                     return static_cast<std::int32_t>(active_orders2_.size());
                 } else {
-                    //const auto i = free_list_.back();
-                    //free_list_.pop_back();
+                    // const auto i = free_list_.back();
+                    // free_list_.pop_back();
                     const auto i = free_list_.front();
                     free_list_.pop_front();
                     active_orders2_[static_cast<std::size_t>(i)] = *current;
@@ -399,7 +400,7 @@ void JsonWriter::extract2(const char* const file_name) {
             current_ += 4;
 
             write_diff(current_, Diff{{2}, price(*last), {0}});
-            //write_diff(current_, Diff{{2}, price(*last), {0}, id(*last)});
+            // write_diff(current_, Diff{{2}, price(*last), {0}, id(*last)});
             // check(tmp, current_, current - active_orders_.begin());
         }
         const auto size = static_cast<std::int32_t>(current_ - header - 4);
@@ -443,8 +444,8 @@ void JsonWriter::write(const char* const source_directory_path) {
     std::vector<std::string> paths;
     paths.reserve(30000);
     directory_tree dir(source_directory_path);
-    std::copy_if(dir.begin(), dir.end(), std::back_inserter(paths),
-                 [](const char* file_name) { return isTgz(file_name); });
+    std::copy_if(
+        dir.begin(), dir.end(), std::back_inserter(paths), [](const char* file_name) { return isTgz(file_name); });
     std::sort(paths.begin(), paths.end());
     for (const auto& file_name : paths) {
         extract2(file_name.c_str());

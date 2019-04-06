@@ -88,9 +88,10 @@ soplex::SoPlex& Planner::getLP(double buyIn) {
         // - We choose row >= lower when lower != 0
         // - otherwise row = 0
         // - Equations make the optimization problem easier, so why not do row = lower when lower != 0?
-        //   We have a number of these lower bounds that conflict with one another. E.g. Given the limit on production lines or science labs,
-        //   we cannot spend all our money. We could add "waste" actions with zero cost/value to turn these into equalities, but that's probably
-        //   exactly what the solver is doing internally (add slack variables)
+        //   We have a number of these lower bounds that conflict with one another. E.g. Given the limit on production
+        //   lines or science labs, we cannot spend all our money. We could add "waste" actions with zero cost/value to
+        //   turn these into equalities, but that's probably exactly what the solver is doing internally (add slack
+        //   variables)
         lp.changeRangeReal(int(i + 1),
                            -resource->getLowerLimit() == 0 ? -resource->getLowerLimit() : -resource->getUpperLimit(),
                            -resource->getLowerLimit());

@@ -5,8 +5,8 @@
 #include <boost/filesystem/path.hpp>
 #include <boost/interprocess/file_mapping.hpp>
 #include <boost/interprocess/mapped_region.hpp>
-#include <vector>
 #include <deque>
+#include <vector>
 
 class archive_iterator;
 
@@ -27,8 +27,8 @@ class JsonWriter {
 
     void writeOrders(const std::vector<Order>& last_orders);
 
-    std::vector<Order>::const_iterator writeOrder(const Order& o, const std::vector<Order>& last_orders,
-                                                  std::vector<Order>::const_iterator hint);
+    std::vector<Order>::const_iterator
+    writeOrder(const Order& o, const std::vector<Order>& last_orders, std::vector<Order>::const_iterator hint);
 
     void updateActiveOrders(const std::vector<std::vector<Order>>& docs);
 
@@ -43,7 +43,7 @@ class JsonWriter {
     std::vector<Order> active_orders_;
     std::vector<Order> active_orders2_;
     std::unordered_map<std::uint64_t, std::int32_t> index_;
-    //std::vector<std::int32_t> free_list_;
+    // std::vector<std::int32_t> free_list_;
     std::deque<std::int32_t> free_list_;
 
     boost::filesystem::path file_name_{};

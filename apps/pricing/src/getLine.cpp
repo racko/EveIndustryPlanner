@@ -38,7 +38,7 @@
 //    return std::string_view(start, length);
 //}
 
-//std::string_view getLine(const std::string_view s, const std::size_t offset) {
+// std::string_view getLine(const std::string_view s, const std::size_t offset) {
 //    // s.empty() => s[offset] yields undefined behavior
 //    // s[offset] == '\n' => ... what would we like to happen? Print the two lines surrounding the '\n'? Print the one
 //    // starting or the one ending with '\n'?

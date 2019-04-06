@@ -2,8 +2,8 @@
 #include "names.h"
 #include <profiling.h>
 
-#include <iostream>
 #include <fstream>
+#include <iostream>
 #include <json/json.h>
 
 namespace {
@@ -11,7 +11,7 @@ Json::Value getRoot() {
     Json::Value root;
     std::ifstream pricesFile("prices.json", std::ifstream::binary);
     std::cout << "loading prices.json. " << std::flush;
-    auto pTime = time<float,std::milli>([&] { pricesFile >> root; });
+    auto pTime = time<float, std::milli>([&] { pricesFile >> root; });
     std::cout << pTime.count() << "ms\n";
     return root;
 }
@@ -22,13 +22,13 @@ Json::Value getItems() {
     std::cout << "Have " << items.size() << " prices\n";
     return items;
 }
-}
+} // namespace
 
 void MarketData::loadPrices(Names& names) {
     auto items = getItems();
     avgPrices.reserve(items.size());
     std::cout << "building map. " << std::flush;
-    auto pTime2 = time<float,std::milli>([&] {
+    auto pTime2 = time<float, std::milli>([&] {
         for (const auto& e : items) {
             auto id = e["type"]["id"].asUInt64();
             const auto& averagePrice = e["averagePrice"];
@@ -44,7 +44,7 @@ void MarketData::loadPrices(Names& names) {
     priceCount = avgPrices.size();
 }
 
-//void MarketData::loadHistoriesFromDB(const sqlite::dbPtr& db) {
+// void MarketData::loadHistoriesFromDB(const sqlite::dbPtr& db) {
 //    //std::unordered_map<TypeID, double> latestPrices;
 //    //latestPrices.reserve(priceCount);
 //    //std::unordered_map<TypeID, double> volumes;
@@ -73,10 +73,13 @@ void MarketData::loadPrices(Names& names) {
 //    //}
 //}
 
-void MarketData::loadOrdersFromDB(const sqlite::dbPtr& db, const std::string& buyQuery, const std::string& sellQuery, const Names& names) {
+void MarketData::loadOrdersFromDB(const sqlite::dbPtr& db,
+                                  const std::string& buyQuery,
+                                  const std::string& sellQuery,
+                                  const Names& names) {
     auto selectBuy = sqlite::prepare(db, buyQuery);
     buyorders.reserve(100000);
-    while(sqlite::step(selectBuy) == sqlite::ROW) {
+    while (sqlite::step(selectBuy) == sqlite::ROW) {
         auto type = sqlite::column<std::int64_t>(selectBuy, 1);
         if (!names.checkName(std::size_t(type))) {
             std::cout << "ignoring typeID " << type << ": no name\n";
@@ -91,7 +94,7 @@ void MarketData::loadOrdersFromDB(const sqlite::dbPtr& db, const std::string& bu
     }
     auto selectSell = sqlite::prepare(db, sellQuery);
     sellorders.reserve(200000);
-    while(sqlite::step(selectSell) == sqlite::ROW) {
+    while (sqlite::step(selectSell) == sqlite::ROW) {
         auto type = sqlite::column<std::int64_t>(selectSell, 1);
         if (!names.checkName(std::size_t(type))) {
             std::cout << "ignoring typeID " << type << ": no name\n";
@@ -106,7 +109,7 @@ void MarketData::loadOrdersFromDB(const sqlite::dbPtr& db, const std::string& bu
     }
 }
 
-//void loadOrdersFromDB(const sqlite::dbPtr& db) {
+// void loadOrdersFromDB(const sqlite::dbPtr& db) {
 //    //std::unordered_map<TypeID, double> latestPrices;
 //    //latestPrices.reserve(priceCount);
 //    //std::unordered_map<TypeID, double> volumes;
@@ -135,7 +138,7 @@ void MarketData::loadOrdersFromDB(const sqlite::dbPtr& db, const std::string& bu
 //    }
 //}
 
-//void loadHistories() {
+// void loadHistories() {
 //    std::cout << "Volumes:\n";
 //    auto now = std::chrono::system_clock::now();
 //    auto i = 0u;
@@ -143,14 +146,11 @@ void MarketData::loadOrdersFromDB(const sqlite::dbPtr& db, const std::string& bu
 //    std::stringstream datestr;
 //    for (auto& p : avgPrices) {
 //        Json::Value root;
-//        std::ifstream pricesFile(std::string("/tmp/histories/") + std::to_string(p.first) + ".json", std::ifstream::binary);
-//        auto pTime = time<float,std::milli>([&] { pricesFile >> root; });
-//        const auto& items = root["items"];
-//        std::cout << names.getName(p.first) << ":\n";
-//        if (items.isNull()) {
-//            volumes.insert({p.first, 0}); // no history means no sales volume (we separated production and sell, so this does not mean that we cannot produce this item)
-//            std::cout << "  no volume\n";
-//            continue;
+//        std::ifstream pricesFile(std::string("/tmp/histories/") + std::to_string(p.first) + ".json",
+//        std::ifstream::binary); auto pTime = time<float,std::milli>([&] { pricesFile >> root; }); const auto& items =
+//        root["items"]; std::cout << names.getName(p.first) << ":\n"; if (items.isNull()) {
+//            volumes.insert({p.first, 0}); // no history means no sales volume (we separated production and sell, so
+//            this does not mean that we cannot produce this item) std::cout << "  no volume\n"; continue;
 //        }
 //        double avg = 0;
 //        double avgOrderCount = 0;
@@ -176,9 +176,9 @@ void MarketData::loadOrdersFromDB(const sqlite::dbPtr& db, const std::string& bu
 //            auto then = std::chrono::system_clock::from_time_t(then_time_t);
 //            //std::cout << " " << then_time_t << " " << then.time_since_epoch().count();
 //            auto diff = now - then;
-//            //std::cout << " " << diff.count() << " (" << (double(std::chrono::duration_cast<std::chrono::seconds>(diff).count()) / 86400.0) << " days)";
-//            auto orderCount = item["orderCount"].asUInt64();
-//            if (diff < std::chrono::seconds(86400 * 30)) {
+//            //std::cout << " " << diff.count() << " (" <<
+//            (double(std::chrono::duration_cast<std::chrono::seconds>(diff).count()) / 86400.0) << " days)"; auto
+//            orderCount = item["orderCount"].asUInt64(); if (diff < std::chrono::seconds(86400 * 30)) {
 //                ++count30;
 //                avgOrderCount += (double(orderCount) - avgOrderCount) / double(count30);
 //                avg += (volume - avg) / double(count30); // maximum number of days (found for tritanium etc.)
@@ -202,18 +202,19 @@ void MarketData::loadOrdersFromDB(const sqlite::dbPtr& db, const std::string& bu
 //        //p.second = avgPrice;
 //        p.second = latestPrice;
 //        std::cout << "  average Volume: " << avg << " (over " << count30 << " recorded days of trading)\n";
-//        std::cout << "  latest Price: " << latestPrice << " (" << ((now - latest).count() / 1e9 / 3600.0 / 24.0) << " days old)\n";
-//        std::cout << "  average Price: " << avgPrice << " (over " << count3 << " recorded days of trading)\n";
-//        if (avgOrderCount < 100)
+//        std::cout << "  latest Price: " << latestPrice << " (" << ((now - latest).count() / 1e9 / 3600.0 / 24.0) << "
+//        days old)\n"; std::cout << "  average Price: " << avgPrice << " (over " << count3 << " recorded days of
+//        trading)\n"; if (avgOrderCount < 100)
 //            avg = 0;
 //        volumes.insert({p.first, avg});
 //        static constexpr const char* ANSI_CLEAR_LINE = "\033[2K";
 //        ++i;
-//        //std::cout << ANSI_CLEAR_LINE << " " << i << " / " << count << " | " << (double(i) / double(count) * 100.0) << "%\r" << std::flush;
+//        //std::cout << ANSI_CLEAR_LINE << " " << i << " / " << count << " | " << (double(i) / double(count) * 100.0)
+//        << "%\r" << std::flush;
 //    }
 //}
 
-//void setBuySell() {
+// void setBuySell() {
 //    sell.reserve(priceCount);
 //    buy.reserve(priceCount);
 //    for (const auto& p : avgPrices) {
@@ -224,4 +225,3 @@ void MarketData::loadOrdersFromDB(const sqlite::dbPtr& db, const std::string& bu
 //            sell[p.first] = buy[p.first] = p.second;
 //    }
 //}
-

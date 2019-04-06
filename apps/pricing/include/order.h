@@ -33,18 +33,18 @@ struct Data {
     }                                                                                                                  \
     struct Name // swallow semicolon
 
-DefData(Buy, std::int8_t);        // 1 (int8, 0 or 1)
-DefData(Issued, std::uint32_t);   // 4 (uint32 timestamp)
-DefData(Price, double);           // 8
+DefData(Buy, std::int8_t);             // 1 (int8, 0 or 1)
+DefData(Issued, std::uint32_t);        // 4 (uint32 timestamp)
+DefData(Price, double);                // 8
 DefData(VolumeEntered, std::uint32_t); // 4
 DefData(StationId, std::uint64_t);     // 8: not written (Jita only)
 DefData(Volume, std::uint32_t);        // 4
-DefData(Range, std::int8_t);      // 1: see _range_to_int comment
+DefData(Range, std::int8_t);           // 1: see _range_to_int comment
 DefData(MinVolume, std::uint32_t);     // 4
 DefData(Duration, std::uint32_t);      // 4
 DefData(Type, std::uint32_t);          // 4
 DefData(Id, std::uint64_t);            // 8
-//DefData(Index, std::uint32_t);
+// DefData(Index, std::uint32_t);
 // 50 Bytes
 
 // Static Data
@@ -99,7 +99,7 @@ DefOrderAccessors(Id, id);
 #undef DefOrderAccessors
 
 // we use "Buy" as disambiguation between "full" and "diff": Buy == 0 => Sell, Buy == 1 => Buy, Buy = 2 => Diff
-//using DiffImpl = std::tuple<Buy, Price, Volume, Id>;
+// using DiffImpl = std::tuple<Buy, Price, Volume, Id>;
 using DiffImpl = std::tuple<Buy, Price, Volume>;
 
 struct Diff : public DiffImpl {
@@ -117,8 +117,8 @@ struct Diff : public DiffImpl {
 DefDiffAccessors(Buy, buy);
 DefDiffAccessors(Price, price);
 DefDiffAccessors(Volume, volume);
-//DefDiffAccessors(Id, id);
-//DefDiffAccessors(Index, index);
+// DefDiffAccessors(Id, id);
+// DefDiffAccessors(Index, index);
 #undef DefDiffAccessors
 
 std::ostream& operator<<(std::ostream& s, const Order& o);

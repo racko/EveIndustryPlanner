@@ -157,28 +157,28 @@ std::string_view OrderReader::read_step(std::string_view doc) {
     const auto read_index = read<std::int32_t>(doc);
     // std::cerr << "index: " << read_index << '\n';
     if (doc[0] == 2) {
-        //if (read_index >= static_cast<std::int64_t>(active_orders.size()))
+        // if (read_index >= static_cast<std::int64_t>(active_orders.size()))
         //   throw std::runtime_error("inconsistency");
         const Diff d = read_diff(doc);
 
         auto& o = active_orders[static_cast<std::size_t>(read_index)];
         volume(o) = volume(d);
         price(o) = price(d);
-        //if (id(o) != id(d))
+        // if (id(o) != id(d))
         //   throw std::runtime_error("id mismatch");
     } else
-     //if (doc[0] == 0 || doc[0] == 1)
+    // if (doc[0] == 0 || doc[0] == 1)
     {
-         //if (read_index >= static_cast<std::int64_t>(active_orders.size()))
-         //   throw std::runtime_error("oob: " + std::to_string(read_index));
-         //if (read_index < static_cast<std::int64_t>(active_orders.size()) &&
-         //volume(active_orders[static_cast<std::size_t>(read_index)]) > 0)
-         //   throw std::runtime_error("inconsistency");
+        // if (read_index >= static_cast<std::int64_t>(active_orders.size()))
+        //   throw std::runtime_error("oob: " + std::to_string(read_index));
+        // if (read_index < static_cast<std::int64_t>(active_orders.size()) &&
+        // volume(active_orders[static_cast<std::size_t>(read_index)]) > 0)
+        //   throw std::runtime_error("inconsistency");
 
         active_orders[static_cast<std::size_t>(read_index)] = read_order(doc);
     }
-     //else
-     //   throw std::runtime_error("invalid record type + " + std::to_string(int(doc[0])));
+    // else
+    //   throw std::runtime_error("invalid record type + " + std::to_string(int(doc[0])));
     return doc;
 }
 
@@ -222,8 +222,8 @@ void OrderReader::step() {
 }
 
 void OrderReader::finalize() {
-    if (!std::is_sorted(active_orders.begin(), active_orders.end(),
-                        [](const Order& a, const Order& b) { return id(a) < id(b); }))
+    if (!std::is_sorted(
+            active_orders.begin(), active_orders.end(), [](const Order& a, const Order& b) { return id(a) < id(b); }))
         throw std::runtime_error("active_orders is not sorted");
     if (!std::is_sorted(deleted.begin(), deleted.end()))
         throw std::runtime_error("deleted is not sorted");
@@ -249,8 +249,8 @@ void OrderReader::finalize() {
     if (insert_it != inserted.end())
         throw std::runtime_error("Did not insert all orders");
     inserted.clear();
-    if (!std::is_sorted(active_orders.begin(), active_orders.end(),
-                        [](const Order& a, const Order& b) { return id(a) < id(b); }))
+    if (!std::is_sorted(
+            active_orders.begin(), active_orders.end(), [](const Order& a, const Order& b) { return id(a) < id(b); }))
         throw std::runtime_error("active_orders is not sorted");
 }
 
@@ -281,4 +281,3 @@ void read_orders_benchmark(const char* file_name) {
         }
     }
 }
-

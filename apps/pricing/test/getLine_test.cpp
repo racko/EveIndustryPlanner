@@ -2,12 +2,12 @@
 
 #include <catch.hpp>
 
-//TEST_CASE("empty string", "[getLine]") {
+// TEST_CASE("empty string", "[getLine]") {
 //    auto s = "";
 //    REQUIRE_THROWS(getLine(s, 0));
 //}
 //
-//TEST_CASE("default case", "[getLine]") {
+// TEST_CASE("default case", "[getLine]") {
 //    std::string_view s("abc\ndef\nghi");
 //
 //    REQUIRE(s.rfind('\n', 1) == std::string_view::npos);

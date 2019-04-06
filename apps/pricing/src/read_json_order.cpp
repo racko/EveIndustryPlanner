@@ -144,4 +144,3 @@ Order convert(const rapidjson::GenericDocument<rapidjson::ASCII<>>::ConstObject&
     }
     return order;
 }
-

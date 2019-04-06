@@ -1,13 +1,13 @@
 #include "settings.h"
 #include <profiling.h>
 
-#include <yaml-cpp/yaml.h>
 #include <iostream>
+#include <yaml-cpp/yaml.h>
 
 void Settings::read() {
     YAML::Node settings;
     std::cout << "loading settings.yaml. " << std::flush;
-    auto tTime = time<float,std::milli>([&]{ settings = YAML::LoadFile("settings.yaml"); });
+    auto tTime = time<float, std::milli>([&] { settings = YAML::LoadFile("settings.yaml"); });
     std::cout << tTime.count() << "ms.\n";
 
     skills.read(settings);

@@ -1,7 +1,7 @@
-#include <string_view>
 #include <cstdint>
+#include <string_view>
 
-//std::string_view getLine(std::string_view s, std::size_t offset);
+// std::string_view getLine(std::string_view s, std::size_t offset);
 
 // simply returns a number of characters around the offset, ignoring newlines
 std::string_view getLine_no_newline(std::string_view s, std::int64_t offset);

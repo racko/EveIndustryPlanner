@@ -1,16 +1,17 @@
 #pragma once
-#include <memory>
 #include <cstdint>
 #include <functional>
+#include <memory>
 
 class Semaphore { // TODO: This should be split into a simple release / acquire semaphore and a "ThreadsafeStateMachine"
-private:
+  private:
     struct impl;
     std::unique_ptr<impl> pimpl;
 
     Semaphore(const Semaphore&);
     Semaphore& operator=(const Semaphore&);
-public:
+
+  public:
     Semaphore(std::int64_t n = 0);
     Semaphore(Semaphore&&);
     Semaphore& operator=(Semaphore&&);

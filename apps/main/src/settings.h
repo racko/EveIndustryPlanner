@@ -1,11 +1,11 @@
 #pragma once
 
+#include "blueprint_selection.h"
+#include "facility_costs.h"
+#include "industry_limits.h"
+#include "queries.h"
 #include "skill_settings.h"
 #include "trade_costs.h"
-#include "facility_costs.h"
-#include "queries.h"
-#include "industry_limits.h"
-#include "blueprint_selection.h"
 
 struct Settings {
     SkillSettings skills;

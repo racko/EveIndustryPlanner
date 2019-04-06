@@ -13,9 +13,7 @@ const std::string& Names::getName(std::size_t typeId, const std::string& alterna
     return n == names.end() ? alternative : n->second;
 }
 
-std::size_t Names::getTypeId(const std::string& name) const {
-    return typeIds.at(name);
-}
+std::size_t Names::getTypeId(const std::string& name) const { return typeIds.at(name); }
 
 const std::string* Names::checkName(std::size_t typeId) const {
     auto n = names.find(typeId);
@@ -25,7 +23,7 @@ const std::string* Names::checkName(std::size_t typeId) const {
 void Names::loadNames(const YAML::Node& typesNode) {
     std::cout << "building map. " << std::flush;
     names.reserve(typesNode.size());
-    auto tTime2 = time<float,std::milli>([&] {
+    auto tTime2 = time<float, std::milli>([&] {
         for (const auto& t : typesNode) {
             const auto& nameNode = t.second["name"]["en"];
             const auto& publishedNode = t.second["published"];

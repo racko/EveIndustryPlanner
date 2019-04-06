@@ -1,8 +1,8 @@
 #pragma once
 
-#include "resource_base.h"
 #include "blueprint_with_efficiency.h"
 #include "decryptor_property.h"
+#include "resource_base.h"
 #include "type_id.h"
 
 #include <cstddef>
@@ -27,7 +27,8 @@ struct Stuff {
 
     const Resource_Base::Ptr labTime;
     const Resource_Base::Ptr productionLineTime;
-private:
+
+  private:
     std::unordered_map<TypeID, Resource_Base::Ptr> resources;
     std::unordered_map<TypeID, Resource_Base::Ptr> bpoTimes;
     std::unordered_map<BlueprintWithEfficiency, Resource_Base::Ptr> bpcs;

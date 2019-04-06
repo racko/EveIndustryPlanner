@@ -1,8 +1,8 @@
 #pragma once
 
-template<typename Functor>
+template <typename Functor>
 class Finalizer {
-public:
+  public:
     Finalizer(Functor f) : func(f) {}
     ~Finalizer() { finalize(); }
     Finalizer(const Finalizer&) = delete;
@@ -16,13 +16,13 @@ public:
             finalized = true;
         }
     }
-private:
+
+  private:
     bool finalized = false;
     Functor func;
 };
 
-template<typename Functor>
+template <typename Functor>
 auto makeFinalizer(Functor f) {
     return Finalizer<Functor>(f);
 }
-

@@ -9,7 +9,7 @@ class Resource_Base {
     using Ptr = std::shared_ptr<Resource_Base>;
     using ConstPtr = std::shared_ptr<const Resource_Base>;
 
-    //Resource_Base(std::string n, std::string fn, double l = 0, double u = infinity)
+    // Resource_Base(std::string n, std::string fn, double l = 0, double u = infinity)
     //    : lower_limit(l), upper_limit(u), name(std::move(n)), fullName(std::move(fn)) {}
     Resource_Base(std::string n, std::string fn, double l = 0)
         : lower_limit(l), upper_limit(infinity), name(std::move(n)), fullName(std::move(fn)) {}
