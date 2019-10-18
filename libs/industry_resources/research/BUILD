@@ -1,13 +1,12 @@
 cc_library(
     name = "research",
     srcs = [
-        "src/inventions.cpp",
+        "inventions.cpp",
     ],
     hdrs = [
-        "include/inventions.h",
+        "inventions.h",
     ],
     linkopts = ["-lyaml-cpp"],
-    strip_include_prefix = "include",
     visibility = [
         "//apps/main:__pkg__",
     ],

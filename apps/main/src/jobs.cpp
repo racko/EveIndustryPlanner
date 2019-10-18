@@ -2,7 +2,7 @@
 
 #include "libs/industry_resources/copying/copies.h"
 #include "libs/industry_resources/production/products.h"
-#include <inventions.h>
+#include "libs/industry_resources/research/inventions.h"
 #include <unordered_map>
 
 struct Skills;

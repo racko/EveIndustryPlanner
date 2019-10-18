@@ -1,4 +1,4 @@
-#include "inventions.h"
+#include "libs/industry_resources/research/inventions.h"
 
 #include "job_values.h"
 #include "names.h"
