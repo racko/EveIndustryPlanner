@@ -1,6 +1,6 @@
 #include "jobs.h"
 
-#include <copies.h>
+#include "libs/industry_resources/copying/copies.h"
 #include <inventions.h>
 #include <products.h>
 #include <unordered_map>

@@ -1,4 +1,4 @@
-#include "copies.h"
+#include "libs/industry_resources/copying/copies.h"
 
 #include "job_values.h"
 #include "market_data.h"

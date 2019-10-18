@@ -1,13 +1,12 @@
 cc_library(
     name = "copying",
     srcs = [
-        "src/copies.cpp",
+        "copies.cpp",
     ],
     hdrs = [
-        "include/copies.h",
+        "copies.h",
     ],
     linkopts = ["-lyaml-cpp"],
-    strip_include_prefix = "include",
     visibility = [
         "//apps/main:__pkg__",
     ],

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <copies.h>
+#include "libs/industry_resources/copying/copies.h"
 #include <inventions.h>
 #include <products.h>
 #include <schematics.h>
