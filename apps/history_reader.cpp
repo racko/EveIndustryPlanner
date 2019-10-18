@@ -1,7 +1,7 @@
-#include "Semaphore.h"                                    // for Semaphore
 #include "libs/Finalizer/Finalizer.h"                     // for makeFinalizer
 #include "libs/HTTPSRequestHandler/HTTPSRequestHandler.h" // for simpleGet, HTTPSRequestHandlerGroup
 #include "libs/QueryRunner/QueryRunner.h"                 // for DatabaseConnection, Query
+#include "libs/Semaphore/Semaphore.h"                     // for Semaphore
 #include "outdatedHistories.h"                            // for outdatedHistories
 #include "sqlite.h"                                       // for bind, reset, step, prepare, dbPtr
 #include <cassert>                                        // for assert

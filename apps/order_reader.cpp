@@ -1,7 +1,7 @@
-#include "Semaphore.h"
 #include "libs/Finalizer/Finalizer.h"
 #include "libs/HTTPSRequestHandler/HTTPSRequestHandler.h"
 #include "libs/QueryRunner/QueryRunner.h"
+#include "libs/Semaphore/Semaphore.h"
 #include "outdatedOrders.h"
 #include "profiling.h"
 #include "sqlite.h"

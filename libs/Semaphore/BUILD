@@ -1,11 +1,10 @@
 cc_library(
     name = "semaphore",
     srcs = [
-        "src/Semaphore.cpp",
+        "Semaphore.cpp",
     ],
     hdrs = [
-        "include/Semaphore.h",
+        "Semaphore.h",
     ],
-    strip_include_prefix = "include",
     visibility = ["//apps:__pkg__"],
 )
