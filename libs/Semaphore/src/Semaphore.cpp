@@ -1,14 +1,8 @@
 #include "Semaphore.h"
+
 #include <cassert>
-
-//#include <boost/thread/condition.hpp>
-//#include <boost/thread/mutex.hpp>
-// namespace tr1 = boost;
-
-//#include <thread> // not yet available in VS 2010
 #include <condition_variable>
 #include <mutex>
-namespace tr1 = std;
 
 namespace {
 int64_t to_int(std::uint64_t n) {
@@ -18,46 +12,46 @@ int64_t to_int(std::uint64_t n) {
 } // namespace
 
 struct Semaphore::impl {
-    mutable tr1::mutex mutex;
-    mutable tr1::condition_variable condition;
+    mutable std::mutex mutex;
+    mutable std::condition_variable condition;
     std::int64_t count;
 
     impl(std::int64_t n) : count(n) {}
 
     void release(std::uint64_t n) {
-        tr1::lock_guard<tr1::mutex> lock(mutex);
+        std::lock_guard<std::mutex> lock(mutex);
         count += to_int(n);
         condition.notify_all();
     }
 
     void acquire(std::uint64_t n) {
         auto n_ = to_int(n);
-        tr1::unique_lock<tr1::mutex> lock(mutex);
+        std::unique_lock<std::mutex> lock(mutex);
         condition.wait(lock, [this, n_]() { return count >= n_; });
         count -= n_;
     }
 
     void acquireAndDo(std::function<void()> f, std::uint64_t n) {
         auto n_ = to_int(n);
-        tr1::unique_lock<tr1::mutex> lock(mutex);
+        std::unique_lock<std::mutex> lock(mutex);
         condition.wait(lock, [this, n_]() { return count >= n_; });
         count -= n_;
         f();
     }
 
     void waitFor(std::function<bool(std::int64_t)> p) const {
-        tr1::unique_lock<tr1::mutex> lock(mutex);
+        std::unique_lock<std::mutex> lock(mutex);
         condition.wait(lock, [this, p]() { return p(count); });
     }
 
     void setTo(std::int64_t n) {
-        tr1::lock_guard<tr1::mutex> lock(mutex);
+        std::lock_guard<std::mutex> lock(mutex);
         count = n;
         condition.notify_all();
     }
 
     bool when(std::function<bool(std::int64_t)> p, std::function<std::int64_t(std::int64_t)> f) {
-        tr1::lock_guard<tr1::mutex> lock(mutex);
+        std::lock_guard<std::mutex> lock(mutex);
         if (p(count)) {
             count = f(count);
             condition.notify_all();
@@ -68,7 +62,7 @@ struct Semaphore::impl {
     }
 
     bool ifThenSetTo(std::function<bool(std::int64_t)> p, std::int64_t n) {
-        tr1::lock_guard<tr1::mutex> lock(mutex);
+        std::lock_guard<std::mutex> lock(mutex);
         if (p(count)) {
             count = n;
             condition.notify_all();
@@ -79,14 +73,14 @@ struct Semaphore::impl {
     }
 
     void waitAndDo(std::function<bool(std::int64_t)> p, std::function<std::int64_t(std::int64_t)> f) {
-        tr1::unique_lock<tr1::mutex> lock(mutex);
+        std::unique_lock<std::mutex> lock(mutex);
         condition.wait(lock, [this, p]() { return p(count); });
         count = f(count);
         condition.notify_all();
     }
 
     void waitAndSetTo(std::function<bool(std::int64_t)> p, std::int64_t n) {
-        tr1::unique_lock<tr1::mutex> lock(mutex);
+        std::unique_lock<std::mutex> lock(mutex);
         condition.wait(lock, [this, p]() { return p(count); });
         count = n;
         condition.notify_all();
