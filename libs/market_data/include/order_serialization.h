@@ -8,15 +8,14 @@
 namespace boost {
 namespace serialization {
 
-template<class Archive>
-void serialize(Archive& ar, Order& o, unsigned int)
-{
-    ar & o.id;
-    ar & o.type;
-    ar & o.price;
-    ar & o.volume;
-    ar & o.stationID;
-    ar & o.stationName;
+template <class Archive>
+void serialize(Archive& ar, Order& o, unsigned int) {
+    ar& o.id;
+    ar& o.type;
+    ar& o.price;
+    ar& o.volume;
+    ar& o.stationID;
+    ar& o.stationName;
 }
 
 } // namespace serialization

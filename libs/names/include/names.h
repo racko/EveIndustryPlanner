@@ -25,4 +25,3 @@ struct Names {
     std::unordered_map<std::size_t, std::string> names;
     std::unordered_map<std::string, std::size_t> typeIds;
 };
-

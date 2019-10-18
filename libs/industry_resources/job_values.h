@@ -10,6 +10,7 @@ struct JobValues {
     double at(std::size_t id) const;
     std::unordered_map<std::size_t, double>::const_iterator find(std::size_t id) const;
     std::unordered_map<std::size_t, double>::const_iterator end() const;
+
   private:
     std::unordered_map<std::size_t, double> jobValues_;
 };

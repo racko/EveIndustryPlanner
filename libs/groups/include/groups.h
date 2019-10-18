@@ -2,8 +2,8 @@
 
 #include "yaml_fwd.h"
 #include <cstddef>
-#include <unordered_map>
 #include <iosfwd>
+#include <unordered_map>
 
 struct Groups {
     void loadGroups(const YAML::Node& typesNode);

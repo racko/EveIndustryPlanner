@@ -5,9 +5,9 @@
 #include <unordered_map>
 #include <vector>
 
-//class ResourceManager;
+// class ResourceManager;
 //
-//class Resource {
+// class Resource {
 //  public:
 //    using Ptr = std::shared_ptr<Resource>;
 //    using ConstPtr = std::shared_ptr<const Resource>;
@@ -27,7 +27,7 @@
 //    std::string fullName;
 //};
 //
-//class ResourceManager {
+// class ResourceManager {
 //    struct ResourceManagerGuard {
 //        ResourceManager* last_;
 //
