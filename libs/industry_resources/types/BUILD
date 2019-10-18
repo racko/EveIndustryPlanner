@@ -1,12 +1,11 @@
 cc_library(
     name = "types",
     srcs = [
-        "src/types.cpp",
+        "types.cpp",
     ],
     hdrs = [
-        "include/types.h",
+        "types.h",
     ],
-    strip_include_prefix = "include",
     visibility = [
         "//libs/industry_resources/resource_manager:__pkg__",
     ],

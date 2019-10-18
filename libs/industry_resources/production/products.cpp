@@ -2,6 +2,7 @@
 
 #include "blueprint_efficiency.h"
 #include "libs/industry_resources/resource_manager/stuff.h"
+#include "libs/industry_resources/types/types.h"
 #include "skills.h"
 #include <algorithm>
 #include <cmath>
@@ -11,7 +12,6 @@
 #include <names.h>
 #include <settings.h>
 #include <tech_level.h>
-#include <types.h>
 #include <yaml-cpp/yaml.h>
 
 namespace {

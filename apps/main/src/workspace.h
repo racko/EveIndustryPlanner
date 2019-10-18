@@ -4,11 +4,11 @@
 #include "groups.h"
 #include "job_values.h"
 #include "jobs.h"
+#include "libs/industry_resources/types/types.h"
 #include "market_data.h"
 #include "names.h"
 #include "settings.h"
 #include "skills.h"
-#include "types.h"
 
 class workspace {
   public:

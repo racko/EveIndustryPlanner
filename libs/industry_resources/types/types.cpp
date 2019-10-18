@@ -1,4 +1,4 @@
-#include "types.h"
+#include "libs/industry_resources/types/types.h"
 
 #include "groups.h"
 #include "tech_level.h"

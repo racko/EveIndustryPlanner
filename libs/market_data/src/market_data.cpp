@@ -2,9 +2,9 @@
 
 #include "buy.h"
 #include "libs/industry_resources/resource_manager/stuff.h"
+#include "libs/industry_resources/types/types.h"
 #include "names.h"
 #include "sell.h"
-#include "types.h"
 #include <boost/archive/binary_iarchive.hpp>
 #include <boost/archive/binary_oarchive.hpp>
 #include <boost/serialization/serialization.hpp>
