@@ -1,8 +1,7 @@
 cc_library(
     name = "https_request_handler",
-    srcs = ["src/HTTPSRequestHandler.cpp"],
-    hdrs = ["include/HTTPSRequestHandler.h"],
-    includes = ["include"],
+    srcs = ["HTTPSRequestHandler.cpp"],
+    hdrs = ["HTTPSRequestHandler.h"],
     linkopts = [
         "-pthread",
         "-lPocoFoundation",

@@ -1,7 +1,7 @@
 #include "Finalizer.h"
-#include "HTTPSRequestHandler.h"
 #include "QueryRunner.h"
 #include "Semaphore.h"
+#include "libs/HTTPSRequestHandler/HTTPSRequestHandler.h"
 #include "outdatedOrders.h"
 #include "profiling.h"
 #include "sqlite.h"
@@ -165,7 +165,8 @@ int64_t to_int(std::uint64_t n) {
 class OrderHandler : public HTTPSRequestHandlerGroup {
   public:
     OrderHandler(std::size_t n, bool print_progress_)
-        : HTTPSRequestHandlerGroup(n, "crest-tq.eveonline.com", 443), writer("market_history.db"),
+        : HTTPSRequestHandlerGroup(n, "crest-tq.eveonline.com", 443),
+          writer("market_history.db"),
           insertBuy_(
               writer.prepareStatement("insert or replace into robust_price(typeid, buy, sell, date) values(?, ?, "
                                       "(select sell from robust_price where typeid = ?), strftime('%s', 'now'));")),
@@ -198,7 +199,8 @@ class OrderHandler : public HTTPSRequestHandlerGroup {
         BuyTransaction(OrderHandler& parent_, std::size_t p_)
             : RequestWithResponseHandler("/market/10000002/orders/buy/?type=https://crest-tq.eveonline.com/types/" +
                                          std::to_string(p_) + "/"),
-              parent(parent_), p(p_) {}
+              parent(parent_),
+              p(p_) {}
         void run(const sqlite::dbPtr&) override {
             auto& insertSell = parent.insertSell_;
             sqlite::Resetter resetter(
@@ -263,7 +265,8 @@ class OrderHandler : public HTTPSRequestHandlerGroup {
         SellTransaction(OrderHandler& parent_, std::size_t p_)
             : RequestWithResponseHandler("/market/10000002/orders/sell/?type=https://crest-tq.eveonline.com/types/" +
                                          std::to_string(p_) + "/"),
-              parent(parent_), p(p_) {}
+              parent(parent_),
+              p(p_) {}
         void run(const sqlite::dbPtr&) override {
             auto& insertBuy = parent.insertBuy_;
             sqlite::Resetter resetter(insertBuy);
@@ -336,7 +339,8 @@ class OrderHandler : public HTTPSRequestHandlerGroup {
 class OrderHandler2 {
   public:
     OrderHandler2(std::size_t r, std::size_t n, bool print_progress_)
-        : region(r), writer("/home/racko/btsync/git/emdr/market_history.db"),
+        : region(r),
+          writer("/home/racko/btsync/git/emdr/market_history.db"),
           insertStation_(
               writer.prepareStatement("insert or ignore into stations(stationid, name, regionid) values(?, ?, ?);")),
           insertOrder_(
@@ -346,7 +350,8 @@ class OrderHandler2 {
           insertSellOrder_(writer.prepareStatement("insert or ignore into sell_orders(orderid) values(?);")),
           insertOrderView_(writer.prepareStatement("insert into order_views(viewtime, orderid, price, volume, "
                                                    "start_date) values(strftime('%s', 'now'), ?, ?, ?, ?);")),
-          http_handlers(n, "crest-tq.eveonline.com", 443), print_progress(print_progress_) {}
+          http_handlers(n, "crest-tq.eveonline.com", 443),
+          print_progress(print_progress_) {}
 
     void saveOrders(const std::vector<std::size_t>& types /*, const std::string& access_token*/) {
         total = types.size();
@@ -373,7 +378,9 @@ class OrderHandler2 {
             : RequestWithResponseHandler("/market/" + std::to_string(region) +
                                          "/orders/?type=https://crest-tq.eveonline.com/types/" + std::to_string(p_) +
                                          "/"),
-              parent(parent_), p(p_), regionid(region) {}
+              parent(parent_),
+              p(p_),
+              regionid(region) {}
         ~Transaction() { semaphore.acquire(singleOrderHandlers.size()); }
 
         void handleResponse(const Response&, std::istream& s) override {
@@ -562,7 +569,8 @@ class OrderHandler2 {
 class OrderHandler3 {
   public:
     OrderHandler3(std::size_t r, bool print_progress_)
-        : region(r), writer("/home/racko/btsync/git/emdr/market_history.db"),
+        : region(r),
+          writer("/home/racko/btsync/git/emdr/market_history.db"),
           insertOrder_(
               writer.prepareStatement("insert or replace into orders(orderid, typeid, station, volume_entered, "
                                       "duration, min_volume, active) values(?, ?, ?, ?, ?, ?, 1);")),
