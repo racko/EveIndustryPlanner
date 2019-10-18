@@ -1,9 +1,9 @@
 #pragma once
 
+#include "libs/market_data/order.h"
 #include <boost/archive/binary_iarchive.hpp>
 #include <boost/archive/binary_oarchive.hpp>
 #include <boost/serialization/serialization.hpp>
-#include <order.h>
 
 namespace boost {
 namespace serialization {
