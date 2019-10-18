@@ -1,4 +1,4 @@
-#include "skills.h"
+#include "libs/skills/skills.h"
 
 #include "libs/names/names.h"
 #include <iostream>

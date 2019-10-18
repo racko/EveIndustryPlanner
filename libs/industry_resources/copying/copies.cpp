@@ -4,7 +4,7 @@
 #include "libs/industry_resources/resource_manager/stuff.h"
 #include "libs/market_data/market_data.h"
 #include "libs/names/names.h"
-#include "skills.h"
+#include "libs/skills/skills.h"
 #include <algorithm>
 #include <iostream>
 #include <yaml-cpp/yaml.h>

@@ -8,7 +8,7 @@
 #include "libs/market_data/market_data.h"
 #include "libs/names/names.h"
 #include "libs/settings/settings.h"
-#include "skills.h"
+#include "libs/skills/skills.h"
 
 class workspace {
   public:

@@ -3,7 +3,7 @@
 #include "libs/industry_resources/job_values.h"
 #include "libs/industry_resources/resource_manager/stuff.h"
 #include "libs/names/names.h"
-#include "skills.h"
+#include "libs/skills/skills.h"
 #include <algorithm>
 #include <iostream>
 #include <yaml-cpp/yaml.h>

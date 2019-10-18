@@ -1,12 +1,11 @@
 cc_library(
     name = "skills",
     srcs = [
-        "src/skills.cpp",
+        "skills.cpp",
     ],
     hdrs = [
-        "include/skills.h",
+        "skills.h",
     ],
-    strip_include_prefix = "include",
     visibility = [
         "//libs/industry_resources/copying:__pkg__",
         "//libs/industry_resources/production:__pkg__",
