@@ -1,9 +1,8 @@
 cc_library(
     name = "profiling",
     hdrs = [
-        "include/profiling.h",
+        "profiling.h",
     ],
-    includes = ["include"],
     visibility = [
         "//apps:__pkg__",
         "//apps/price_reader:__pkg__",

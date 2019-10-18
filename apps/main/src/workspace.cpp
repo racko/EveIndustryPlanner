@@ -2,8 +2,8 @@
 
 #include "libs/industry_resources/input_values.h"
 #include "libs/industry_resources/resource_manager/stuff.h"
+#include "libs/profiling/profiling.h"
 #include "planner.h"
-#include "profiling.h"
 #include "sqlite.h"
 #include <boost/filesystem.hpp>
 #include <yaml-cpp/yaml.h>

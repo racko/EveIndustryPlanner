@@ -1,11 +1,11 @@
 #include "libs/names/names.h"
 
+#include "libs/profiling/profiling.h"
 #include <boost/archive/binary_iarchive.hpp>
 #include <boost/archive/binary_oarchive.hpp>
 #include <boost/serialization/serialization.hpp>
 #include <boost/serialization/unordered_map.hpp>
 #include <iostream>
-#include <profiling.h>
 #include <yaml-cpp/yaml.h>
 
 const std::string& Names::getName(std::size_t typeId) const {

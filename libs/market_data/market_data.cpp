@@ -6,6 +6,7 @@
 #include "libs/market_data/order_serialization.h"
 #include "libs/market_data/sell.h"
 #include "libs/names/names.h"
+#include "libs/profiling/profiling.h"
 #include <boost/archive/binary_iarchive.hpp>
 #include <boost/archive/binary_oarchive.hpp>
 #include <boost/serialization/serialization.hpp>
@@ -13,7 +14,6 @@
 #include <fstream>
 #include <iostream>
 #include <json/json.h>
-#include <profiling.h>
 
 namespace {
 Json::Value getRoot() {

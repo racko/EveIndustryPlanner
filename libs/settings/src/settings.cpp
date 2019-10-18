@@ -1,5 +1,5 @@
 #include "settings.h"
-#include <profiling.h>
+#include "libs/profiling/profiling.h"
 
 #include <iostream>
 #include <yaml-cpp/yaml.h>
