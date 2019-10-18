@@ -1,10 +1,8 @@
-load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
+load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
-git_repository(
-    name = "com_github_nelhage_rules_boost",
-    commit = "6d6fd834281cb8f8e758dd9ad76df86304bf1869",
-    remote = "https://github.com/nelhage/rules_boost",
+http_archive(
+    name = "bazel_compilation_database",
+    sha256 = "bb1b812396e2ee36a50a13b03ae6833173ce643e8a4bd50731067d0b4e5c6e86",
+    strip_prefix = "bazel-compilation-database-0.3.5",
+    urls = ["https://github.com/grailbio/bazel-compilation-database/archive/0.3.5.tar.gz"],
 )
-
-load("@com_github_nelhage_rules_boost//:boost/boost.bzl", "boost_deps")
-boost_deps()

@@ -5,10 +5,13 @@ cc_library(
         "src/outdatedOrders.cpp",
     ],
     hdrs = [
-        "include/outdatedOrders.h",
         "include/outdatedHistories.h",
+        "include/outdatedOrders.h",
     ],
     strip_include_prefix = "include",
-    deps = ["@boost//:numeric"],
+    visibility = ["//apps:__pkg__"],
+    deps = [
+        "//libs/profiling",
+        "//libs/sqlite-util:sqlite_util",
+    ],
 )
-

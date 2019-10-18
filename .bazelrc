@@ -1,0 +1,20 @@
+build --disk_cache=/tmp/nvme/racko/bazel_disk_cache
+build --cxxopt=-fdiagnostics-color=always
+build --cxxopt=-Werror
+build --cxxopt=-Wall
+build --cxxopt=-Wextra
+build --cxxopt=-pedantic
+build --cxxopt=-Wconversion
+build --cxxopt=-Wsign-conversion
+build --cxxopt=-Wshadow
+build --cxxopt=-Wold-style-cast
+build --cxxopt=-Woverloaded-virtual
+build --cxxopt=-Wunused
+build --cxxopt=-march=native
+build --cxxopt=-g
+build --cxxopt=-O2
+build --cxxopt=-std=c++2a
+#build --cxxopt=-stdlib=libc++ --linkopt=-stdlib=libc++
+#build:cov --cxxopt=--coverage --linkopt=--coverage
+build:cov --cxxopt=-fprofile-instr-generate --cxxopt=-fcoverage-mapping
+build:cov --linkopt=-fprofile-instr-generate --linkopt=-fcoverage-mapping
