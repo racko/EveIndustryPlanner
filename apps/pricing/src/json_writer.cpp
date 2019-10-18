@@ -16,9 +16,13 @@ using bi::read_only;
 using bi::read_write;
 
 JsonWriter::JsonWriter(const boost::filesystem::path file_name)
-    : file_name_{std::move(file_name)}, file_{file_name_.c_str(), read_write},
-      region_{file_, read_write, 0, file_size(file_name_)}, start_{static_cast<char*>(region_.get_address())},
-      current_{start_}, stop_{static_cast<char*>(start_ + region_.get_size())}, reader_{{start_, region_.get_size()}} {}
+    : file_name_{std::move(file_name)},
+      file_{file_name_.c_str(), read_write},
+      region_{file_, read_write, 0, file_size(file_name_)},
+      start_{static_cast<char*>(region_.get_address())},
+      current_{start_},
+      stop_{static_cast<char*>(start_ + region_.get_size())},
+      reader_{{start_, region_.get_size()}} {}
 JsonWriter::~JsonWriter() {
     // destroy region? close file?
     resize_file(file_name_, static_cast<std::size_t>(current_ - start_));
@@ -444,8 +448,10 @@ void JsonWriter::write(const char* const source_directory_path) {
     std::vector<std::string> paths;
     paths.reserve(30000);
     directory_tree dir(source_directory_path);
-    std::copy_if(
-        dir.begin(), dir.end(), std::back_inserter(paths), [](const char* file_name) { return isTgz(file_name); });
+    std::copy_if(dir.begin(), dir.end(), std::back_inserter(paths), [](const char* file_name) {
+        // char* -> std::string_view
+        return isTgz(file_name);
+    });
     std::sort(paths.begin(), paths.end());
     for (const auto& file_name : paths) {
         extract2(file_name.c_str());

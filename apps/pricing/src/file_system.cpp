@@ -45,7 +45,7 @@ directory_iterator::~directory_iterator() = default;
 
 bool directory_iterator::operator!=(const directory_iterator& rhs) const { return it != rhs.it; }
 
-directory_iterator& directory_iterator::operator++() {
+directory_iterator& directory_iterator::operator++() & {
     ++it;
     return *this;
 }
@@ -55,7 +55,7 @@ recursive_directory_iterator::~recursive_directory_iterator() = default;
 
 bool recursive_directory_iterator::operator!=(const recursive_directory_iterator& rhs) const { return it != rhs.it; }
 
-recursive_directory_iterator& recursive_directory_iterator::operator++() {
+recursive_directory_iterator& recursive_directory_iterator::operator++() & {
     ++it;
     return *this;
 }

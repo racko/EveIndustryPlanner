@@ -1,2 +1,5 @@
 add_library(profiling INTERFACE)
-set_property(TARGET profiling PROPERTY INTERFACE_INCLUDE_DIRECTORIES ${CMAKE_CURRENT_SOURCE_DIR}/include)
+
+target_include_directories(profiling INTERFACE include)
+
+add_library(profiling::profiling ALIAS profiling)

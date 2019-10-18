@@ -1,22 +1,30 @@
 #pragma once
 
+#include "assets.h"
+#include "groups.h"
+#include "job_values.h"
+#include "jobs.h"
+#include "market_data.h"
+#include "names.h"
 #include "settings.h"
 #include "skills.h"
-#include "assets.h"
-#include "market_data.h"
-#include "job_values.h"
-#include "names.h"
-#include "groups.h"
-#include "jobs.h"
 #include "types.h"
-#include "planner.h"
 
-struct Stuff;
-
-struct workspace {
+class workspace {
+  public:
     workspace();
 
-private:
+    const Settings& getSettings() const { return settings_; }
+    const Skills& getSkills() const { return skills_; }
+    const Assets& getAssets() const { return assets_; }
+    const MarketData& getMarketData() const { return market_; }
+    const JobValues& getJobValues() const { return values_; }
+    const Names& getNames() const { return names_; }
+    const Groups& getGroups() const { return groups_; }
+    const Jobs& getJobs() const { return jobs_; }
+    const Types& getTypes() const { return types_; }
+
+  private:
     Settings settings_;
     Skills skills_;
     Assets assets_;
@@ -27,16 +35,8 @@ private:
     Jobs jobs_;
     Types types_;
 
-    Planner planner;
-
     void processBlueprints();
-
     void feedPlanner();
-
-    void addPlanetary(Stuff& stuff);
-    void addMarket(Stuff& stuff);
-    void addProduction(Stuff& stuff);
-    void addT2Invention(Stuff& stuff);
-    void addT3Invention(Stuff& stuff);
-    void addCopy(Stuff& stuff);
+    void loadTypeIds();
+    void loadMarketData();
 };

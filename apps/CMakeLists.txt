@@ -21,7 +21,7 @@ target_link_libraries(order_reader
     QueryRunner
     Semaphore
     jsoncpp::jsoncpp
-    profiling
+    profiling::profiling
 )
 
 add_executable(server server.cpp)
@@ -35,7 +35,7 @@ target_link_libraries(server
 add_executable(station_reader station_reader.cpp)
 target_link_libraries(station_reader
     QueryRunner
-    profiling
+    profiling::profiling
     HTTPSRequestHandler
     yaml-cpp
 )

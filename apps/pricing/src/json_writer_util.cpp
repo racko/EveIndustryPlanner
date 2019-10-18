@@ -8,6 +8,7 @@
 #include "read_json_order.h"
 #include <algorithm>
 #include <boost/numeric/conversion/cast.hpp>
+#include <charconv>
 #include <cstring>
 #include <iostream>
 #include <optional>
@@ -124,8 +125,8 @@ std::vector<Order> convertOrders(const ParseResult& parse_result) {
     if (parse_result.d.IsNull()) {
         return {};
     }
-    std::vector<Order> orders;
     const auto& arr = parse_result.d["items"].GetArray();
+    std::vector<Order> orders;
     orders.reserve(arr.Size());
     std::transform(arr.begin(), arr.end(), std::back_inserter(orders), [](const JsonValue& order) {
         if (!order.IsObject())
@@ -136,15 +137,21 @@ std::vector<Order> convertOrders(const ParseResult& parse_result) {
 }
 
 std::size_t parsePageNumber(const std::string_view f) {
-    std::size_t characters_processed;
-    const auto possibly_signed_page_number = std::stoi(std::string{f}, &characters_processed);
-    if (characters_processed == 0) {
-        throw std::runtime_error(std::string{"invalid file name: '"} + std::string{f} + '\'');
+    std::size_t page_number;
+    const auto [p, ec] = std::from_chars(f.begin(), f.end(), page_number);
+    if (ec != std::errc{}) {
+        throw std::runtime_error(std::string{"invalid page number: '"} + std::string{f} + '\'');
     }
-    if (possibly_signed_page_number < 0) {
-        throw std::runtime_error("negative page number: " + std::to_string(possibly_signed_page_number));
-    }
-    return static_cast<std::size_t>(possibly_signed_page_number);
+    // std::size_t characters_processed;
+    // const auto possibly_signed_page_number = std::stoi(std::string{f}, &characters_processed);
+    // if (characters_processed == 0) {
+    //    throw std::runtime_error(std::string{"invalid file name: '"} + std::string{f} + '\'');
+    //}
+    // if (possibly_signed_page_number < 0) {
+    //    throw std::runtime_error("negative page number: " + std::to_string(possibly_signed_page_number));
+    //}
+    // return static_cast<std::size_t>(possibly_signed_page_number);
+    return page_number;
 }
 
 // 2016_12_04_14_55_06/8.json, order 4698198329 has volume 0, causing problems ... ... ...
@@ -158,15 +165,12 @@ std::vector<Order> filterOrders(std::vector<Order>&& docs) {
 std::vector<Order> readOrders(archive_iterator& ar) { return filterOrders(convertOrders(parseOrders(ar))); }
 
 std::optional<std::size_t> parseFileName(const char* path) {
+    // implicit conversion to string_view
     const auto [dirname, basename] = split_directory_and_basename(path);
     const auto [f, extension] = split_extension(basename);
-    constexpr std::string_view json{"json"};
-    if (extension != json) {
-        return {};
-    }
+    using namespace std::literals;
 
-    const auto page = parsePageNumber(f);
-    return page;
+    return extension == "json"sv ? parsePageNumber(f) : std::optional<std::size_t>{};
 }
 } // namespace
 

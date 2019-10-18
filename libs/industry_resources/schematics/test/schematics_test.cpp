@@ -1,6 +1,6 @@
 #include <schematics.h>
 
-#include <catch.hpp>
+#include <catch2/catch.hpp>
 
 TEST_CASE("0 <= tier <= 3", "[schematics]") {
     Schematics schematic_loader;

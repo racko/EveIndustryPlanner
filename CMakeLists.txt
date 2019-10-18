@@ -8,7 +8,7 @@ include(CTest)
 #pkg_check_modules( EIGEN3 REQUIRED eigen3 )
 
 set(Boost_USE_STATIC_LIBS OFF)
-find_package(Boost COMPONENTS system regex filesystem REQUIRED)
+find_package(Boost COMPONENTS system regex filesystem serialization REQUIRED)
 find_package(RapidJSON REQUIRED)
 find_package(yaml-cpp REQUIRED)
 find_package(pugixml REQUIRED)

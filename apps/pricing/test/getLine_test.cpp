@@ -1,6 +1,6 @@
 #include "getLine.h"
 
-#include <catch.hpp>
+#include <catch2/catch.hpp>
 
 // TEST_CASE("empty string", "[getLine]") {
 //    auto s = "";

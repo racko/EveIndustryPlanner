@@ -211,9 +211,8 @@ void OrderReader::step() {
         [[maybe_unused]] const auto last_id = read<std::int64_t>(text);
         // std::cerr << "  " << i << ": " << first_id << " - " << last_id << '\n';
         const auto doc_size = read<std::int32_t>(text);
-        auto doc = text.substr(0, static_cast<std::size_t>(doc_size));
+        read_doc(text.substr(0, static_cast<std::size_t>(doc_size)));
         text.remove_prefix(static_cast<std::size_t>(doc_size));
-        read_doc(doc);
     }
     // std::cout << "deleted.size(): " << deleted.size() << '\n';
     // std::cout << "inserted.size(): " << inserted.size() << '\n';

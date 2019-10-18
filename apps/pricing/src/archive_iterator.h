@@ -28,17 +28,17 @@ class archive_iterator {
 
     std::int64_t size() const;
 
-    archive_iterator& operator*() { return *this; }
+    archive_iterator& operator*() & { return *this; }
 
-    const archive_iterator& operator*() const { return *this; }
+    const archive_iterator& operator*() const& { return *this; }
 
-    const archive_iterator* operator->() const { return this; }
+    const archive_iterator* operator->() const& { return this; }
 
-    archive_iterator* operator->() { return this; }
+    archive_iterator* operator->() & { return this; }
 
     bool operator!=(const archive_iterator& rhs) const { return ae_ != rhs.ae_; }
 
-    archive_iterator& operator++() {
+    archive_iterator& operator++() & {
         step();
         return *this;
     }

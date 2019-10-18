@@ -32,7 +32,7 @@ class directory_iterator {
 
     bool operator!=(const directory_iterator& rhs) const;
 
-    directory_iterator& operator++();
+    directory_iterator& operator++() &;
 
   private:
     boost::filesystem::directory_iterator it;
@@ -55,7 +55,7 @@ class recursive_directory_iterator {
 
     bool operator!=(const recursive_directory_iterator& rhs) const;
 
-    recursive_directory_iterator& operator++();
+    recursive_directory_iterator& operator++() &;
 
   private:
     boost::filesystem::recursive_directory_iterator it;

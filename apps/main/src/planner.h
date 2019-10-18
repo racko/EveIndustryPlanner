@@ -10,19 +10,21 @@
 
 class Planner {
   public:
-    Planner() : cols(1000000, 1000000) {}
-    void addJob(const Job::Ptr& job);
-    soplex::SoPlex& getLP(double buyIn);
+    Planner();
+    ~Planner();
+    void addJob(Job::Ptr job);
+    void solve(double buyIn);
 
   private:
-    void assertResource(const Resource_Base::Ptr& resource);
+    void ensureResource(const Resource_Base::Ptr& resource);
+    soplex::DataKey AddBuyIn();
 
-    soplex::SoPlex lp;
-    soplex::NameSet colNameSet, rowNameSet;
-    std::vector<Resource_Base::ConstPtr> resources;
-    std::vector<Job::ConstPtr> jobs;
+    soplex::NameSet colNameSet_, rowNameSet_;
+    std::vector<Resource_Base::ConstPtr> resources_;
+    std::vector<Job::ConstPtr> jobs_;
     // std::vector<DSVector> constraints;
-    soplex::LPColSetReal cols;
+    soplex::LPColSetReal cols_;
+    soplex::DataKey buyIn_;
     // DSVector buyInRow;
 };
 

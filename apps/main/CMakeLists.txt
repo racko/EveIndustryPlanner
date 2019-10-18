@@ -1,38 +1,36 @@
 add_executable(main
-  src/assets.cpp
-  src/blueprint_efficiency.cpp
-  src/blueprint_selection.cpp
-  src/blueprint_with_efficiency.cpp
-  src/facility_costs.cpp
-  src/filter_jobs.cpp
-  src/groups.cpp
-  src/industry_limits.cpp
-  src/input_values.cpp
-  src/job_values.cpp
   src/jobs.cpp
   src/main.cpp
-  src/market_data.cpp
-  src/names.cpp
-  src/order.cpp
   src/planner.cpp
-  src/production.cpp
-  src/queries.cpp
-  src/settings.cpp
-  src/skill_settings.cpp
-  src/skills.cpp
-  src/stuff.cpp
-  src/trade_costs.cpp
-  src/types.cpp
   src/workspace.cpp
 )
 
 target_link_libraries(main
   PRIVATE
+    Boost::filesystem
+    assets::assets
+    copying::copying
+    groups::groups
     infinity::infinity
     jsoncpp::jsoncpp
     libsoplex
-    profiling
+    market_data::market_data
+    names::names
+    production::production
+    profiling::profiling
     pugixml
+    research::research
+    resource_manager::resource_manager
+    schematics::schematics
+    settings::settings
+    skills::skills
     sqlite-util
+    type_id::type_id
+    types::types
     yaml-cpp
+    yaml_fwd::yaml_fwd
 )
+
+if(BUILD_TESTING)
+  add_subdirectory(test)
+endif()

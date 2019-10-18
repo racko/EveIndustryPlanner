@@ -9,7 +9,7 @@ class mapped_file {
   public:
     mapped_file(const char* file_name);
     ~mapped_file();
-    std::string_view text() { return {static_cast<const char*>(region.get_address()), region.get_size()}; }
+    std::string_view text() const { return {static_cast<const char*>(region.get_address()), region.get_size()}; }
 
   private:
     boost::interprocess::file_mapping file;
@@ -65,8 +65,8 @@ template <typename Functor>
 void read_orders(const char* file_name, Functor f) {
     mapped_file file{file_name};
     OrderReader order_reader{file.text()};
-    for (const auto& orders : order_reader) {
-        f(std::get<0>(orders), std::get<1>(orders));
+    for (const auto& [viewtime, orders] : order_reader) {
+        f(viewtime, orders);
     }
 }
 

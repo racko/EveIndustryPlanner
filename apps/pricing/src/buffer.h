@@ -27,28 +27,28 @@ class Buffer {
 
     ~Buffer() noexcept { delete[] data_; }
 
-    const value_type* data() const { return data_; }
-    value_type* data() { return data_; }
+    const value_type* data() const& { return data_; }
+    value_type* data() & { return data_; }
 
     std::int64_t size() const { return end_ - data_; }
 
-    value_type* begin() { return data_; }
-    value_type* end() { return end_; }
+    value_type* begin() & { return data_; }
+    value_type* end() & { return end_; }
 
-    const value_type* begin() const { return data_; }
-    const value_type* end() const { return end_; }
+    const value_type* begin() const& { return data_; }
+    const value_type* end() const& { return end_; }
 
     const value_type* cbegin() const { return data_; }
     const value_type* cend() const { return end_; }
 
-    value_type& operator[](const std::int64_t i) { return data_[i]; }
-    const value_type& operator[](const std::int64_t i) const { return data_[i]; }
+    value_type& operator[](const std::int64_t i) & { return data_[i]; }
+    const value_type& operator[](const std::int64_t i) const& { return data_[i]; }
 
-    value_type& front() { return *data_; }
-    const value_type& front() const { return *data_; }
+    value_type& front() & { return *data_; }
+    const value_type& front() const& { return *data_; }
 
-    value_type& back() { return *(end_ - 1); }
-    const value_type& back() const { return *(end_ - 1); }
+    value_type& back() & { return *(end_ - 1); }
+    const value_type& back() const& { return *(end_ - 1); }
 
     // provides strong exception safety guarantee
     // FIXME: a.resize(n) suggests that afterwards a.back() == a[n-1], which isn't the case when n < a.size()
