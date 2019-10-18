@@ -1,6 +1,6 @@
 #include "libs/industry_resources/types/types.h"
 
-#include "groups.h"
+#include "libs/groups/groups.h"
 #include "libs/industry_resources/tech_level.h"
 
 #include <algorithm>
