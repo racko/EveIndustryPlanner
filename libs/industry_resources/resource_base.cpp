@@ -1,6 +1,6 @@
 #include "libs/industry_resources/resource_base.h"
 
-#include <infinity.h>
+#include "libs/infinity/infinity.h"
 
 // ResourceManager* ResourceManager::current_{};
 Resource_Base::Resource_Base(std::string n, std::string fn, double l)

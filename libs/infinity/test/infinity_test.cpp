@@ -1,4 +1,4 @@
-#include <infinity.h>
+#include "libs/infinity/infinity.h"
 
 #include <catch2/catch.hpp>
 #include <soplex.h>

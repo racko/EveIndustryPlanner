@@ -1,6 +1,6 @@
 #include "libs/industry_resources/job.h"
 
-#include <infinity.h>
+#include "libs/infinity/infinity.h"
 
 Job::Job(Resources i, Resources o, double c, std::string n, std::string fn, double l, double u)
     : inputs(std::move(i)),
