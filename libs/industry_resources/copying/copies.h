@@ -2,7 +2,7 @@
 
 #include "libs/industry_resources/copying.h"
 #include "libs/industry_resources/job.h"
-#include "yaml_fwd.h"
+#include "libs/yaml_fwd/yaml_fwd.h"
 #include <unordered_map>
 #include <vector>
 

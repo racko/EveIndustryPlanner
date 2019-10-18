@@ -2,7 +2,7 @@
 
 #include "libs/industry_resources/tech_level_fwd.h"
 #include "libs/industry_resources/type_id.h"
-#include "yaml_fwd.h"
+#include "libs/yaml_fwd/yaml_fwd.h"
 
 #include <cstddef>
 #include <unordered_map>

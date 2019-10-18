@@ -1,6 +1,6 @@
 #pragma once
 
-#include "yaml_fwd.h"
+#include "libs/yaml_fwd/yaml_fwd.h"
 
 struct SkillSettings {
     bool overrideSkills;

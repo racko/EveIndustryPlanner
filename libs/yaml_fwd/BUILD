@@ -1,9 +1,8 @@
 cc_library(
     name = "yaml_fwd",
     hdrs = [
-        "include/yaml_fwd.h",
+        "yaml_fwd.h",
     ],
-    strip_include_prefix = "include",
     visibility = [
         "//libs/groups:__pkg__",
         "//libs/industry_resources/copying:__pkg__",
