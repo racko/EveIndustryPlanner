@@ -1,10 +1,12 @@
-#include "QueryRunner.h"
+#include "libs/QueryRunner/QueryRunner.h"
 #include <boost/asio/io_service.hpp>
 
 struct QueryRunner::impl {
     impl(const char* path, const std::string& query)
-        : db(sqlite::getDB(path)), stmt(sqlite::prepare(db, query)), work(ioService), thread([&] { ioService.run(); }) {
-    }
+        : db(sqlite::getDB(path)),
+          stmt(sqlite::prepare(db, query)),
+          work(ioService),
+          thread([&] { ioService.run(); }) {}
 
     ~impl() {
         ioService.stop();

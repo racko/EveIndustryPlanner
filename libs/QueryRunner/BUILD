@@ -1,13 +1,12 @@
 cc_library(
     name = "query_runner",
     srcs = [
-        "src/QueryRunner.cpp",
+        "QueryRunner.cpp",
     ],
     hdrs = [
-        "include/QueryRunner.h",
+        "QueryRunner.h",
     ],
     linkopts = ["-pthread"],
-    strip_include_prefix = "include",
     visibility = [
         "//apps:__pkg__",
         "//apps/price_reader:__pkg__",
