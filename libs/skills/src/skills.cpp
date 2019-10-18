@@ -1,6 +1,6 @@
 #include "skills.h"
 
-#include "names.h"
+#include "libs/names/names.h"
 #include <iostream>
 #include <pugixml.hpp>
 

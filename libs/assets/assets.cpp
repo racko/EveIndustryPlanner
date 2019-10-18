@@ -1,5 +1,5 @@
 #include "libs/assets/assets.h"
-#include "names.h"
+#include "libs/names/names.h"
 
 #include <fstream>
 #include <iostream>

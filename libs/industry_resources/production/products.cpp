@@ -6,11 +6,11 @@
 #include "libs/industry_resources/tech_level.h"
 #include "libs/industry_resources/types/types.h"
 #include "libs/market_data/market_data.h"
+#include "libs/names/names.h"
 #include "skills.h"
 #include <algorithm>
 #include <cmath>
 #include <iostream>
-#include <names.h>
 #include <settings.h>
 #include <yaml-cpp/yaml.h>
 

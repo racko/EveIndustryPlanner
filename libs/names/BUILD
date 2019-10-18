@@ -1,16 +1,15 @@
 cc_library(
     name = "names",
     srcs = [
-        "src/names.cpp",
+        "names.cpp",
     ],
     hdrs = [
-        "include/names.h",
+        "names.h",
     ],
     linkopts = [
         "-lboost_serialization",
         "-lyaml-cpp",
     ],
-    strip_include_prefix = "include",
     visibility = [
         "//libs/assets:__pkg__",
         "//libs/industry_resources/research:__pkg__",

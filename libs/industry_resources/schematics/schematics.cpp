@@ -2,8 +2,8 @@
 
 #include "libs/assets/assets.h"
 #include "libs/industry_resources/resource_manager/stuff.h"
+#include "libs/names/names.h"
 #include <boost/numeric/conversion/cast.hpp>
-#include <names.h>
 #include <sqlite.h>
 #include <unordered_set>
 

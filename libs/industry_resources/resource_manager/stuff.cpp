@@ -3,7 +3,7 @@
 #include "industry_limits.h"
 #include "libs/assets/assets.h"
 #include "libs/industry_resources/types/types.h"
-#include "names.h"
+#include "libs/names/names.h"
 
 Stuff::Stuff(const Names& names, const Assets& assets, const Types& types, const IndustryLimits& industry)
     : NormalResources{names, assets},
