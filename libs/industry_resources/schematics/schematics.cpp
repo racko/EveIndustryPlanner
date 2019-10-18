@@ -1,4 +1,4 @@
-#include "schematics.h"
+#include "libs/industry_resources/schematics/schematics.h"
 
 #include <assets.h>
 #include <boost/numeric/conversion/cast.hpp>

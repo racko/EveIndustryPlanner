@@ -1,4 +1,4 @@
-#include <schematics.h>
+#include "libs/industry_resources/schematics/schematics.h"
 
 #include <catch2/catch.hpp>
 

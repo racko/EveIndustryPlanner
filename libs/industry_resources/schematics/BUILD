@@ -1,13 +1,12 @@
 cc_library(
     name = "schematics",
     srcs = [
-        "src/schematics.cpp",
+        "schematics.cpp",
     ],
     hdrs = [
-        "include/schematics.h",
+        "schematics.h",
     ],
     linkopts = ["-lyaml-cpp"],
-    strip_include_prefix = "include",
     visibility = [
         "//apps/main:__pkg__",
         "//libs/industry_resources/schematics/test:__pkg__",
