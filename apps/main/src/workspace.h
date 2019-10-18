@@ -7,7 +7,7 @@
 #include "libs/industry_resources/types/types.h"
 #include "libs/market_data/market_data.h"
 #include "libs/names/names.h"
-#include "settings.h"
+#include "libs/settings/settings.h"
 #include "skills.h"
 
 class workspace {

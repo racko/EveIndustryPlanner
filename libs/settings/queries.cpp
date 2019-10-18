@@ -1,4 +1,4 @@
-#include "queries.h"
+#include "libs/settings/queries.h"
 
 #include <yaml-cpp/yaml.h>
 

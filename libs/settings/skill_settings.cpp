@@ -1,4 +1,4 @@
-#include "skill_settings.h"
+#include "libs/settings/skill_settings.h"
 
 #include <yaml-cpp/yaml.h>
 
