@@ -1,13 +1,12 @@
 cc_library(
     name = "assets",
     srcs = [
-        "src/assets.cpp",
+        "assets.cpp",
     ],
     hdrs = [
-        "include/assets.h",
+        "assets.h",
     ],
     linkopts = ["-lpugixml"],
-    strip_include_prefix = "include",
     visibility = [
         "//apps/main:__pkg__",
         "//libs/industry_resources/resource_manager:__pkg__",

@@ -1,7 +1,7 @@
 #include "libs/industry_resources/resource_manager/stuff.h"
 
-#include "assets.h"
 #include "industry_limits.h"
+#include "libs/assets/assets.h"
 #include "libs/industry_resources/types/types.h"
 #include "names.h"
 
