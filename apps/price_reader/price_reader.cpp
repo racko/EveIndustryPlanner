@@ -2,7 +2,7 @@
 #include "libs/HTTPSRequestHandler/HTTPSRequestHandler.h"
 #include "libs/QueryRunner/QueryRunner.h"
 #include "libs/profiling/profiling.h"
-#include "sqlite.h"
+#include "libs/sqlite-util/sqlite.h"
 #include <json/json.h>
 #include <sstream>
 #include <vector>

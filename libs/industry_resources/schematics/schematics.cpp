@@ -3,8 +3,8 @@
 #include "libs/assets/assets.h"
 #include "libs/industry_resources/resource_manager/stuff.h"
 #include "libs/names/names.h"
+#include "libs/sqlite-util/sqlite.h"
 #include <boost/numeric/conversion/cast.hpp>
-#include <sqlite.h>
 #include <unordered_set>
 
 void Schematics::loadSchematics(/*const Names& names*/) {

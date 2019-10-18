@@ -3,7 +3,7 @@
 #include "libs/QueryRunner/QueryRunner.h"                 // for DatabaseConnection, Query
 #include "libs/Semaphore/Semaphore.h"                     // for Semaphore
 #include "libs/eve_stuff/outdatedHistories.h"             // for outdatedHistories
-#include "sqlite.h"                                       // for bind, reset, step, prepare, dbPtr
+#include "libs/sqlite-util/sqlite.h"                      // for bind, reset, step, prepare, dbPtr
 #include <cassert>                                        // for assert
 #include <csignal>                                        // for signal, SIGINT
 #include <cstdint>                                        // for uint64_t, int32_t, uint32_t

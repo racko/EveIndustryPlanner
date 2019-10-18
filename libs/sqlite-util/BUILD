@@ -1,13 +1,12 @@
 cc_library(
     name = "sqlite_util",
     srcs = [
-        "src/sqlite.cpp",
+        "sqlite.cpp",
     ],
     hdrs = [
-        "include/sqlite.h",
+        "sqlite.h",
     ],
     linkopts = ["-lsqlite3"],
-    strip_include_prefix = "include",
     visibility = [
         "//libs/QueryRunner:__pkg__",
         "//libs/eve_stuff:__pkg__",

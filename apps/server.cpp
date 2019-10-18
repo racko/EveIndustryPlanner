@@ -1,6 +1,6 @@
 #include "libs/QueryRunner/QueryRunner.h"
 #include "libs/Semaphore/Semaphore.h"
-#include "sqlite.h"
+#include "libs/sqlite-util/sqlite.h"
 #include <Poco/Net/HTMLForm.h>
 #include <Poco/Net/HTTPRequestHandler.h>
 #include <Poco/Net/HTTPServer.h>
