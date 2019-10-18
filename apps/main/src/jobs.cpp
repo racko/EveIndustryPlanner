@@ -1,8 +1,8 @@
 #include "jobs.h"
 
 #include "libs/industry_resources/copying/copies.h"
+#include "libs/industry_resources/production/products.h"
 #include <inventions.h>
-#include <products.h>
 #include <unordered_map>
 
 struct Skills;

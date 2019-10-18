@@ -1,4 +1,4 @@
-#include "products.h"
+#include "libs/industry_resources/production/products.h"
 
 #include "blueprint_efficiency.h"
 #include "skills.h"

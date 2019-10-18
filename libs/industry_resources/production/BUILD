@@ -1,13 +1,12 @@
 cc_library(
     name = "production",
     srcs = [
-        "src/products.cpp",
+        "products.cpp",
     ],
     hdrs = [
-        "include/products.h",
+        "products.h",
     ],
     linkopts = ["-lyaml-cpp"],
-    strip_include_prefix = "include",
     visibility = [
         "//apps/main:__pkg__",
     ],

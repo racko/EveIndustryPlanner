@@ -1,8 +1,8 @@
 #pragma once
 
 #include "libs/industry_resources/copying/copies.h"
+#include "libs/industry_resources/production/products.h"
 #include <inventions.h>
-#include <products.h>
 #include <schematics.h>
 #include <unordered_map>
 
