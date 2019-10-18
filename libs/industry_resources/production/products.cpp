@@ -1,6 +1,7 @@
 #include "libs/industry_resources/production/products.h"
 
 #include "blueprint_efficiency.h"
+#include "libs/industry_resources/resource_manager/stuff.h"
 #include "skills.h"
 #include <algorithm>
 #include <cmath>
@@ -9,7 +10,6 @@
 #include <market_data.h>
 #include <names.h>
 #include <settings.h>
-#include <stuff.h>
 #include <tech_level.h>
 #include <types.h>
 #include <yaml-cpp/yaml.h>

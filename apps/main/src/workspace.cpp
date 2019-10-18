@@ -1,10 +1,10 @@
 #include "workspace.h"
 
 #include "input_values.h"
+#include "libs/industry_resources/resource_manager/stuff.h"
 #include "planner.h"
 #include "profiling.h"
 #include "sqlite.h"
-#include "stuff.h"
 #include <boost/filesystem.hpp>
 #include <yaml-cpp/yaml.h>
 

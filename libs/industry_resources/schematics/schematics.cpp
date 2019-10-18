@@ -1,10 +1,10 @@
 #include "libs/industry_resources/schematics/schematics.h"
 
+#include "libs/industry_resources/resource_manager/stuff.h"
 #include <assets.h>
 #include <boost/numeric/conversion/cast.hpp>
 #include <names.h>
 #include <sqlite.h>
-#include <stuff.h>
 #include <unordered_set>
 
 void Schematics::loadSchematics(/*const Names& names*/) {

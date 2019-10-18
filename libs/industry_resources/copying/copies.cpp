@@ -1,10 +1,10 @@
 #include "libs/industry_resources/copying/copies.h"
 
 #include "job_values.h"
+#include "libs/industry_resources/resource_manager/stuff.h"
 #include "market_data.h"
 #include "names.h"
 #include "skills.h"
-#include "stuff.h"
 #include <algorithm>
 #include <iostream>
 #include <yaml-cpp/yaml.h>

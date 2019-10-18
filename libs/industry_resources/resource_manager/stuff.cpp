@@ -1,4 +1,4 @@
-#include "stuff.h"
+#include "libs/industry_resources/resource_manager/stuff.h"
 
 #include "assets.h"
 #include "industry_limits.h"

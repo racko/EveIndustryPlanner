@@ -1,12 +1,11 @@
 cc_library(
     name = "resource_manager",
     srcs = [
-        "src/stuff.cpp",
+        "stuff.cpp",
     ],
     hdrs = [
-        "include/stuff.h",
+        "stuff.h",
     ],
-    strip_include_prefix = "include",
     visibility = [
         "//libs/industry_resources/research:__pkg__",
         "//libs/industry_resources/schematics:__pkg__",
