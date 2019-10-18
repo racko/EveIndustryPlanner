@@ -2,8 +2,8 @@
 
 #include "assets.h"
 #include "groups.h"
-#include "job_values.h"
 #include "jobs.h"
+#include "libs/industry_resources/job_values.h"
 #include "libs/industry_resources/types/types.h"
 #include "market_data.h"
 #include "names.h"

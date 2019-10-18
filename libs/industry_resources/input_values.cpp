@@ -1,6 +1,6 @@
-#include "input_values.h"
+#include "libs/industry_resources/input_values.h"
 
-#include "production.h"
+#include "libs/industry_resources/production.h"
 
 #include <cmath>
 

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "resource_base.h"
+#include "libs/industry_resources/resource_base.h"
 #include <memory>
 #include <string>
 #include <vector>

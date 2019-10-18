@@ -1,7 +1,7 @@
 #pragma once
 
-#include "job.h"
-#include "research.h"
+#include "libs/industry_resources/job.h"
+#include "libs/industry_resources/research.h"
 #include "yaml_fwd.h"
 #include <unordered_map>
 #include <vector>

@@ -1,6 +1,6 @@
 #include "workspace.h"
 
-#include "input_values.h"
+#include "libs/industry_resources/input_values.h"
 #include "libs/industry_resources/resource_manager/stuff.h"
 #include "planner.h"
 #include "profiling.h"

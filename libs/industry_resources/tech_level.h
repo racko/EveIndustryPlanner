@@ -1,6 +1,6 @@
 #pragma once
 
-#include "tech_level_fwd.h"
+#include "libs/industry_resources/tech_level_fwd.h"
 
 #include <string>
 

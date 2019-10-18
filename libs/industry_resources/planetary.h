@@ -1,6 +1,6 @@
 #pragma once
 
-#include "type_id.h"
+#include "libs/industry_resources/type_id.h"
 
 #include <chrono>
 #include <cstddef>
@@ -17,7 +17,10 @@ class Planetary {
 
     Planetary(
         product_t product_, std::size_t producedQuantity_, materials_t materials_, duration_t duration_, tier_t tier_)
-        : product(product_), producedQuantity(producedQuantity_), materials(std::move(materials_)), duration(duration_),
+        : product(product_),
+          producedQuantity(producedQuantity_),
+          materials(std::move(materials_)),
+          duration(duration_),
           tier(tier_) {}
 
     product_t getProduct() const { return product; }

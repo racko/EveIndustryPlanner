@@ -1,17 +1,17 @@
 #include "libs/industry_resources/production/products.h"
 
-#include "blueprint_efficiency.h"
+#include "libs/industry_resources/blueprint_efficiency.h"
+#include "libs/industry_resources/job_values.h"
 #include "libs/industry_resources/resource_manager/stuff.h"
+#include "libs/industry_resources/tech_level.h"
 #include "libs/industry_resources/types/types.h"
 #include "skills.h"
 #include <algorithm>
 #include <cmath>
 #include <iostream>
-#include <job_values.h>
 #include <market_data.h>
 #include <names.h>
 #include <settings.h>
-#include <tech_level.h>
 #include <yaml-cpp/yaml.h>
 
 namespace {

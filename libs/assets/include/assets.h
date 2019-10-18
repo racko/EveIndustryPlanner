@@ -1,6 +1,6 @@
 #pragma once
 
-#include "blueprint_with_efficiency.h"
+#include "libs/industry_resources/blueprint_with_efficiency.h"
 
 #include <unordered_map>
 #include <unordered_set>

@@ -1,4 +1,4 @@
-#include "blueprint_with_efficiency.h"
+#include "libs/industry_resources/blueprint_with_efficiency.h"
 #include <boost/functional/hash.hpp>
 #include <tuple>
 

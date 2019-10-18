@@ -1,10 +1,10 @@
 #pragma once
 
-#include <blueprint_efficiency.h>
-#include <blueprint_with_efficiency.h>
+#include "libs/industry_resources/blueprint_efficiency.h"
+#include "libs/industry_resources/blueprint_with_efficiency.h"
+#include "libs/industry_resources/decryptor_property.h"
+#include "libs/industry_resources/resource_base.h"
 #include <cstddef>
-#include <decryptor_property.h>
-#include <resource_base.h>
 #include <unordered_map>
 #include <vector>
 

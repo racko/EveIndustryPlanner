@@ -1,7 +1,7 @@
 #pragma once
 
-#include "job.h"
-#include "resource_base.h"
+#include "libs/industry_resources/job.h"
+#include "libs/industry_resources/resource_base.h"
 
 #include "soplex.h"
 #include <vector>

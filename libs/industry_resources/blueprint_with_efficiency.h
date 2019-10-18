@@ -1,7 +1,7 @@
 #pragma once
 
-#include "blueprint_efficiency.h"
-#include "type_id.h"
+#include "libs/industry_resources/blueprint_efficiency.h"
+#include "libs/industry_resources/type_id.h"
 #include <functional>
 
 class BlueprintWithEfficiency {

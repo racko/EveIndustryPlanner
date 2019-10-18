@@ -1,6 +1,6 @@
 #include "libs/industry_resources/research/inventions.h"
 
-#include "job_values.h"
+#include "libs/industry_resources/job_values.h"
 #include "libs/industry_resources/resource_manager/stuff.h"
 #include "names.h"
 #include "skills.h"

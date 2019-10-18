@@ -1,6 +1,6 @@
 #pragma once
 
-#include "job.h"
+#include "libs/industry_resources/job.h"
 #include "order.h"
 #include "sqlite.h"
 #include <iosfwd>

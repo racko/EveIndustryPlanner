@@ -1,7 +1,7 @@
 #pragma once
 
-#include "job.h"
-#include "planetary.h"
+#include "libs/industry_resources/job.h"
+#include "libs/industry_resources/planetary.h"
 #include <vector>
 
 struct Stuff;

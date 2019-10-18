@@ -1,6 +1,6 @@
 #pragma once
 
-#include "type_id.h"
+#include "libs/industry_resources/type_id.h"
 
 #include <chrono>
 

@@ -1,4 +1,4 @@
-#include "blueprint_efficiency.h"
+#include "libs/industry_resources/blueprint_efficiency.h"
 #include <ostream>
 
 std::ostream& operator<<(std::ostream& s, const BlueprintEfficiency& bpe) {

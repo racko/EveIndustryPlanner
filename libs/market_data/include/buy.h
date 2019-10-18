@@ -1,7 +1,7 @@
 #pragma once
 
-#include "job.h"
-#include "resource_base.h"
+#include "libs/industry_resources/job.h"
+#include "libs/industry_resources/resource_base.h"
 
 #include <cstddef>
 #include <string>
@@ -20,7 +20,9 @@ struct Buy : public Job {
               "Buy " + r->getFullName() + " at " + stationName_,
               0,
               l),
-          resource(std::move(r)), stationID(stationID_), stationName(stationName_) {}
+          resource(std::move(r)),
+          stationID(stationID_),
+          stationName(stationName_) {}
     Resource_Base::Ptr resource;
     std::size_t stationID;
     std::string stationName;
