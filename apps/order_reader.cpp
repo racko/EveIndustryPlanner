@@ -1,6 +1,6 @@
-#include "Finalizer.h"
 #include "QueryRunner.h"
 #include "Semaphore.h"
+#include "libs/Finalizer/Finalizer.h"
 #include "libs/HTTPSRequestHandler/HTTPSRequestHandler.h"
 #include "outdatedOrders.h"
 #include "profiling.h"

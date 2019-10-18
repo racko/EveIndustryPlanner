@@ -1,6 +1,5 @@
 cc_library(
     name = "finalizer",
-    hdrs = ["include/Finalizer.h"],
-    includes = ["include"],
+    hdrs = ["Finalizer.h"],
     visibility = ["//apps:__pkg__"],
 )

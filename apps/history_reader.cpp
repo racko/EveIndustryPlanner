@@ -1,6 +1,6 @@
-#include "Finalizer.h"                                    // for makeFinalizer
 #include "QueryRunner.h"                                  // for DatabaseConnection, Query
 #include "Semaphore.h"                                    // for Semaphore
+#include "libs/Finalizer/Finalizer.h"                     // for makeFinalizer
 #include "libs/HTTPSRequestHandler/HTTPSRequestHandler.h" // for simpleGet, HTTPSRequestHandlerGroup
 #include "outdatedHistories.h"                            // for outdatedHistories
 #include "sqlite.h"                                       // for bind, reset, step, prepare, dbPtr
