@@ -1,4 +1,3 @@
-#include "libs/Finalizer/Finalizer.h"
 #include "libs/HTTPSRequestHandler/HTTPSRequestHandler.h"
 #include "libs/QueryRunner/QueryRunner.h"
 #include "libs/Semaphore/Semaphore.h"
@@ -6,6 +5,7 @@
 #include "libs/profiling/profiling.h"
 #include "libs/sqlite-util/sqlite.h"
 #include <algorithm>
+#include <atomic>
 #include <chrono>
 #include <cmath>
 #include <csignal>
@@ -17,26 +17,12 @@
 #include <sstream>
 #include <unordered_map>
 
-static constexpr const char* ANSI_CLEAR_LINE = "\033[2K";
+namespace {
+constexpr const char* ANSI_CLEAR_LINE = "\033[2K";
 
-Semaphore handler_lock(1);
-using handler_t = std::function<void()>;
-using handlers_t = std::list<handler_t>;
-handlers_t sigint_handlers; // list was chosen for iterator validity
+std::atomic<bool> sig_caught = 0;
 
-auto addSigintHandler(std::function<void()> handler) {
-    handler_lock.acquire();
-    auto handle = sigint_handlers.insert(sigint_handlers.end(), handler);
-    handler_lock.release();
-    return handle;
-}
-
-void removeSigintHandler(handlers_t::const_iterator handle) { sigint_handlers.erase(handle); }
-
-void sigint_handler(int) {
-    for (auto h : sigint_handlers)
-        h();
-}
+void sigint_handler(int) { sig_caught = true; }
 
 template <typename T>
 auto openFile(const T& filename) {
@@ -98,9 +84,13 @@ double getMinPrice(const Json::Value& root) {
         root, std::numeric_limits<double>::infinity(), [](double a, double b) { return std::min(a, b); });
 }
 
-double getMaxPrice(const std::string& dir, std::size_t typeID) { return getMaxPrice(loadOrders(dir, typeID)); }
+[[maybe_unused]] double getMaxPrice(const std::string& dir, std::size_t typeID) {
+    return getMaxPrice(loadOrders(dir, typeID));
+}
 
-double getMinPrice(const std::string& dir, std::size_t typeID) { return getMinPrice(loadOrders(dir, typeID)); }
+[[maybe_unused]] double getMinPrice(const std::string& dir, std::size_t typeID) {
+    return getMinPrice(loadOrders(dir, typeID));
+}
 
 double getMaxPriceInStation(const Json::Value& root, std::size_t stationId) {
     return accumulate(root, -std::numeric_limits<double>::infinity(), [&](double a, const Json::Value& v) {
@@ -124,43 +114,37 @@ double getMinPriceInStation(const std::string& dir, std::size_t typeID, std::siz
     return getMinPriceInStation(loadOrders(dir, typeID), stationId);
 }
 
-void saveOrders(const std::unordered_map<std::size_t, double>& avgPrices, const sqlite::dbPtr& db) {
+[[maybe_unused]] void saveOrders(const std::unordered_map<std::size_t, double>& avgPrices, const sqlite::dbPtr& db) {
     auto insertRobustPrice = sqlite::prepare(db, "insert or replace into robust_price values(?, ?, ?);");
     auto i = 0u;
     auto count = avgPrices.size();
     auto inserted = 0u;
     for (auto& p : avgPrices) {
-        auto incr_i = makeFinalizer([&] {
-            ++i;
-            std::cout << ANSI_CLEAR_LINE << " " << i << " / " << count << " | " << (double(i) / double(count) * 100.0)
-                      << "%\r" << std::flush;
-        });
-        auto maxBuy = getMaxPriceInStation("/tmp/orders/buy/", p.first, 60003760);
-        auto minSell = getMinPriceInStation("/tmp/orders/sell/", p.first, 60003760);
-        // std::cout << p.first << ": " << "maxBuy = " << maxBuy << ", minSell = " << minSell << '\n';
-        if (maxBuy < std::numeric_limits<double>::lowest() && minSell > std::numeric_limits<double>::max()) {
-            continue;
-        }
-        sqlite::Resetter resetter(insertRobustPrice);
-        sqlite::bind(insertRobustPrice, 1, p.first);
-        sqlite::bind(insertRobustPrice, 2, minSell > std::numeric_limits<double>::max() ? maxBuy : minSell);   // buy
-        sqlite::bind(insertRobustPrice, 3, maxBuy < std::numeric_limits<double>::lowest() ? minSell : maxBuy); // sell
-        auto rc = sqlite::step(insertRobustPrice);
-        if (rc != sqlite::DONE) {
-            std::cout << __PRETTY_FUNCTION__ << ":  " << sqlite::errstr(rc) << " (" << rc << ")\n";
-            continue;
-        }
-        ++inserted;
+        [&] {
+            auto maxBuy = getMaxPriceInStation("/tmp/orders/buy/", p.first, 60003760);
+            auto minSell = getMinPriceInStation("/tmp/orders/sell/", p.first, 60003760);
+            // std::cout << p.first << ": " << "maxBuy = " << maxBuy << ", minSell = " << minSell << '\n';
+            if (maxBuy < std::numeric_limits<double>::lowest() && minSell > std::numeric_limits<double>::max()) {
+                return;
+            }
+            sqlite::Resetter resetter(insertRobustPrice);
+            sqlite::bind(insertRobustPrice, 1, p.first);
+            sqlite::bind(insertRobustPrice, 2, minSell > std::numeric_limits<double>::max() ? maxBuy : minSell); // buy
+            sqlite::bind(
+                insertRobustPrice, 3, maxBuy < std::numeric_limits<double>::lowest() ? minSell : maxBuy); // sell
+            auto rc = sqlite::step(insertRobustPrice);
+            if (rc != sqlite::DONE) {
+                std::cout << __PRETTY_FUNCTION__ << ":  " << sqlite::errstr(rc) << " (" << rc << ")\n";
+                return;
+            }
+            ++inserted;
+        }();
+        ++i;
+        std::cout << ANSI_CLEAR_LINE << " " << i << " / " << count << " | " << (double(i) / double(count) * 100.0)
+                  << "%\r" << std::flush;
     }
     std::cout << "Done. Have prices for " << inserted << " items.\n";
 }
-
-namespace {
-int64_t to_int(std::uint64_t n) {
-    assert(n <= static_cast<std::uint64_t>(std::numeric_limits<std::int64_t>::max()));
-    return static_cast<std::int64_t>(n);
-}
-} // namespace
 
 class OrderHandler : public HTTPSRequestHandlerGroup {
   public:
@@ -177,15 +161,15 @@ class OrderHandler : public HTTPSRequestHandlerGroup {
 
     void saveOrders(const std::vector<std::size_t>& types /*, const std::string& access_token*/) {
         total = 2 * types.size();
-        auto handler_handle = addSigintHandler([&] { semaphore.setTo(to_int(total)); });
-        auto sigintHandlerRemover = makeFinalizer([&] { removeSigintHandler(handler_handle); });
         for (auto p : types) {
             buyTransactions.emplace_back(std::make_shared<BuyTransaction>(*this, p));
             postRequest(buyTransactions.back(), "");
             sellTransactions.emplace_back(std::make_shared<SellTransaction>(*this, p));
             postRequest(sellTransactions.back(), "");
         }
-        semaphore.acquire(total);
+        semaphore.waitFor([total = total](const std::int64_t value) {
+            return sig_caught || value >= static_cast<std::int64_t>(total);
+        });
     }
 
   private:
@@ -355,15 +339,15 @@ class OrderHandler2 {
 
     void saveOrders(const std::vector<std::size_t>& types /*, const std::string& access_token*/) {
         total = types.size();
-        auto handler_handle = addSigintHandler([&] { semaphore.setTo(to_int(total)); });
-        auto sigintHandlerRemover = makeFinalizer([&] { removeSigintHandler(handler_handle); });
         // for (auto region : {10000002, 10000030, 10000032, 10000042, 10000043}) {
         for (auto p : types) {
             transactions.emplace_back(std::make_unique<Transaction>(*this, region, p));
             http_handlers.postRequest(*transactions.back(), "");
         }
         //}
-        semaphore.acquire(total);
+        semaphore.waitFor([total = total](const std::int64_t value) {
+            return sig_caught || value >= static_cast<std::int64_t>(total);
+        });
     }
 
   private:
@@ -608,11 +592,6 @@ class OrderHandler3 {
 
     void updateOrders() {
         // sqlite::Transaction transaction;
-        auto interrupted = false;
-        auto handler_handle = addSigintHandler([&] {
-            interrupted = true; /*semaphore.setTo(std::numeric_limits<std::int32_t>::max());*/
-        });
-        auto sigintHandlerRemover = makeFinalizer([&] { removeSigintHandler(handler_handle); });
         TIME(
             simpleGet("https://esi.evetech.net/latest/markets/" + std::to_string(region) + "/orders/?page=1", stream););
 
@@ -660,7 +639,7 @@ class OrderHandler3 {
                     // f.close();
                     // stream.seekg(0);
                 }
-            } while (!stream.str().empty() && interrupted == false);
+            } while (!stream.str().empty() && !sig_caught);
         } catch (const Json::Exception& e) {
             onJsonError(e);
         } catch (const HttpException& e) {
@@ -785,6 +764,7 @@ class OrderHandler3 {
     bool print_progress;
     std::vector<SingleOrderHandler> singleOrderHandlers;
 };
+} // namespace
 
 int main(int argc, char** args) {
     std::signal(SIGINT, &sigint_handler);

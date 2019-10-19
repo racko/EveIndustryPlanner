@@ -89,13 +89,10 @@ struct Semaphore::impl {
 
 Semaphore::Semaphore(std::int64_t n) : pimpl(new impl(n)) {}
 
-Semaphore::Semaphore(Semaphore&& rhs) : pimpl(std::move(rhs.pimpl)) {}
-Semaphore& Semaphore::operator=(Semaphore&& rhs) {
-    std::swap(pimpl, rhs.pimpl);
-    return *this;
-}
+Semaphore::Semaphore(Semaphore&& rhs) = default;
+Semaphore& Semaphore::operator=(Semaphore&&) = default;
 
-Semaphore::~Semaphore() {}
+Semaphore::~Semaphore() = default;
 
 void Semaphore::release(std::uint64_t n) { pimpl->release(n); }
 

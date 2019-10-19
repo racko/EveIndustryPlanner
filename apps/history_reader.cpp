@@ -1,9 +1,9 @@
-#include "libs/Finalizer/Finalizer.h"                     // for makeFinalizer
 #include "libs/HTTPSRequestHandler/HTTPSRequestHandler.h" // for simpleGet, HTTPSRequestHandlerGroup
 #include "libs/QueryRunner/QueryRunner.h"                 // for DatabaseConnection, Query
 #include "libs/Semaphore/Semaphore.h"                     // for Semaphore
 #include "libs/eve_stuff/outdatedHistories.h"             // for outdatedHistories
 #include "libs/sqlite-util/sqlite.h"                      // for bind, reset, step, prepare, dbPtr
+#include <atomic>                                         // for assert
 #include <cassert>                                        // for assert
 #include <csignal>                                        // for signal, SIGINT
 #include <cstdint>                                        // for uint64_t, int32_t, uint32_t
@@ -27,7 +27,8 @@
 #include <utility>                                        // for move
 #include <vector>                                         // for vector
 
-static constexpr const char* ANSI_CLEAR_LINE = "\033[2K";
+namespace {
+constexpr const char* ANSI_CLEAR_LINE = "\033[2K";
 
 // template<typename Functor>
 // void handleHistory(DatabaseConnection& writer, const sqlite::stmtPtr& insertHistory, std::size_t typeID, const
@@ -80,31 +81,9 @@ static constexpr const char* ANSI_CLEAR_LINE = "\033[2K";
 //    f();
 //}
 
-Semaphore handler_lock(1);
-using handler_t = std::function<void()>;
-using handlers_t = std::list<handler_t>;
-handlers_t sigint_handlers; // list was chosen for iterator validity
+std::atomic<bool> sig_caught = 0;
 
-auto addSigintHandler(std::function<void()> handler) {
-    handler_lock.acquire();
-    auto handle = sigint_handlers.insert(sigint_handlers.end(), handler);
-    handler_lock.release();
-    return handle;
-}
-
-void removeSigintHandler(handlers_t::const_iterator handle) { sigint_handlers.erase(handle); }
-
-bool interrupted = false;
-void sigint_handler(int) {
-    // interrupted = true;
-    for (auto h : sigint_handlers)
-        h();
-}
-
-int32_t to_int32(std::size_t n) {
-    assert(n <= static_cast<std::size_t>(std::numeric_limits<std::int32_t>::max()));
-    return static_cast<std::int32_t>(n);
-}
+void sigint_handler(int) { sig_caught = true; }
 
 uint32_t to_uint32(std::size_t n) {
     assert(n <= static_cast<std::size_t>(std::numeric_limits<std::uint32_t>::max()));
@@ -121,8 +100,6 @@ class HistoryHandler {
           http_handlers(15, "crest-tq.eveonline.com", 443) {}
 
     void saveHistories(const std::vector<std::size_t>& types /*, const std::string& access_token*/) {
-        auto handler_handle = addSigintHandler([&] { semaphore.setTo(to_int32(types.size())); });
-        auto sigintHandlerRemover = makeFinalizer([&] { removeSigintHandler(handler_handle); });
         total = types.size();
         for (auto p : types) {
             requests.emplace_back(std::make_unique<HistoryRequest>(
@@ -132,7 +109,9 @@ class HistoryHandler {
                 p));
             http_handlers.postRequest(*requests.back(), "");
         }
-        semaphore.acquire(to_uint32(types.size()));
+        semaphore.waitFor([total = to_uint32(types.size())](const std::int64_t value) {
+            return sig_caught || value >= static_cast<std::int64_t>(total);
+        });
     }
 
   private:
@@ -294,21 +273,17 @@ class HistoryHandler {
     HTTPSRequestHandlerGroup http_handlers;
 };
 
-void saveHistoriesST(const sqlite::dbPtr& db,
-                     const std::vector<std::size_t>& types /*, const std::string& access_token*/) {
+[[maybe_unused]] void
+saveHistoriesSingleThreaded(const sqlite::dbPtr& db,
+                            const std::vector<std::size_t>& types /*, const std::string& access_token*/) {
     auto insertStmt = sqlite::prepare(db, "insert or ignore into history values(?, ?, ?, ?, ?, ?, ?, ?);");
     auto updateStmt =
         sqlite::prepare(db, "insert or replace into last_history_update values(?, 10000002, strftime('%s', 'now'));");
     auto count = 0u;
     for (auto p : types) {
-        if (interrupted) {
+        if (sig_caught) {
             return;
         }
-        ++count;
-        auto progressReport = makeFinalizer([&] {
-            std::cout << ANSI_CLEAR_LINE << " " << count << " / " << types.size() << " | "
-                      << (double(count) / double(types.size()) * 100.0) << "%\r" << std::flush;
-        });
         try {
             std::stringstream body;
             simpleGet("https://crest-tq.eveonline.com/market/10000002/types/" + std::to_string(p) + "/history/", body);
@@ -346,6 +321,9 @@ void saveHistoriesST(const sqlite::dbPtr& db,
         } catch (const std::exception& e) {
             std::cout << "item " << p << ": " << e.what() << '\n';
         }
+        ++count;
+        std::cout << ANSI_CLEAR_LINE << " " << count << " / " << types.size() << " | "
+                  << (double(count) / double(types.size()) * 100.0) << "%\r" << std::flush;
     }
 }
 
@@ -377,6 +355,7 @@ void saveHistoriesST(const sqlite::dbPtr& db,
 //}
 
 auto outdatedHistories() { return outdatedHistories(sqlite::getDB("market_history.db")); }
+} // namespace
 
 int main() {
     std::cout << std::boolalpha;

@@ -8,13 +8,14 @@ class Semaphore { // TODO: This should be split into a simple release / acquire 
     struct impl;
     std::unique_ptr<impl> pimpl;
 
-    Semaphore(const Semaphore&);
-    Semaphore& operator=(const Semaphore&);
-
   public:
     Semaphore(std::int64_t n = 0);
+
     Semaphore(Semaphore&&);
     Semaphore& operator=(Semaphore&&);
+    Semaphore(const Semaphore&) = delete;
+    Semaphore& operator=(const Semaphore&) = delete;
+
     ~Semaphore();
 
     void release(std::uint64_t n = 1);

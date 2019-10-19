@@ -7,7 +7,6 @@ cc_binary(
         "-ljsoncpp",
     ],
     deps = [
-        "//libs/Finalizer:finalizer",
         "//libs/HTTPSRequestHandler:https_request_handler",
         "//libs/QueryRunner:query_runner",
         "//libs/Semaphore:semaphore",
@@ -24,7 +23,6 @@ cc_binary(
         "-ljsoncpp",
     ],
     deps = [
-        "//libs/Finalizer:finalizer",
         "//libs/HTTPSRequestHandler:https_request_handler",
         "//libs/QueryRunner:query_runner",
         "//libs/Semaphore:semaphore",
