@@ -2,6 +2,8 @@
 
 #include <catch2/catch.hpp>
 
+// TODO: getLine has been replaced with getLine_no_newline ... so these tests should be rewritten ...
+
 // TEST_CASE("empty string", "[getLine]") {
 //    auto s = "";
 //    REQUIRE_THROWS(getLine(s, 0));
