@@ -6,9 +6,9 @@ class Finalizer {
     Finalizer(Functor f) : func(f) {}
     ~Finalizer() { finalize(); }
     Finalizer(const Finalizer&) = delete;
-    Finalizer(Finalizer&&) = default;
+    Finalizer(Finalizer&&) = delete;
     Finalizer& operator=(const Finalizer&) = delete;
-    Finalizer& operator=(Finalizer&&) = default;
+    Finalizer& operator=(Finalizer&&) = delete;
     void abort() { finalized = true; }
     void finalize() {
         if (!finalized) {
