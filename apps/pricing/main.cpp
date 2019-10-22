@@ -365,7 +365,7 @@ int main(int argc, char** argv) {
     if (argc < 3)
         return 1;
 
-    // write_orders(argv[1], argv[2]);
+    write_orders(argv[1], argv[2]);
 
     // read_orders_benchmark(argv[2]);
 
@@ -378,9 +378,9 @@ int main(int argc, char** argv) {
     //});
     // analyze(std::move(minimum_prices));
 
-    TritaniumBuyAnalysis analysis;
-    read_orders(argv[2], [&analysis](const std::uint32_t viewtime, const std::vector<Order>& view) {
-        analysis(viewtime, view);
-    });
+    //TritaniumBuyAnalysis analysis;
+    //read_orders(argv[2], [&analysis](const std::uint32_t viewtime, const std::vector<Order>& view) {
+    //    analysis(viewtime, view);
+    //});
     return 0;
 }

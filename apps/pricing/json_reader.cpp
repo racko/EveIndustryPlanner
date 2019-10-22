@@ -97,7 +97,7 @@ void OrderReader::read_step(std::string_view& doc, std::vector<std::uint64_t>::i
             throw std::runtime_error("fixed_index out of bounds");
 
         if (insert_it != inserted.end() && id(*insert_it) == id(d)) {
-            std::cout << id(d).data << " is in the 'inserted' vector\n";
+            std::cerr << id(d).data << " is in the 'inserted' vector\n";
         }
         auto& o = insert_it != inserted.end() && id(*insert_it) == id(d)
                       ? *insert_it
@@ -105,7 +105,7 @@ void OrderReader::read_step(std::string_view& doc, std::vector<std::uint64_t>::i
         volume(o) = volume(d);
         price(o) = price(d);
         if (volume(d).data == 0) {
-            // std::cout << "delete " << id(o).data << " (" << index(d).data << ")\n";
+            // std::cerr << "delete " << id(o).data << " (" << index(d).data << ")\n";
             if (id(o) != id(d))
                 throw std::runtime_error("id mismatch in delete");
             const auto k = std::distance(deleted.begin(), delete_it);
@@ -113,7 +113,7 @@ void OrderReader::read_step(std::string_view& doc, std::vector<std::uint64_t>::i
             delete_it = deleted.begin() + k;
             //++offset;
         } else {
-            // std::cout << "change " << id(o).data << " (" << index(d).data << ")\n";
+            // std::cerr << "change " << id(o).data << " (" << index(d).data << ")\n";
             if (id(o) != id(d))
                 throw std::runtime_error("id mismatch in diff");
         }
@@ -134,12 +134,12 @@ void OrderReader::read_step(std::string_view& doc, std::vector<std::uint64_t>::i
         //    throw std::runtime_error("fixed_index out of bounds");
 
         if (active_orders.empty() || id(o) > id(active_orders.back())) {
-            // std::cout << "push_back " << o << '\n';
+            // std::cerr << "push_back " << o << '\n';
             if (!active_orders.empty() && id(o) <= id(active_orders.back()))
                 throw std::runtime_error("id mismatch in push_back");
             active_orders.push_back(o);
         } else {
-            // std::cout << "insert " << o << '\n';
+            // std::cerr << "insert " << o << '\n';
             // if (id(o) >= id(active_orders[static_cast<std::size_t>(index)]) ||
             //    (index > 0 && id(o) <= id(active_orders[static_cast<std::size_t>(index - 1)])))
             //    throw std::runtime_error("id mismatch in insert");
@@ -214,19 +214,26 @@ void OrderReader::step() {
         read_doc(text.substr(0, static_cast<std::size_t>(doc_size)));
         text.remove_prefix(static_cast<std::size_t>(doc_size));
     }
-    // std::cout << "deleted.size(): " << deleted.size() << '\n';
-    // std::cout << "inserted.size(): " << inserted.size() << '\n';
-    // std::cout << "active_orders.size(): " << active_orders.size() << '\n';
+    // std::cerr << "deleted.size(): " << deleted.size() << '\n';
+    // std::cerr << "inserted.size(): " << inserted.size() << '\n';
+    // std::cerr << "active_orders.size(): " << active_orders.size() << '\n';
     // finalize();
 }
 
 void OrderReader::finalize() {
-    if (!std::is_sorted(
-            active_orders.begin(), active_orders.end(), [](const Order& a, const Order& b) { return id(a) < id(b); }))
+    if (const auto where = std::adjacent_find(
+            active_orders.begin(), active_orders.end(), [](const Order& a, const Order& b) { return id(a) > id(b); });
+        where != active_orders.end())
+        std::cerr << *where << " before " << where[1] << '\n';
         throw std::runtime_error("active_orders is not sorted");
-    if (!std::is_sorted(deleted.begin(), deleted.end()))
+    if (const auto where = std::adjacent_find(deleted.begin(), deleted.end(), std::greater<std::uint64_t>());
+        where != deleted.end())
+        std::cerr << *where << " before " << where[1] << '\n';
         throw std::runtime_error("deleted is not sorted");
-    if (!std::is_sorted(inserted.begin(), inserted.end(), [](const auto& a, const auto& b) { return id(a) < id(b); }))
+    if (const auto where = std::adjacent_find(
+            inserted.begin(), inserted.end(), [](const auto& a, const auto& b) { return id(a) > id(b); });
+        where != inserted.end())
+        std::cerr << *where << " before " << where[1] << '\n';
         throw std::runtime_error("inserted is not sorted");
     deleted.clear();
     const auto snapshot = std::move(active_orders);
@@ -239,10 +246,10 @@ void OrderReader::finalize() {
         active_orders.insert(active_orders.end(), insert_it, new_insert_it);
         insert_it = new_insert_it;
         if (volume(o) == 0) {
-            // std::cout << "deleting " << id(*it).data << '\n';
+            // std::cerr << "deleting " << id(o).data << '\n';
             continue;
         }
-        // std::cout << "pushing back " << id(*it).data << '\n';
+        // std::cerr << "pushing back " << id(o).data << '\n';
         active_orders.push_back(o);
     }
     if (insert_it != inserted.end())

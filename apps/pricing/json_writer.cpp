@@ -49,19 +49,16 @@ void JsonWriter::check(const char* const start, const char* const stop, std::int
     // if (read_orders.size() != active_orders_.size())
     //    std::cerr << "size mismatch. Actual: " << read_orders.size() << ", Expected: " << active_orders_.size() <<
     //    '\n';
-    bool abort = false;
 
-    for (auto i = 0U; i < order_count; ++i) {
-        if (!equal_ignoring_issued(read_orders[i], active_orders_[i])) {
-            abort = true;
-            std::cerr << "order mismatch at index " << i << ". Actual:\n"
-                      << read_orders[i] << "\nExpected:\n"
-                      << active_orders_[i] << '\n';
-        }
-    }
+    if (const auto where = std::mismatch(
+            read_orders.begin(), read_orders.begin() + order_count, active_orders_.begin(), equal_ignoring_issued);
+        where.first != read_orders.begin() + order_count) {
+        std::cerr << "order mismatch at index " << (where.first - read_orders.begin()) << ". Actual:\n"
+                  << *where.first << "\nExpected:\n"
+                  << *where.second << '\n';
 
-    if (abort)
         throw std::runtime_error("order write/read mismatch");
+    }
 }
 
 /*
@@ -279,7 +276,7 @@ void JsonWriter::extract2(const char* const file_name) {
         auto last = r1;
         if (current != current_stop && last != r2) {
             while (true) {
-                // const auto tmp = current_;
+                const auto tmp = current_;
                 if (id(*current).data < id(*last).data) {
                     // std::cout << "new  " << id(*current).data << " (" << index << ")\n";
                     // std::cout << "new  " << id(*current).data << '\n';
@@ -353,12 +350,12 @@ void JsonWriter::extract2(const char* const file_name) {
                     if (last == r2)
                         break;
                 }
-                // check(tmp, current_, current - active_orders_.begin());
+                check(tmp, current_, current - active_orders_.begin());
             }
         }
 
         for (; current != current_stop; ++current) {
-            // const auto tmp = current_;
+            const auto tmp = current_;
 
             // std::cout << "new  " << id(*current).data << '\n';
 
@@ -384,11 +381,11 @@ void JsonWriter::extract2(const char* const file_name) {
             current_ += 4;
 
             write_order(current_, *current);
-            // check(tmp, current_, current - active_orders_.begin());
+            check(tmp, current_, current - active_orders_.begin());
         }
 
         for (; last != r2; ++last) {
-            // const auto tmp = current_;
+            const auto tmp = current_;
 
             // std::cout << "del  " << id(*last).data << '\n';
 
@@ -405,7 +402,7 @@ void JsonWriter::extract2(const char* const file_name) {
 
             write_diff(current_, Diff{{2}, price(*last), {0}});
             // write_diff(current_, Diff{{2}, price(*last), {0}, id(*last)});
-            // check(tmp, current_, current - active_orders_.begin());
+            check(tmp, current_, current - active_orders_.begin());
         }
         const auto size = static_cast<std::int32_t>(current_ - header - 4);
         std::memcpy(header, &size, sizeof(size));
