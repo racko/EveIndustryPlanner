@@ -1,9 +1,14 @@
 #pragma once
 
+#include <type_traits>
+#include <utility>
+
 template <typename Functor>
 class Finalizer {
+    static_assert(std::is_invocable_v<Functor> && std::is_move_constructible_v<Functor>);
+
   public:
-    Finalizer(Functor f) : func(f) {}
+    Finalizer(Functor f) : func(std::move(f)) {}
     ~Finalizer() { finalize(); }
     Finalizer(const Finalizer&) = delete;
     Finalizer(Finalizer&&) = delete;
